@@ -59,7 +59,10 @@ export default function Hero() {
                     <span className="hero__title-equi">EQUI</span>
                     <span className="hero__title-nox">NOX</span>
                 </h1>
-
+                <h2 className="hero__title__h2" style={{alignItems:'center',justifyContent:'center',display:'flex'}}>
+                    <span className="hero__title-equi">20</span>
+                    <span className="hero__title-nox">26</span>
+                </h2>
                 {/* COUNTDOWN */}
                 <div className="hero__countdown">
                     <div className="time-block">
