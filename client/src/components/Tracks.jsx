@@ -1,42 +1,42 @@
+import { Heart, Route, Users, Shield, Home, Sparkles } from "lucide-react";
 import './Tracks.css';
 
 const TRACKS = [
     {
-        name: 'Healthcare',
-        subtitle: 'Smart Infrastructure for Health',
-        icon: '✚',
-        description: 'Build solutions that leverage smart infrastructure to bridge gaps in healthcare delivery, resource management, and patient wellness across communities.',
+        name: 'SMART HEALTHCARE SYSTEMS',
+        subtitle: 'Intelligent Care Infrastructure',
+        icon: <Heart size={30} strokeWidth={2} />,
+        description: 'Illuminate the path to better health. Design solutions that empower care, predict outcomes, and save lives.',
     },
     {
-        name: 'Road Safety',
-        subtitle: 'Intelligent Transportation Systems',
-        icon: '⊕',
-        description: 'Design systems that make roads smarter, safer, and more efficient — from collision prevention to adaptive traffic management and urban mobility.',
+        name: 'ROAD SAFETY',
+        subtitle: 'Intelligent Mobility & Road Safety',
+        icon: <Route size={30} strokeWidth={2} />,
+        description: 'Drive the future of safe mobility. Create solutions that protect lives, prevent accidents, and pave the way for smarter roads.',
     },
     {
-        name: 'Social Wellness',
-        subtitle: 'Tech-Enabled Communities',
-        icon: '⊙',
-        description: 'Create technology-powered solutions that improve how communities live, interact, and thrive — transforming public spaces into inclusive, connected environments.',
+        name: 'SOCIAL WELLNESS',
+        subtitle: 'Smart Communities & Public Wellness',
+        icon: <Users size={30} strokeWidth={2} />,
+        description: 'Foster thriving communities. Build solutions that enhance public services, promote well-being, and create smarter cities for all.',
     },
     {
-        name: 'Smart Security',
-        subtitle: 'Protection & Cyber Resilience',
-        icon: '⊗',
-        description: 'Build solutions that protect smart infrastructure from physical and digital threats — securing connected systems, data pipelines, and public utilities.',
+        name: 'SMART SECURITY PROTECTION',
+        subtitle: 'Defending Smart Infrastructure',
+        icon: <Shield size={30} strokeWidth={2} />,
+        description: 'Guard the digital frontier. Develop solutions that secure smart infrastructure, protect data, and ensure a safe connected future.',
     },
     {
-        name: 'Smart Home',
-        subtitle: 'Home Automation & Intelligent Living',
-        icon: '⌂',
-        description: 'Develop solutions that transform homes into responsive, efficient, and connected living spaces.',
-        sponsored: true,
+        name: 'SMART HOME & AUTOMATION',
+        subtitle: 'Next-Gen Smart Living',
+        icon: <Home size={30} strokeWidth={2} />,
+        description: 'Reimagine home life. Create solutions that automate daily tasks, enhance comfort, and make smart living accessible to everyone.',
     },
     {
-        name: 'Open Innovation',
-        subtitle: 'Smart Infrastructure — Your Way',
-        icon: '∞',
-        description: 'No domain constraints — just the theme of Smart Infrastructure. Reach beyond defined boundaries and build whatever the future demands.',
+        name: 'OPEN INNOVATION: SMART INFRASTRUCTURE',
+        subtitle: 'Build Beyond Boundaries',
+        icon: <Sparkles size={30} strokeWidth={2} />,
+        description: 'Unleash the power of open innovation. Create solutions that transcend traditional boundaries and build the next generation of smart infrastructure.',
     },
 ];
 
@@ -68,7 +68,7 @@ export default function Tracks() {
 
             <div className="tracks__grid reveal stagger">
                 {TRACKS.map((track) => (
-                    <div className={`tracks__card${track.sponsored ? ' tracks__card--sponsored' : ''}`} key={track.name}>
+                    <div className="tracks__card" key={track.name}>
                         <span className="tracks__icon">{track.icon}</span>
                         <h3 className="tracks__name">{track.name}</h3>
                         <span className="tracks__subtitle accent-text">{track.subtitle}</span>

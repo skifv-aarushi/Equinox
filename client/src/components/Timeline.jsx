@@ -3,22 +3,22 @@ import './Timeline.css';
 
 const EVENTS = [
     /* ── Pre-event ── */
-    { time: 'Before April 1', title: 'Online Screening (Review 0)', desc: '~150 teams shortlisted via Google Forms for on-site participation.' },
+    { time: 'Before Hack', title: 'Online Screening (Review 0)', desc: 'Teams get shortlisted via Google Forms for on-site participation.' },
 
     /* ── Day 1 — April 1, Wednesday ── */
-    { time: 'Apr 1 · 08:00 – 10:00 AM', title: 'Check-in & Registration', desc: 'Participants arrive at Anna Auditorium and collect their event kits.' },
-    { time: 'Apr 1 · 10:00 – 11:00 AM', title: 'Inauguration', desc: 'Welcome address, Panasonic Roma introduction, and ceremonial lamp lighting.' },
-    { time: 'Apr 1 · 11:00 AM', title: 'Hack Commences', desc: '72 hours of ideation, engineering, and innovation — the build phase begins.' },
-    { time: 'Apr 1 · 05:30 – 07:30 PM', title: 'Review 1', desc: 'Organizer-led progress evaluation; underperforming teams are eliminated.' },
+    { time: 'Day 1 · 08:00 – 10:00 AM', title: 'Check-in & Registration', desc: 'Participants arrive at the venue.' },
+    { time: 'Day 1 · 10:00 – 11:00 AM', title: 'Inauguration', desc: 'Opening Ceremony and Welcome Address.' },
+    { time: 'Day 1 · 11:00 AM', title: 'Hack Commences', desc: '3 days of ideation, engineering, and innovation. The build phase begins.' },
+    { time: 'Day 1 · 05:30 – 07:30 PM', title: 'Review 1', desc: 'Progress evaluation; Teams get feedback on their work so far.' },
 
     /* ── Day 2 — April 2, Thursday ── */
-    { time: 'Apr 2 · 10:00 AM – 12:00 PM', title: 'Review 2', desc: 'Faculty assesses architecture, technical feasibility, and problem-solution fit.' },
-    { time: 'Apr 2 · 05:00 – 06:00 PM', title: 'Speaker Session', desc: 'Industry expert shares perspectives on smart infrastructure and emerging tech.' },
+    { time: 'Day 2 · 10:00 AM – 12:00 PM', title: 'Review 2', desc: 'Judges assesses architecture, technical feasibility, and problem-solution fit.' },
+    { time: 'Day 2 · 05:00 – 06:00 PM', title: 'Speaker Session', desc: 'Industry expert shares perspectives on smart infrastructure and emerging tech.' },
 
     /* ── Day 3 — April 3, Friday ── */
-    { time: 'Apr 3 · 10:00 AM – 12:00 PM', title: 'Review 3 & Code Freeze', desc: 'Submissions locked; judges shortlist the top teams for final stage.' },
-    { time: 'Apr 3 · 02:15 – 06:00 PM', title: 'Final Pitches', desc: 'Finalists present and defend their solutions before the judging panel.' },
-    { time: 'Apr 3 · 06:30 – 07:15 PM', title: 'Prize Distribution & Closing Ceremony', desc: 'Winners announced, prizes awarded, and Equinox \'26 concludes.' },
+    { time: 'Day 3 · 10:00 AM – 12:00 PM', title: 'Review 3 & Code Freeze', desc: 'Submissions locked; judges shortlist the top teams for final stage.' },
+    { time: 'Day 3 · 02:15 – 06:00 PM', title: 'Final Pitches', desc: 'Finalists present and defend their solutions before the judging panel.' },
+    { time: 'Day 3 · 06:30 – 07:15 PM', title: 'Prize Distribution & Closing Ceremony', desc: 'Winners announced, prizes awarded, and Equinox \'26 concludes.' },
 ];
 
 export default function Timeline() {

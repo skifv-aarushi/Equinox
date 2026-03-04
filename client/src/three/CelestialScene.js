@@ -58,13 +58,14 @@ export default class CelestialScene {
     this.starGroups = [];
 
     const accentColors = [
-      new THREE.Color(0xEFBF04), // gold
-      new THREE.Color(0x66CCFF), // light blue
-      new THREE.Color(0xFF99CC), // pink
-      new THREE.Color(0x99FF99), // mint
-      new THREE.Color(0xFFCC66), // peach
-      new THREE.Color(0xCC66FF), // purple
-      new THREE.Color(0x6666FF), // periwinkle
+      new THREE.Color(0x1B2735), // deep midnight blue
+      new THREE.Color(0x090A0F), // void black
+      new THREE.Color(0x2E3192), // cosmic indigo
+      new THREE.Color(0x736EFE), // soft violet ray
+      new THREE.Color(0x5EEAD4), // starlight teal
+      new THREE.Color(0xBAE6FD), // icy stellar blue
+      new THREE.Color(0xFDE68A), // distant star gold
+      new THREE.Color(0xE879F9), // nebula magenta
     ];
 
     const glowTex = this._makeGlowTexture(128);

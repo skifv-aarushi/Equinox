@@ -41,8 +41,8 @@ export default function AboutUs() {
                     <div className="aboutus__card-body">
                         <p>
                             Vellore Institute of Technology (VIT) is one of India's most
-                            prestigious private technical universities — NAAC A++ accredited
-                            and consistently top-ranked by NIRF — with a global alumni
+                            prestigious private technical universities, NAAC A++ accredited
+                            and consistently top-ranked by NIRF with a global alumni
                             network spanning 125+ countries.
                         </p>
                         <p>
@@ -99,13 +99,14 @@ export default function AboutUs() {
 
                     <div className="aboutus__card-body">
                         <p>
-                            RoboVITics is the official Robotics Club of VIT Vellore — a
+                            RoboVITics is the official Robotics Club of VIT Vellore. A
                             community of tech enthusiasts united by curiosity, ambition,
                             and hands-on innovation. Through workshops, seminars, and
                             ground-breaking projects, we mentor the next generation of
                             builders and roboticists.
                         </p>
                         <p>
+                            <br></br>
                             Equinox is RoboVITics' flagship event, invites innovators nationwide to build the future of smart technology.
                         </p>
                     </div>

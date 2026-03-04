@@ -83,26 +83,18 @@
     animation: shimmerSweep 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.tracks__sponsor-badge {
-    display: inline-block;
-    font-family: var(--font-heading);
-    font-size: 0.58rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--gold-subtle);
-    border: 1px solid rgba(201, 169, 110, 0.3);
-    padding: 0.2rem 0.55rem;
-    border-radius: 100px;
-    margin-bottom: var(--space-sm);
-    opacity: 0.75;
-}
 
 .tracks__icon {
-    display: block;
-    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
     margin-bottom: var(--space-sm);
     color: var(--gold-subtle);
     opacity: 0.5;
+    transition: opacity var(--transition-smooth);
+}
+
+.tracks__card:hover .tracks__icon {
+    opacity: 0.85;
 }
 
 .tracks__name {

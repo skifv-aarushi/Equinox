@@ -127,16 +127,51 @@ const CONSTELLATIONS = [
             /* Lambda Sco  stinger   */ { fx: 0.30, fy: 0.92, r: 2.0, c: [200, 220, 255], a: 0.70 },
         ],
     },
+
+    /* 6 — PERSEUS  (section: Hero) ─────────────────────── */
+    {
+        stars: [
+            /* Mirfak      body-core */ { fx: 0.52, fy: 0.33, r: 4.0, c: [255, 244, 210], a: 0.94 },
+            /* Algol       demon-head*/ { fx: 0.82, fy: 0.62, r: 3.2, c: [200, 220, 255], a: 0.90 },
+            /* Delta Per   shoulder  */ { fx: 0.60, fy: 0.18, r: 2.8, c: [190, 215, 255], a: 0.84 },
+            /* Eta Per     sword-arm */ { fx: 0.44, fy: 0.10, r: 2.5, c: [255, 200, 100], a: 0.80 },
+            /* Tau Per     sword-tip */ { fx: 0.26, fy: 0.14, r: 2.0, c: [255, 210, 120], a: 0.74 },
+            /* Phi Per     R-wing    */ { fx: 0.88, fy: 0.36, r: 1.9, c: [190, 215, 255], a: 0.72 },
+            /* Epsilon Per arm       */ { fx: 0.76, fy: 0.46, r: 2.2, c: [180, 210, 255], a: 0.78 },
+            /* Zeta Per    L-leg     */ { fx: 0.66, fy: 0.78, r: 2.5, c: [190, 215, 255], a: 0.80 },
+            /* Gamma Per   L-side    */ { fx: 0.34, fy: 0.46, r: 2.2, c: [255, 220, 140], a: 0.76 },
+            /* Iota Per    far-left  */ { fx: 0.16, fy: 0.56, r: 1.9, c: [255, 244, 210], a: 0.68 },
+        ],
+    },
+
+    /* 7 — GEMINI  (section: AboutUs) ──────────────────── */
+    {
+        stars: [
+            /* Castor      L-twin    */ { fx: 0.34, fy: 0.07, r: 3.5, c: [220, 235, 255], a: 0.92 },
+            /* Pollux      R-twin    */ { fx: 0.66, fy: 0.09, r: 4.2, c: [255, 210, 120], a: 0.96 },
+            /* Mebsuda (ε) L-body    */ { fx: 0.27, fy: 0.32, r: 2.3, c: [255, 244, 210], a: 0.80 },
+            /* Alhena (γ)  R-body    */ { fx: 0.74, fy: 0.36, r: 2.8, c: [240, 244, 255], a: 0.84 },
+            /* Wasat  (δ)  centre    */ { fx: 0.52, fy: 0.38, r: 2.0, c: [255, 244, 210], a: 0.74 },
+            /* Nu Gem      L-leg-up  */ { fx: 0.18, fy: 0.54, r: 2.0, c: [200, 220, 255], a: 0.72 },
+            /* Lambda Gem  R-leg-mid */ { fx: 0.64, fy: 0.60, r: 1.9, c: [240, 244, 255], a: 0.70 },
+            /* Mu Gem      L-foot    */ { fx: 0.10, fy: 0.74, r: 2.3, c: [255, 145,  55], a: 0.80 },
+            /* Mekbuda (ζ) R-foot    */ { fx: 0.60, fy: 0.82, r: 2.2, c: [255, 244, 210], a: 0.76 },
+            /* Eta Gem     far-L-ft  */ { fx: 0.06, fy: 0.90, r: 2.0, c: [255, 145,  55], a: 0.72 },
+            /* Kappa Gem   R-lower   */ { fx: 0.76, fy: 0.74, r: 1.9, c: [255, 220, 140], a: 0.68 },
+        ],
+    },
 ];
 
 /* Section id → constellation index */
 const SECTION_MAP = [
-    { id: 'about',    idx: 0 },
-    { id: 'tracks',   idx: 1 },
-    { id: 'timeline', idx: 2 },
-    { id: 'sponsors', idx: 3 },
-    { id: 'register', idx: 4 },
-    { id: 'faq',      idx: 5 },
+    { id: 'hero',     idx: 6 },  // Perseus
+    { id: 'about',    idx: 0 },  // Orion
+    { id: 'aboutus',  idx: 7 },  // Gemini
+    { id: 'tracks',   idx: 1 },  // Lyra
+    { id: 'timeline', idx: 2 },  // Ursa Major
+    { id: 'sponsors', idx: 3 },  // Leo
+    { id: 'register', idx: 4 },  // Cassiopeia
+    { id: 'faq',      idx: 5 },  // Scorpius
 ];
 
 const BG_STARS = generateBgStars();
