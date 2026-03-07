@@ -1,0 +1,156 @@
+/* ═══════════════════════════════════════════════
+   RegisterCTA — 3-state Register Button
+   corner | cursor | hidden
+   ═══════════════════════════════════════════════ */
+
+/* ── Shared pill base ── */
+.rcta {
+    /* Button reset */
+    appearance: none;
+    margin: 0;
+
+    /* Layout */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.75rem 1.6rem;
+    white-space: nowrap;
+
+    /* Typography — matches .btn on site */
+    font-family: 'Julius Sans One', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    color: #F5F6F3;
+
+    /* Visual — matches .btn-primary */
+    background: rgba(201, 169, 110, 0.14);
+    border: 1px solid rgba(201, 169, 110, 0.6);
+    border-radius: 100px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    box-shadow:
+        0 0 14px rgba(201, 169, 110, 0.22),
+        0 4px 20px rgba(201, 169, 110, 0.10);
+
+    /* Hidden by default */
+    opacity: 0;
+    scale: 0;
+    pointer-events: none;
+
+    /* Default: dissolve animation (out) — 300 ms, no delay */
+    transition:
+        opacity 300ms cubic-bezier(0.4, 0, 1, 1),
+        scale 300ms cubic-bezier(0.4, 0, 1, 1),
+        box-shadow 200ms ease;
+
+    z-index: 10001;
+    cursor: pointer;
+}
+
+/* ── Active / visible state ── */
+.rcta--visible {
+    opacity: 1;
+    scale: 1;
+    pointer-events: auto;
+}
+
+/* Hover — matches .btn:hover */
+.rcta--visible:hover {
+    background: rgba(201, 169, 110, 0.24);
+    border-color: #C9A96E;
+    box-shadow:
+        0 0 22px rgba(201, 169, 110, 0.45),
+        0 6px 28px rgba(201, 169, 110, 0.22);
+}
+
+/* ─────────────────────────────────────────────
+   Corner variant  ·  position: fixed bottom-left
+   ───────────────────────────────────────────── */
+.rcta-corner {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+}
+
+/* Corner in: same spring pop + 300 ms delay — waits for cursor pill to dissolve first */
+.rcta-corner.rcta--visible {
+    transition:
+        opacity 350ms cubic-bezier(0.22, 1, 0.36, 1) 300ms,
+        scale 350ms cubic-bezier(0.34, 1.56, 0.64, 1) 300ms,
+        box-shadow 200ms ease;
+}
+
+/* Corner hover lift (safe — not fighting JS transform) */
+.rcta-corner.rcta--visible:hover {
+    transform: translateY(-2px);
+}
+
+/* ─────────────────────────────────────────────
+   Cursor variant  ·  position tracked by RAF
+   ───────────────────────────────────────────── */
+.rcta-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    will-change: transform;
+    /* transform set every frame by RAF:
+     translate(calc(x - 50%), calc(y - 50%))  */
+}
+
+/* Cursor in: ease-out + 300 ms delay (waits for corner to dissolve) */
+.rcta-cursor.rcta--visible {
+    transition:
+        opacity 350ms cubic-bezier(0.22, 1, 0.36, 1) 300ms,
+        scale 380ms cubic-bezier(0.34, 1.56, 0.64, 1) 300ms,
+        box-shadow 200ms ease;
+
+    /* Subtle breathing glow once fully visible */
+    animation: rctaGlow 2.8s ease-in-out infinite;
+    animation-delay: 680ms;
+    /* starts after full re-materialise */
+}
+
+@keyframes rctaGlow {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 14px rgba(201, 169, 110, 0.22),
+            0 4px 20px rgba(201, 169, 110, 0.10);
+    }
+
+    50% {
+        box-shadow:
+            0 0 26px rgba(201, 169, 110, 0.44),
+            0 4px 34px rgba(201, 169, 110, 0.20);
+    }
+}
+
+/* Cursor hover: only scale/glow (transform is owned by JS) */
+.rcta-cursor.rcta--visible:hover {
+    scale: 1.07;
+    box-shadow:
+        0 0 28px rgba(201, 169, 110, 0.55),
+        0 8px 32px rgba(201, 169, 110, 0.25);
+}
+
+/* ── Star accent ── */
+.rcta__star {
+    font-size: 0.58rem;
+    opacity: 0.72;
+    color: rgba(201, 169, 110, 0.9);
+    transition: transform 220ms ease;
+}
+
+.rcta--visible:hover .rcta__star {
+    transform: rotate(90deg);
+}
+
+/* ── Touch devices — hide entirely ── */
+@media (pointer: coarse) {
+    .rcta {
+        display: none;
+    }
+}

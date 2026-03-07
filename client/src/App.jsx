@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import RegisterCTA from './components/RegisterCTA';
 import CustomCursor from './components/CustomCursor';
 import Navbar from './components/Navbar';
 import ConstellationCanvas from './components/ConstellationCanvas';
@@ -13,6 +14,7 @@ import RegisterForm from './components/RegisterForm';
 import Footer from './components/Footer';
 
 export default function App() {
+
   /* ── Scroll-based reveal observer ── */
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -37,6 +39,7 @@ export default function App() {
       {/* Rendered outside the animated app div so position:fixed elements
           live in the root stacking context — not trapped by transform/opacity */}
       <CustomCursor />
+      <RegisterCTA />
       <Navbar />
       {/* Constellation field — fixed, always visible, pointer-events pass-through */}
       <ConstellationCanvas />

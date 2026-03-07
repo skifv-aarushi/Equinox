@@ -2,11 +2,11 @@ import { useEffect, useRef } from 'react';
 import './CustomCursor.css';
 
 export default function CustomCursor() {
-  const dotRef     = useRef(null);
+  const dotRef = useRef(null);
   const wrapperRef = useRef(null);
-  const posRef     = useRef({ x: -200, y: -200 });
-  const ringPos    = useRef({ x: -200, y: -200 });
-  const rafRef     = useRef(null);
+  const posRef = useRef({ x: -200, y: -200 });
+  const ringPos = useRef({ x: -200, y: -200 });
+  const rafRef = useRef(null);
 
   useEffect(() => {
     // Don't mount on touch-only devices
@@ -61,14 +61,14 @@ export default function CustomCursor() {
               strokeWidth="0.8"
             />
             {/* Cardinal tick marks */}
-            <line x1="18" y1="3"  x2="18" y2="7.5"  stroke="rgba(201,169,110,0.8)" strokeWidth="1.1" strokeLinecap="round" />
+            <line x1="18" y1="3" x2="18" y2="7.5" stroke="rgba(201,169,110,0.8)" strokeWidth="1.1" strokeLinecap="round" />
             <line x1="18" y1="28.5" x2="18" y2="33" stroke="rgba(201,169,110,0.8)" strokeWidth="1.1" strokeLinecap="round" />
-            <line x1="3"  y1="18" x2="7.5"  y2="18" stroke="rgba(201,169,110,0.8)" strokeWidth="1.1" strokeLinecap="round" />
+            <line x1="3" y1="18" x2="7.5" y2="18" stroke="rgba(201,169,110,0.8)" strokeWidth="1.1" strokeLinecap="round" />
             <line x1="28.5" y1="18" x2="33" y2="18" stroke="rgba(201,169,110,0.8)" strokeWidth="1.1" strokeLinecap="round" />
             {/* Diagonal subtle marks */}
-            <line x1="7.8"  y1="7.8"  x2="9.9"  y2="9.9"  stroke="rgba(201,169,110,0.35)" strokeWidth="0.7" strokeLinecap="round" />
-            <line x1="28.2" y1="7.8"  x2="26.1" y2="9.9"  stroke="rgba(201,169,110,0.35)" strokeWidth="0.7" strokeLinecap="round" />
-            <line x1="7.8"  y1="28.2" x2="9.9"  y2="26.1" stroke="rgba(201,169,110,0.35)" strokeWidth="0.7" strokeLinecap="round" />
+            <line x1="7.8" y1="7.8" x2="9.9" y2="9.9" stroke="rgba(201,169,110,0.35)" strokeWidth="0.7" strokeLinecap="round" />
+            <line x1="28.2" y1="7.8" x2="26.1" y2="9.9" stroke="rgba(201,169,110,0.35)" strokeWidth="0.7" strokeLinecap="round" />
+            <line x1="7.8" y1="28.2" x2="9.9" y2="26.1" stroke="rgba(201,169,110,0.35)" strokeWidth="0.7" strokeLinecap="round" />
             <line x1="28.2" y1="28.2" x2="26.1" y2="26.1" stroke="rgba(201,169,110,0.35)" strokeWidth="0.7" strokeLinecap="round" />
           </svg>
         </div>
