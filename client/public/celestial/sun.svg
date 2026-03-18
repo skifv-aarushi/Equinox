@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <!-- Core gold radial glow -->
+    <radialGradient id="sunCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#C9A96E" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#C9A96E" stop-opacity="0.85"/>
+      <stop offset="70%" stop-color="#C9A96E" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#C9A96E" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Outer corona glow -->
+    <radialGradient id="corona" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#C9A96E" stop-opacity="0.5"/>
+      <stop offset="35%" stop-color="#C9A96E" stop-opacity="0.2"/>
+      <stop offset="65%" stop-color="#E7E2DE" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#E7E2DE" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Ray gradient -->
+    <linearGradient id="rayGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#C9A96E" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#E7E2DE" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Filter for soft glow -->
+    <filter id="sunGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer corona -->
+  <circle cx="100" cy="100" r="98" fill="url(#corona)"/>
+
+  <!-- Rays (12 pointed) -->
+  <g filter="url(#sunGlow)" opacity="0.6">
+    <!-- Cardinal rays -->
+    <polygon points="100,8 96,60 104,60"   fill="url(#rayGrad)"/>
+    <polygon points="100,192 96,140 104,140" fill="url(#rayGrad)" transform="rotate(180,100,100)"/>
+    <polygon points="8,100 60,96 60,104"     fill="url(#rayGrad)" transform="rotate(90,100,100)"/>
+    <polygon points="192,100 140,96 140,104" fill="url(#rayGrad)" transform="rotate(270,100,100)"/>
+
+    <!-- Diagonal rays -->
+    <polygon points="100,18 97,55 103,55" fill="url(#rayGrad)" transform="rotate(30,100,100)"/>
+    <polygon points="100,18 97,55 103,55" fill="url(#rayGrad)" transform="rotate(60,100,100)"/>
+    <polygon points="100,18 97,55 103,55" fill="url(#rayGrad)" transform="rotate(120,100,100)"/>
+    <polygon points="100,18 97,55 103,55" fill="url(#rayGrad)" transform="rotate(150,100,100)"/>
+    <polygon points="100,18 97,55 103,55" fill="url(#rayGrad)" transform="rotate(210,100,100)"/>
+    <polygon points="100,18 97,55 103,55" fill="url(#rayGrad)" transform="rotate(240,100,100)"/>
+    <polygon points="100,18 97,55 103,55" fill="url(#rayGrad)" transform="rotate(300,100,100)"/>
+    <polygon points="100,18 97,55 103,55" fill="url(#rayGrad)" transform="rotate(330,100,100)"/>
+  </g>
+
+  <!-- Inner glow ring -->
+  <circle cx="100" cy="100" r="38" fill="none" stroke="#C9A96E" stroke-width="1" opacity="0.25"/>
+
+  <!-- Sun disc -->
+  <circle cx="100" cy="100" r="32" fill="url(#sunCore)" filter="url(#sunGlow)"/>
+
+  <!-- Bright center -->
+  <circle cx="100" cy="100" r="14" fill="#E7E2DE" opacity="0.35"/>
+</svg>

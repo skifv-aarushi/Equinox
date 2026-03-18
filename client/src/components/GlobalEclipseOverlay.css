@@ -1,0 +1,116 @@
+/* ═══════════════════════════════════════════════
+   Global Eclipse Overlay  —  v3
+   Matches the reference: large bodies, corona, warm light-cone
+   ═══════════════════════════════════════════════ */
+
+.global-eclipse {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+}
+
+/* ── Celestial Bodies ── */
+.global-eclipse__moon {
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    will-change: transform, opacity;
+    opacity: 0;
+    filter: drop-shadow(0 0 12px rgba(231, 226, 222, 0.25));
+}
+
+.global-eclipse__sun {
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    will-change: transform, opacity;
+    opacity: 0;
+    filter: drop-shadow(0 0 18px rgba(201, 169, 110, 0.4));
+}
+
+/* ── Corona Glow  ──
+   A radial burst of light at the eclipse point (top-center).
+   Only visible when the two bodies overlap.              */
+.global-eclipse__corona {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -35%);
+    border-radius: 50%;
+    opacity: 0;
+    will-change: opacity;
+    background: radial-gradient(circle,
+            rgba(255, 255, 255, 0.9) 0%,
+            rgba(255, 248, 220, 0.6) 15%,
+            rgba(201, 169, 110, 0.35) 35%,
+            rgba(201, 169, 110, 0.1) 55%,
+            transparent 75%);
+    mix-blend-mode: screen;
+}
+
+/* ── Light Cone ──
+   A dramatic warm cone of light from the eclipse point,
+   illuminating the sponsor cards below.                  */
+.global-eclipse__lightcone {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    will-change: opacity;
+    /* Warm golden cone becoming white at the tip */
+    background: linear-gradient(180deg,
+            rgba(255, 253, 240, 0.30) 0%,
+            rgba(255, 248, 210, 0.18) 8%,
+            rgba(201, 169, 110, 0.12) 20%,
+            rgba(201, 169, 110, 0.06) 40%,
+            rgba(201, 169, 110, 0.02) 60%,
+            transparent 80%);
+    /* Cone/trapezoid shape: narrow at top, widens below */
+    clip-path: polygon(48% 0%, 52% 0%, 82% 100%, 18% 100%);
+    mix-blend-mode: screen;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .global-eclipse__moon {
+        width: 100px;
+        height: 100px;
+    }
+
+    .global-eclipse__sun {
+        width: 85px;
+        height: 85px;
+    }
+
+    .global-eclipse__corona {
+        width: 200px;
+        height: 200px;
+    }
+
+    .global-eclipse__lightcone {
+        clip-path: polygon(44% 0%, 56% 0%, 88% 100%, 12% 100%);
+    }
+}
+
+@media (max-width: 480px) {
+    .global-eclipse__moon {
+        width: 80px;
+        height: 80px;
+    }
+
+    .global-eclipse__sun {
+        width: 65px;
+        height: 65px;
+    }
+
+    .global-eclipse__corona {
+        width: 160px;
+        height: 160px;
+    }
+}

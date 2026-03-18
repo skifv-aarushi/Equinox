@@ -3,6 +3,7 @@ import RegisterCTA from './components/RegisterCTA';
 import CustomCursor from './components/CustomCursor';
 import Navbar from './components/Navbar';
 import ConstellationCanvas from './components/ConstellationCanvas';
+import GlobalEclipseOverlay from './components/GlobalEclipseOverlay';
 import Hero from './components/Hero';
 import About from './components/About';
 import AboutUs from './components/AboutUs';
@@ -43,6 +44,8 @@ export default function App() {
       <Navbar />
       {/* Constellation field — fixed, always visible, pointer-events pass-through */}
       <ConstellationCanvas />
+      {/* Global eclipse animation — fixed, tracks scroll across sections */}
+      <GlobalEclipseOverlay />
 
       <div className="app page-enter">
         {/* Fixed subtle star texture */}

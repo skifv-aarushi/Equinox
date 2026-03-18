@@ -8,10 +8,10 @@ const MAIN_SPONSOR = {
 };
 
 const OTHER_SPONSORS = [
-    { name: 'K7 Computing', logo: '/sponsor-logos/k7.png'       },
-    { name: 'Flipkart',     logo: '/sponsor-logos/flipkart.png' },
-    { name: 'Edubook',      logo: '/sponsor-logos/edubook.png'  },
-    { name: 'Inkind',       logo: '/sponsor-logos/inkind.png'   },
+    { name: 'K7 Computing', logo: '/sponsor-logos/k7.png' },
+    { name: 'Flipkart', logo: '/sponsor-logos/flipkart.png' },
+    { name: 'Edubook', logo: '/sponsor-logos/edubook.png' },
+    { name: 'Inkind', logo: '/sponsor-logos/inkind.png' },
 ];
 
 export default function Sponsor() {

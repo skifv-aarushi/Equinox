@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <!-- Moon surface gradient -->
+    <radialGradient id="moonSurface" cx="40%" cy="40%" r="55%">
+      <stop offset="0%"  stop-color="#F5F6F3" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#E7E2DE" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#E7E2DE" stop-opacity="0.8"/>
+    </radialGradient>
+
+    <!-- Outer glow -->
+    <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#F5F6F3" stop-opacity="0"/>
+      <stop offset="60%" stop-color="#F5F6F3" stop-opacity="0"/>
+      <stop offset="80%" stop-color="#E7E2DE" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#E7E2DE" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Shadow for crescent effect -->
+    <radialGradient id="crescentShadow" cx="65%" cy="45%" r="45%">
+      <stop offset="0%"  stop-color="#1A2238" stop-opacity="0.7"/>
+      <stop offset="60%" stop-color="#1A2238" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#1A2238" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Soft glow filter -->
+    <filter id="moonSoftGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Clip for moon body -->
+    <clipPath id="moonClip">
+      <circle cx="100" cy="100" r="42"/>
+    </clipPath>
+  </defs>
+
+  <!-- Outer glow aura -->
+  <circle cx="100" cy="100" r="98" fill="url(#moonGlow)"/>
+
+  <!-- Moon disc -->
+  <circle cx="100" cy="100" r="42" fill="url(#moonSurface)" filter="url(#moonSoftGlow)"/>
+
+  <!-- Crater textures (clipped to moon body) -->
+  <g clip-path="url(#moonClip)" opacity="0.3">
+    <circle cx="85"  cy="88"  r="8"  fill="#2F3A55" opacity="0.4"/>
+    <circle cx="112" cy="95"  r="5"  fill="#2F3A55" opacity="0.35"/>
+    <circle cx="95"  cy="115" r="6"  fill="#2F3A55" opacity="0.3"/>
+    <circle cx="108" cy="80"  r="4"  fill="#2F3A55" opacity="0.25"/>
+    <circle cx="78"  cy="105" r="3"  fill="#2F3A55" opacity="0.2"/>
+    <circle cx="118" cy="110" r="3.5" fill="#2F3A55" opacity="0.22"/>
+  </g>
+
+  <!-- Crescent shadow overlay -->
+  <circle cx="100" cy="100" r="42" fill="url(#crescentShadow)"/>
+
+  <!-- Subtle rim light -->
+  <circle cx="100" cy="100" r="41" fill="none" stroke="#F5F6F3" stroke-width="0.8" opacity="0.2"/>
+</svg>
