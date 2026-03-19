@@ -7,13 +7,6 @@ const MAIN_SPONSOR = {
     invert: true,   // black-on-white logo → invert for dark background
 };
 
-const OTHER_SPONSORS = [
-    { name: 'K7 Computing', logo: '/sponsor-logos/k7.png' },
-    { name: 'Flipkart', logo: '/sponsor-logos/flipkart.png' },
-    { name: 'Edubook', logo: '/sponsor-logos/edubook.png' },
-    { name: 'Inkind', logo: '/sponsor-logos/inkind.png' },
-];
-
 export default function Sponsor() {
     const sectionRef = useRef(null);
 
@@ -57,20 +50,6 @@ export default function Sponsor() {
                         draggable={false}
                     />
                 </div>
-            </div>
-
-            {/* Other sponsors — 4-card row */}
-            <div className="sponsor__other-row">
-                {OTHER_SPONSORS.map((s, i) => (
-                    <div className="sponsor__logo-card" key={i}>
-                        <img
-                            src={s.logo}
-                            alt={s.name}
-                            className="sponsor__logo-img"
-                            draggable={false}
-                        />
-                    </div>
-                ))}
             </div>
         </section>
     );

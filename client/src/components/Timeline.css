@@ -31,7 +31,202 @@
     animation: slowRotate 260s linear infinite;
 }
 
-/* Timeline spine */
+/* ═══════════════════════════════════════════════
+   Collapsed Stepper View
+   ═══════════════════════════════════════════════ */
+
+.timeline__stepper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    max-width: 960px;
+    margin: 0 auto 0.5rem;
+    z-index: 2;
+    padding: 0 var(--space-sm, 1rem);
+
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.4s ease, transform 0.4s ease, max-height 0.5s ease;
+    max-height: 600px;
+    overflow: hidden;
+}
+
+.timeline__stepper--hidden {
+    opacity: 0;
+    transform: translateY(-12px);
+    max-height: 0;
+    margin-bottom: 0;
+    pointer-events: none;
+}
+
+/* Connecting horizontal line behind nodes */
+.timeline__stepper-line {
+    display: none; /* hidden on vertical layout, shown on desktop */
+}
+
+/* Individual step */
+.timeline__step {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+
+    background: rgba(47, 58, 85, 0.25);
+    border: 1px solid rgba(201, 169, 110, 0.12);
+    border-radius: var(--radius-md, 12px);
+    padding: 1.2rem 0.9rem 1rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    transition: border-color 0.3s ease,
+                background 0.3s ease,
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+/* Shimmer sweep */
+.timeline__step::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(105deg,
+        transparent 30%,
+        rgba(201, 169, 110, 0.07) 50%,
+        transparent 70%);
+    transform: skewX(-12deg);
+    pointer-events: none;
+}
+
+.timeline__step:hover::after {
+    animation: shimmerSweep 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.timeline__step:hover {
+    border-color: rgba(201, 169, 110, 0.35);
+    background: rgba(47, 58, 85, 0.42);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(201, 169, 110, 0.08);
+}
+
+/* Node icon */
+.timeline__step-node {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(201, 169, 110, 0.3);
+    background: rgba(30, 35, 55, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.7rem;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 0 12px rgba(201, 169, 110, 0.08);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timeline__step:hover .timeline__step-node {
+    border-color: rgba(201, 169, 110, 0.6);
+    box-shadow: 0 0 18px rgba(201, 169, 110, 0.2);
+}
+
+.timeline__step-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold-subtle, #c9a96e);
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.timeline__step:hover .timeline__step-icon {
+    opacity: 1;
+}
+
+/* Step label */
+.timeline__step-label {
+    display: block;
+    font-family: var(--font-heading, 'Cinzel', serif);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--marble, #e8e0d0);
+    margin-bottom: 0.2rem;
+}
+
+.timeline__step-date {
+    display: block;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-subtle, #c9a96e);
+    opacity: 0.6;
+    margin-bottom: 0.75rem;
+}
+
+/* Event list inside step */
+.timeline__step-events {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+}
+
+.timeline__step-event {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: left;
+}
+
+.timeline__step-dot {
+    flex-shrink: 0;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold-subtle, #c9a96e);
+    opacity: 0.5;
+    box-shadow: 0 0 4px rgba(201, 169, 110, 0.35);
+}
+
+.timeline__step-event-name {
+    font-size: 0.72rem;
+    opacity: 0.7;
+    line-height: 1.35;
+    color: var(--text-primary, #e8e0d0);
+}
+
+/* ═══════════════════════════════════════════════
+   Expanded Full View
+   ═══════════════════════════════════════════════ */
+
+.timeline__expanded {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.4s ease;
+}
+
+.timeline__expanded--open {
+    max-height: 3000px; /* large enough to hold all items */
+    opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════
+   Timeline spine (expanded)
+   ═══════════════════════════════════════════════ */
 
 .timeline__line {
     position: absolute;
@@ -198,10 +393,91 @@
     line-height: 1.6;
 }
 
-/* Mobile */
+/* ═══════════════════════════════════════════════
+   Toggle Button
+   ═══════════════════════════════════════════════ */
+
+.timeline__toggle-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.timeline__toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.6rem;
+    cursor: pointer;
+
+    background: rgba(201, 169, 110, 0.08);
+    border: 1px solid rgba(201, 169, 110, 0.35);
+    border-radius: 999px;
+
+    font-family: var(--font-heading, 'Cinzel', serif);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold-subtle, #c9a96e);
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.timeline__toggle-btn:hover {
+    background: rgba(201, 169, 110, 0.16);
+    border-color: rgba(201, 169, 110, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(201, 169, 110, 0.15);
+}
+
+.timeline__toggle-btn--collapse {
+    background: rgba(201, 169, 110, 0.14);
+}
+
+.timeline__toggle-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--gold-subtle, #c9a96e);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ═══════════════════════════════════════════════
+   Mobile Responsive
+   ═══════════════════════════════════════════════ */
 
 @media (max-width: 768px) {
 
+    /* Stepper collapses vertically */
+    .timeline__stepper {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .timeline__step {
+        flex-direction: row;
+        align-items: flex-start;
+        text-align: left;
+        padding: 0.9rem 1rem;
+        gap: 0.8rem;
+    }
+
+    .timeline__step-node {
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+
+    .timeline__step-body {
+        flex: 1;
+    }
+
+    /* Expanded timeline */
     .timeline__line {
         left: 20px;
         transform: none;
@@ -241,5 +517,13 @@
 
     .timeline__event-desc {
         font-size: 0.75rem;
+    }
+
+    .timeline__step {
+        padding: 0.75rem 0.8rem;
+    }
+
+    .timeline__step-event-name {
+        font-size: 0.68rem;
     }
 }

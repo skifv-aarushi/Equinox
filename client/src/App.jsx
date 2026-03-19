@@ -57,16 +57,16 @@ export default function App() {
         <About />
 
         <div className="celestial-divider" />
-        <AboutUs />
-
-        <div className="celestial-divider" />
-        <Tracks />
+        <Sponsor />
 
         <div className="celestial-divider" />
         <Timeline />
 
         <div className="celestial-divider" />
-        <Sponsor />
+        <Tracks />
+
+        <div className="celestial-divider" />
+        <AboutUs />
 
         <div className="celestial-divider" />
         <RegisterForm />

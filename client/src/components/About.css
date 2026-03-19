@@ -51,7 +51,37 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-md);
+}
+
+/* ── Equinox Logo ── */
+
+.about__equinox-logo-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about__equinox-logo {
+    width: clamp(100px, 16vw, 160px);
+    height: auto;
+    object-fit: contain;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 16px rgba(201, 169, 110, 0.25));
+    transition: filter 0.4s ease, transform 0.4s ease;
+}
+
+.about__equinox-logo:hover {
+    filter: drop-shadow(0 0 24px rgba(201, 169, 110, 0.45));
+    transform: scale(1.05);
+}
+
+.about__logo-separator {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold-subtle);
+    opacity: 0.5;
 }
 
 /* ── PNG Character Logo ── */

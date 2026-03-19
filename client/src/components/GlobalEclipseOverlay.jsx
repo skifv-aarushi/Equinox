@@ -6,42 +6,37 @@ import "./GlobalEclipseOverlay.css";
 gsap.registerPlugin(ScrollTrigger);
 
 /*
- * GlobalEclipseOverlay — v3
+ * GlobalEclipseOverlay — v5
  *
- * Matches the reference implementation:
- * ● Large moon (left, ~7 o'clock) and sun (right, ~4 o'clock) at #about
- * ● They arc upward along a clock-face path through #tracks / #timeline
- * ● Eclipse at 12 o'clock just before #sponsors
- * ● Brilliant corona glow + warm light cone at eclipse
- * ● Retreat & fade past sponsors
+ * Key fix: Corona and lightcone opacity are driven by the ANGLE
+ * convergence of the sun and moon, not by fixed scroll percentages.
+ * This ensures the halo ONLY appears when the bodies actually meet.
  *
- * Uses direct x/y position animation along a circular arc
- * rather than CSS transform-origin pendulum.
- */
-
-/* ---- Arc geometry ----
- *
- * The arc center (pivot) is at viewport (50%, 85vh).
- * Radius ≈ 85vh so the top of the arc reaches y ≈ 0.
- *
- * Moon starts at angle -70° (≡ ~7 o'clock, lower-left)
- * Sun  starts at angle +70° (≡ ~5 o'clock, lower-right)
- * Both end at angle 0° (≡ 12 o'clock, top-center)
- *
- * x = cx + R·sin(θ)
- * y = cy - R·cos(θ)
+ * ● Moon (left, ~8 o'clock) and Sun (right, ~4 o'clock) start separated
+ * ● True circular arc motion via angle-based proxy animation
+ * ● Corona + lightcone ONLY appear when angles are within ~8° of each other
+ * ● Eclipse + spotlight illuminates down to the Panasonic logo bottom
+ * ● Sun and moon part as the scroll reaches the top of Panasonic
+ * ● Everything (corona, cone, bodies) fully gone before Timeline section
  */
 
 const DEG = Math.PI / 180;
-const ARC_CX = 0.5;          // fraction of viewport width
-const ARC_CY = 0.85;         // fraction of viewport height
-const ARC_R_VH = 0.85;       // radius as fraction of viewport height
 
-const MOON_START_ANGLE = -70; // degrees (left)
-const SUN_START_ANGLE = 70; // degrees (right)
-const ECLIPSE_ANGLE = 0; // degrees (top-center)
+const ARC_CX = 0.5;
+const ARC_CY = 1.0;
+const ARC_R_VH = 1.0;
 
-function arcPos(angleDeg, vw, vh) {
+const MOON_START_ANGLE = -80;
+const SUN_START_ANGLE  =  80;
+const ECLIPSE_ANGLE    =   0;
+
+const MOON_SIZE = 130;
+const SUN_SIZE  = 110;
+
+// Corona/cone only visible when both bodies are within this many degrees of eclipse point
+const CORONA_THRESHOLD_DEG = 12;
+
+function arcXY(angleDeg, vw, vh) {
     const rad = angleDeg * DEG;
     const R = ARC_R_VH * vh;
     return {
@@ -69,85 +64,114 @@ export default function GlobalEclipseOverlay() {
         const rafId = requestAnimationFrame(() => {
             const aboutEl = document.getElementById("about");
             const sponsorsEl = document.getElementById("sponsors");
-            const registerEl = document.getElementById("register");
-            if (!aboutEl || !sponsorsEl || !registerEl) return;
+            if (!aboutEl || !sponsorsEl) return;
 
             const vw = window.innerWidth;
             const vh = window.innerHeight;
 
-            // Pre-calculate positions at key angles
-            const moonStart = arcPos(MOON_START_ANGLE, vw, vh);
-            const sunStart = arcPos(SUN_START_ANGLE, vw, vh);
-            const eclipsePos = arcPos(ECLIPSE_ANGLE, vw, vh);
+            const moonProxy = { angle: MOON_START_ANGLE, opacity: 0 };
+            const sunProxy  = { angle: SUN_START_ANGLE, opacity: 0 };
+
+            function updatePositions() {
+                // Update moon position
+                const moonPos = arcXY(moonProxy.angle, vw, vh);
+                moonEl.style.left = (moonPos.x - MOON_SIZE / 2) + 'px';
+                moonEl.style.top  = (moonPos.y - MOON_SIZE / 2) + 'px';
+                moonEl.style.opacity = moonProxy.opacity;
+
+                // Update sun position
+                const sunPos = arcXY(sunProxy.angle, vw, vh);
+                sunEl.style.left = (sunPos.x - SUN_SIZE / 2) + 'px';
+                sunEl.style.top  = (sunPos.y - SUN_SIZE / 2) + 'px';
+                sunEl.style.opacity = sunProxy.opacity;
+
+                // ── KEY FIX: Drive corona/cone from angular proximity ──
+                // Only show halo when both bodies are near the eclipse point
+                const moonDist = Math.abs(moonProxy.angle - ECLIPSE_ANGLE);
+                const sunDist  = Math.abs(sunProxy.angle - ECLIPSE_ANGLE);
+                const maxDist  = Math.max(moonDist, sunDist);
+
+                // Both must be visible for the halo to show
+                const bodiesVisible = Math.min(moonProxy.opacity, sunProxy.opacity);
+
+                let haloOpacity = 0;
+                if (maxDist < CORONA_THRESHOLD_DEG && bodiesVisible > 0.3) {
+                    // Ramp from 0 at threshold to 1 at 0 degrees
+                    haloOpacity = Math.pow(1 - (maxDist / CORONA_THRESHOLD_DEG), 2) * bodiesVisible;
+                }
+
+                coronaEl.style.opacity = haloOpacity;
+                coneEl.style.opacity = haloOpacity * 0.9; // cone slightly less intense
+            }
+
+            // Set initial positions (hidden)
+            updatePositions();
 
             const ctx = gsap.context(() => {
 
-                // ── PHASE 1 — APPROACH  (About → Sponsors top) ──
+                // ── PHASE 1 — APPROACH (About section → Sponsors title area) ──
                 const approach = gsap.timeline({
                     scrollTrigger: {
                         trigger: aboutEl,
-                        start: "top 80%",
+                        start: "top 60%",
                         endTrigger: sponsorsEl,
-                        end: "top 55%",
-                        scrub: 1,
+                        end: "top 20%",
+                        scrub: 1.2,
                     },
                 });
 
-                // Moon: arc from lower-left to top-center
-                approach.fromTo(moonEl,
-                    { left: moonStart.x, top: moonStart.y, opacity: 0 },
-                    {
-                        left: eclipsePos.x, top: eclipsePos.y, opacity: 1,
-                        ease: "power1.inOut", duration: 1
-                    },
-                    0
-                );
+                // Moon: arc from -80° to 0°
+                approach.to(moonProxy, {
+                    angle: ECLIPSE_ANGLE,
+                    opacity: 1,
+                    ease: "power2.inOut",
+                    duration: 1,
+                    onUpdate: updatePositions,
+                }, 0);
 
-                // Sun: arc from lower-right to top-center
-                approach.fromTo(sunEl,
-                    { left: sunStart.x, top: sunStart.y, opacity: 0 },
-                    {
-                        left: eclipsePos.x, top: eclipsePos.y, opacity: 1,
-                        ease: "power1.inOut", duration: 1
-                    },
-                    0
-                );
+                // Sun: arc from +80° to 0°
+                approach.to(sunProxy, {
+                    angle: ECLIPSE_ANGLE,
+                    opacity: 1,
+                    ease: "power2.inOut",
+                    duration: 1,
+                    onUpdate: updatePositions,
+                }, 0);
 
-                // Corona: appears in the last 8%
-                approach.fromTo(coronaEl,
-                    { opacity: 0 },
-                    { opacity: 1, ease: "power3.in", duration: 0.08 },
-                    0.92
-                );
-
-                // Light cone: appears in the last 6%
-                approach.fromTo(coneEl,
-                    { opacity: 0 },
-                    { opacity: 1, ease: "power2.in", duration: 0.06 },
-                    0.94
-                );
-
-                // ── PHASE 2 — RETREAT  (Sponsors bottom → Register) ──
+                // ── PHASE 2 — RETREAT (starts when Panasonic is in view) ──
+                // Sun and moon part as scroll reaches the Panasonic card area
+                // Everything FULLY gone before sponsor section bottom
                 const retreat = gsap.timeline({
                     scrollTrigger: {
                         trigger: sponsorsEl,
-                        start: "bottom 60%",
-                        endTrigger: registerEl,
-                        end: "top 50%",
+                        start: "top 10%",    // when sponsors title reaches near top
+                        end: "bottom 60%",    // done well before sponsors section ends
                         scrub: 1,
                     },
                 });
 
-                retreat.to(moonEl, {
-                    left: moonStart.x, top: moonStart.y, opacity: 0,
-                    ease: "power1.inOut", duration: 1
+                // Moon returns to a moderate angle
+                retreat.to(moonProxy, {
+                    angle: -45,
+                    opacity: 0,
+                    ease: "power1.inOut",
+                    duration: 1,
+                    onUpdate: updatePositions,
                 }, 0);
-                retreat.to(sunEl, {
-                    left: sunStart.x, top: sunStart.y, opacity: 0,
-                    ease: "power1.inOut", duration: 1
+
+                // Sun returns to a moderate angle
+                retreat.to(sunProxy, {
+                    angle: 45,
+                    opacity: 0,
+                    ease: "power1.inOut",
+                    duration: 1,
+                    onUpdate: updatePositions,
                 }, 0);
-                retreat.to(coronaEl, { opacity: 0, ease: "power2.out", duration: 0.3 }, 0);
-                retreat.to(coneEl, { opacity: 0, ease: "power2.out", duration: 0.4 }, 0);
+
+                // Corona and cone opacity handled by updatePositions automatically
+                // But force them to 0 at end as a safety net
+                retreat.set(coronaEl, { opacity: 0 }, 1);
+                retreat.set(coneEl, { opacity: 0 }, 1);
 
             }, container);
 
@@ -164,7 +188,6 @@ export default function GlobalEclipseOverlay() {
 
     return (
         <div ref={containerRef} className="global-eclipse">
-            {/* Moon — starts lower-left, arcs to noon */}
             <img
                 ref={moonRef}
                 src="/celestial/moon.svg"
@@ -173,8 +196,6 @@ export default function GlobalEclipseOverlay() {
                 draggable={false}
                 aria-hidden="true"
             />
-
-            {/* Sun — starts lower-right, arcs to noon */}
             <img
                 ref={sunRef}
                 src="/celestial/sun.svg"
@@ -183,11 +204,7 @@ export default function GlobalEclipseOverlay() {
                 draggable={false}
                 aria-hidden="true"
             />
-
-            {/* Corona glow — visible only at eclipse */}
             <div ref={coronaRef} className="global-eclipse__corona" />
-
-            {/* Light cone — warm spotlight on sponsors */}
             <div ref={coneRef} className="global-eclipse__lightcone" />
         </div>
     );

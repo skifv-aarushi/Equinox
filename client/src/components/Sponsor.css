@@ -6,15 +6,6 @@
 .sponsor__main-row {
     display: flex;
     justify-content: center;
-    margin-bottom: var(--space-lg);
-}
-
-/* ── Other sponsors row ── */
-.sponsor__other-row {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: var(--space-md);
 }
 
 /* ── Shared card base ── */
@@ -82,22 +73,6 @@
     border-color: rgba(201, 169, 110, 0.2);
 }
 
-/* ── Other sponsor card size ── */
-.sponsor__other-row .sponsor__logo-card {
-    width: clamp(130px, 17vw, 200px);
-    height: clamp(88px, 10vw, 118px);
-    background: rgba(155, 162, 220, 0.88);
-    border-color: rgba(201, 169, 110, 0.2);
-    backdrop-filter: blur(16px) brightness(1.9);
-    -webkit-backdrop-filter: blur(16px) brightness(1.9);
-}
-
-.sponsor__other-row .sponsor__logo-card:hover {
-    background: rgba(155, 162, 220, 0.96);
-    backdrop-filter: blur(16px) brightness(2.1);
-    -webkit-backdrop-filter: blur(16px) brightness(2.1);
-}
-
 /* ── Logo image ── */
 .sponsor__logo-img {
     width: 72%;
@@ -114,13 +89,9 @@
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-    .sponsor__other-row {
-        gap: var(--space-sm);
-    }
-
-    .sponsor__other-row .sponsor__logo-card {
-        width: clamp(110px, 38vw, 160px);
-        height: clamp(75px, 22vw, 100px);
+    .sponsor__logo-card--main {
+        width: clamp(240px, 70vw, 400px);
+        height: clamp(100px, 18vw, 140px);
     }
 }
 
@@ -128,10 +99,5 @@
     .sponsor__logo-card--main {
         width: clamp(220px, 80vw, 320px);
         height: clamp(90px, 22vw, 120px);
-    }
-
-    .sponsor__other-row .sponsor__logo-card {
-        width: clamp(100px, 40vw, 140px);
-        height: clamp(68px, 20vw, 90px);
     }
 }

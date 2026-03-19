@@ -137,6 +137,18 @@ export default function About() {
                 </div>
 
                 <div className="about__visual">
+                    {/* Equinox Logo */}
+                    <div className="about__equinox-logo-wrap">
+                        <img
+                            src="/equinox-logo.png"
+                            alt="Equinox '26"
+                            className="about__equinox-logo"
+                            draggable={false}
+                        />
+                    </div>
+
+                    <div className="about__logo-separator" />
+
                     {/* PNG Character Logo */}
                     <div ref={logoWrapRef} className="about__logo-wrap">
                         <div className="about__logo-text">
