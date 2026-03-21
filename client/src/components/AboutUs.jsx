@@ -113,7 +113,7 @@ export default function AboutUs() {
 
                     <div className="aboutus__card-stats">
                         <div className="aboutus__stat">
-                            <span className="aboutus__stat-num">10+</span>
+                            <span className="aboutus__stat-num">15+</span>
                             <span className="aboutus__stat-label">Years Active</span>
                         </div>
                         <div className="aboutus__stat">

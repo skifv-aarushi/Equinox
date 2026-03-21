@@ -66,6 +66,12 @@
     justify-content: center;
 }
 
+.faq__question:hover .faq__icon {
+    opacity: 1;
+    transform: scale(1.5);
+    filter: drop-shadow(0 0 10px rgba(219, 184, 120, 0.7));
+}
+
 .faq__item--open .faq__icon {
     opacity: 0.85;
     color: var(--gold-subtle);

@@ -125,12 +125,12 @@ export default function About() {
                         Where innovation meets infrastructure
                     </p>
                     <p>
-                        Equinox '26 is a 3-day hackathon centered on the theme of <strong>Smart Infrastructure</strong>,
+                        Equinox '26 is 60-Hour hackathon centered on the theme of <strong>Smart Infrastructure</strong>,
                         challenging teams to build solutions that make cities, homes, roads, and communities more intelligent, connected, and resilient.
                     </p>
                     <p>
                         Organized by <strong>RoboVITics</strong> and hosted at <strong>VIT Vellore</strong>, Equinox brings together coders, designers,
-                        and innovators from across the country for <strong>3 days</strong> of relentless building. Beyond the code and hardware,
+                        and innovators from across the country for <strong>60 hours</strong> of relentless building. Beyond the code and hardware,
                         Equinox is an ecosystem of rapid prototyping and high-stakes problem-solving.
                         It's where theoretical concepts meet real-world constraints, pushing participants to transcend traditional engineering boundaries.
                     </p>

@@ -2,7 +2,13 @@
    Timeline Section
    ═══════════════════════════════════════════════ */
 
-.timeline__track {
+.timeline {
+    font-size: 1.2rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+   .timeline__track {
     position: relative;
     max-width: 800px;
     margin: 0 auto;
@@ -48,16 +54,8 @@
     opacity: 1;
     transform: translateY(0);
     transition: opacity 0.4s ease, transform 0.4s ease, max-height 0.5s ease;
-    max-height: 600px;
-    overflow: hidden;
-}
-
-.timeline__stepper--hidden {
-    opacity: 0;
-    transform: translateY(-12px);
-    max-height: 0;
-    margin-bottom: 0;
-    pointer-events: none;
+    max-height: none;  
+    overflow: visible; 
 }
 
 /* Connecting horizontal line behind nodes */
@@ -78,7 +76,8 @@
     background: rgba(47, 58, 85, 0.25);
     border: 1px solid rgba(201, 169, 110, 0.12);
     border-radius: var(--radius-md, 12px);
-    padding: 1.2rem 0.9rem 1rem;
+    padding: 1.6rem 1.2rem 1rem;
+    min-height: 180px;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 
@@ -86,6 +85,7 @@
                 background 0.3s ease,
                 transform 0.3s ease,
                 box-shadow 0.3s ease;
+    transform: scale(1.03);
     overflow: hidden;
 }
 
@@ -118,8 +118,8 @@
 
 /* Node icon */
 .timeline__step-node {
-    width: 40px;
-    height: 40px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     border: 1.5px solid rgba(201, 169, 110, 0.3);
     background: rgba(30, 35, 55, 0.6);
@@ -147,6 +147,11 @@
     transition: opacity 0.3s ease;
 }
 
+.timeline__step-icon svg {
+    width: 26px;
+    height: 26px;
+}
+
 .timeline__step:hover .timeline__step-icon {
     opacity: 1;
 }
@@ -155,7 +160,7 @@
 .timeline__step-label {
     display: block;
     font-family: var(--font-heading, 'Cinzel', serif);
-    font-size: 0.7rem;
+    font-size: 0.95rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--marble, #e8e0d0);
@@ -164,7 +169,7 @@
 
 .timeline__step-date {
     display: block;
-    font-size: 0.6rem;
+    font-size: 0.85rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--gold-subtle, #c9a96e);
@@ -179,7 +184,7 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.5rem;
     width: 100%;
 }
 
@@ -201,7 +206,7 @@
 }
 
 .timeline__step-event-name {
-    font-size: 0.72rem;
+    font-size: 0.9rem;
     opacity: 0.7;
     line-height: 1.35;
     color: var(--text-primary, #e8e0d0);
@@ -336,7 +341,10 @@
 
 .timeline__card {
     max-width: 300px;
-    padding: var(--space-md);
+
+    padding: 1.2rem 1.1rem;  /* UPDATED (was var(--space-md)) */
+    min-height: 140px;       /* ADDED (prevents cramped look) */
+
     background: rgba(47, 58, 85, 0.32);
     border: 1px solid rgba(201, 169, 110, 0.18);
     border-radius: var(--radius-md);
@@ -373,7 +381,7 @@
 .timeline__time {
     display: block;
     font-family: var(--font-heading);
-    font-size: 0.6rem;
+    font-size: 0.85rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--gold-subtle);
@@ -382,13 +390,13 @@
 }
 
 .timeline__event-title {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     margin-bottom: 0.3rem;
     letter-spacing: 0.08em;
 }
 
 .timeline__event-desc {
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     opacity: 0.55;
     line-height: 1.6;
 }
@@ -466,6 +474,8 @@
         text-align: left;
         padding: 0.9rem 1rem;
         gap: 0.8rem;
+        margin: 2rem auto; 
+        padding: 1rem;   
     }
 
     .timeline__step-node {
@@ -508,15 +518,16 @@
 
 @media (max-width: 480px) {
     .timeline__card {
-        padding: var(--space-sm);
+        padding: 0.9rem 0.8rem;   
+        min-height: auto; 
     }
 
     .timeline__event-title {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
     }
 
     .timeline__event-desc {
-        font-size: 0.75rem;
+        font-size: 0.8rem;
     }
 
     .timeline__step {
@@ -524,6 +535,6 @@
     }
 
     .timeline__step-event-name {
-        font-size: 0.68rem;
+        font-size: 0.75rem;
     }
 }

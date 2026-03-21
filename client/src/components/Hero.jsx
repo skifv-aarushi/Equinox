@@ -52,7 +52,7 @@ export default function Hero() {
 
             <div className="hero__content page-enter">
                 <p className="hero__pre-title accent-text">
-                    A 3-Day Hackathon by RoboVITics
+                   A 60-Hour Hackathon by RoboVITics
                 </p>
 
                 <h1 className="hero__title" style={{alignItems:'center',justifyContent:'center',display:'flex'}}>
