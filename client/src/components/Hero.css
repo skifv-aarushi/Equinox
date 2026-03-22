@@ -50,7 +50,7 @@
     font-size: clamp(0.8rem, 1.2vw, 1rem);
     color: var(--gold-subtle);
     opacity: 0.7;
-    margin: 0 auto var(--space-sm);
+    margin: 0 auto 0.3rem;
     letter-spacing: 0.1em;
     text-align: center;
     width: 100%;
@@ -58,20 +58,23 @@
 
 .hero__title {
     font-size: clamp(3rem, 12vw, 9rem);
-    letter-spacing: 0.25em;
-    margin-bottom: var(--space-md);
+    letter-spacing: 0.04em;
+    margin-bottom: 0;
     line-height: 1;
     text-align: center;
+    gap: 0;
 }
 
-/* Duality: EQUI is slightly lighter, NOX slightly darker */
+/* EQUI — bright warm gold matching the SVG's #FEEB90, with metallic shimmer */
 .hero__title-equi {
     background: linear-gradient(90deg,
-        var(--mist)       0%,
-        var(--gold-subtle) 40%,
-        var(--mist)       55%,
-        var(--mist)       100%);
-    background-size: 250% auto;
+        #FEEB90 0%,
+        #fff5c0 20%,
+        #FEEB90 40%,
+        #d4a82a 60%,
+        #FEEB90 80%,
+        #fff5c0 100%);
+    background-size: 300% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -79,17 +82,44 @@
     animation-delay: 1.6s;
 }
 
+/* N and X — pure white matching the SVG */
 .hero__title-nox {
-    color: var(--marble);
-    opacity: 0.65;
-    text-shadow: 0 0 60px rgba(201, 169, 110, 0.06);
+    color: #ffffff;
+    opacity: 1;
+}
+
+/* ── O-letter image in EQUINOX title ── */
+.hero__title-o {
+    height: 1.05em;
+    width: auto;
+    display: block;
+    align-self: center;
+    margin-top: -0.07em;
+    filter: drop-shadow(0 0 16px rgba(120, 170, 255, 0.5));
+}
+
+/* ── Cobrand logo (AnchorPanasonic) — sits above the EQUINOX title ── */
+.hero__cobrand {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.4rem;
+    animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.25s;
+}
+
+.hero__cobrand-logo {
+    height: clamp(36px, 5vw, 64px);
+    width: auto;
+    object-fit: contain;
+    opacity: 0.85;
 }
 
 .hero__subtitle {
     font-size: clamp(0.9rem, 1.3vw, 1.1rem);
     opacity: 0.6;
     max-width: min(55ch, 90vw);
-    margin: 0 auto var(--space-lg);
+    margin: 0 auto 0.8rem;
     line-height: 1.8;
 }
 
@@ -129,7 +159,11 @@
 
 @media (max-width: 768px) {
     .hero__title {
-        letter-spacing: 0.15em;
+        letter-spacing: 0.02em;
+    }
+
+    .hero__cobrand-logo {
+        height: clamp(28px, 7vw, 48px);
     }
 
     .hero__actions {
@@ -159,8 +193,8 @@
     display: flex;
     justify-content: center;
     gap: clamp(0.6rem, 2vw, 1.2rem);
-    margin-top: 0.4rem;
-    margin-bottom: var(--space-md);
+    margin-top: 0.6rem;
+    margin-bottom: 0.8rem;
 }
 
 /* glass tiles */
@@ -224,6 +258,7 @@
 }
 
 .hero__title__h2 {
+    letter-spacing: 0.04em;
     animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
     animation-delay: 0.65s;
 }

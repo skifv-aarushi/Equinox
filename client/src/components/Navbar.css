@@ -37,22 +37,23 @@
 .navbar__logo {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.1rem;
     text-decoration: none;
 }
 
-.navbar__logo-icon {
-    font-size: 1.4rem;
-    color: var(--gold-subtle);
-    opacity: 0.7;
+.navbar__logo-icon-img {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 6px rgba(201, 169, 110, 0.35));
 }
 
-.navbar__logo-text {
-    font-family: var(--font-heading);
-    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--mist);
+.navbar__logo-text-img {
+    height: 28px;
+    width: auto;
+    object-fit: contain;
+    filter: brightness(0.95);
 }
 
 .navbar__links {

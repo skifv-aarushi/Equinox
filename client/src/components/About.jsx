@@ -137,18 +137,6 @@ export default function About() {
                 </div>
 
                 <div className="about__visual">
-                    {/* Equinox Logo */}
-                    <div className="about__equinox-logo-wrap">
-                        <img
-                            src="/equinox-logo.png"
-                            alt="Equinox '26"
-                            className="about__equinox-logo"
-                            draggable={false}
-                        />
-                    </div>
-
-                    <div className="about__logo-separator" />
-
                     {/* PNG Character Logo */}
                     <div ref={logoWrapRef} className="about__logo-wrap">
                         <div className="about__logo-text">
@@ -185,7 +173,15 @@ export default function About() {
                             The Official Robotics Club of VIT
                         </span>
                     </div>
-
+                    {/* Equinox × Panasonic Logo */}
+                    <div className="about__equinox-logo-wrap">
+                        <img
+                            src="/sponsor-logos/equinoxpanasonic.svg"
+                            alt="Equinox '26 × Panasonic"
+                            className="about__equinox-logo"
+                            draggable={false}
+                        />
+                    </div>
                     <div className="about__stats">
                         <div className="about__stat">
                             <span className="about__stat-number">3</span>

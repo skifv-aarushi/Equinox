@@ -54,10 +54,23 @@ export default function Hero() {
                 <p className="hero__pre-title accent-text">
                    A 60-Hour Hackathon by RoboVITics
                 </p>
+                <br></br>
+                <div className="hero__cobrand">
+                    <img
+                        src="/sponsor-logos/anchorpanasonic.svg"
+                        alt="Anchor Panasonic"
+                        className="hero__cobrand-logo"
+                        draggable={false}
+                    />
+                </div>
+
+                <br></br>
 
                 <h1 className="hero__title" style={{alignItems:'center',justifyContent:'center',display:'flex'}}>
                     <span className="hero__title-equi">EQUI</span>
-                    <span className="hero__title-nox">NOX</span>
+                    <span className="hero__title-nox">N</span>
+                    <img src="/equinoxkaO.png" alt="O" className="hero__title-o" draggable={false} />
+                    <span className="hero__title-nox">X</span>
                 </h1>
                 <h2 className="hero__title__h2" style={{alignItems:'center',justifyContent:'center',display:'flex'}}>
                     <span className="hero__title-equi">20</span>
@@ -82,10 +95,7 @@ export default function Hero() {
                         <small>SEC</small>
                     </div>
                 </div>
-
-                <p className="hero__subtitle">
-                    Theme: Smart Infrastructure
-                </p>
+                <br></br>
 
                 <div className="hero__actions">
                     <button className="btn btn-primary" onClick={() => scrollTo('#register')}>

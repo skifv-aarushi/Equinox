@@ -61,49 +61,89 @@ const DAY_GROUPS = [
     { label: 'Day 3', date: 'April 3 · Friday', icon: ICONS.trophy, indices: [7, 8, 9] },
 ];
 
-export default function Timeline() {
-    const trackRef = useRef(null);
-    const expandRef = useRef(null);
-    const [expanded, setExpanded] = useState(false);
+const FADE_MS = 380; // must match CSS transition duration
 
-    /* ── Intersection observer for expanded cards ── */
+export default function Timeline() {
+    const trackRef    = useRef(null);
+    const stepperRef  = useRef(null);
+    const expandedRef = useRef(null);
+    const timerRef    = useRef(null);
+
+    // isExpanded  — true means the full-timeline div is in-flow (height: auto)
+    // stepperShow — true means stepper has opacity 1
+    // expandShow  — true means expanded has opacity 1
+    const [isExpanded,  setIsExpanded]  = useState(false);
+    const [stepperShow, setStepperShow] = useState(true);
+    const [expandShow,  setExpandShow]  = useState(false);
+
+    /* ── Intersection observer — fires once expanded enters DOM ── */
     useEffect(() => {
-        if (!expanded) return;
+        if (!isExpanded) return;
         const track = trackRef.current;
         if (!track) return;
 
-        // Small delay so DOM is rendered
         const raf = requestAnimationFrame(() => {
             const cards = track.querySelectorAll(".timeline__item:not(.show)");
-            const cardObserver = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add("show");
-                            cardObserver.unobserve(entry.target);
-                        }
-                    });
-                },
+            const obs = new IntersectionObserver(
+                (entries) => entries.forEach(e => {
+                    if (e.isIntersecting) { e.target.classList.add("show"); obs.unobserve(e.target); }
+                }),
                 { threshold: 0.15, rootMargin: "0px 0px -30px 0px" }
             );
-
-            cards.forEach(card => cardObserver.observe(card));
+            cards.forEach(c => obs.observe(c));
             track.classList.add("animate-line");
         });
 
         return () => cancelAnimationFrame(raf);
-    }, [expanded]);
+    }, [isExpanded]);
 
-    const handleToggle = () => {
-        if (expanded) {
-            // Scroll back to section top when collapsing
-            const section = document.getElementById('timeline');
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-        setExpanded(prev => !prev);
+    const handleExpand = () => {
+        clearTimeout(timerRef.current);
+
+        // 1. Fade stepper out
+        setStepperShow(false);
+
+        timerRef.current = setTimeout(() => {
+            // 2. Collapse stepper instantly, bring expanded into flow (opacity 0)
+            setIsExpanded(true);
+
+            // 3. Double rAF ensures browser has painted before we trigger fade-in
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                setExpandShow(true);
+            }));
+        }, FADE_MS);
     };
+
+    const handleCollapse = () => {
+        clearTimeout(timerRef.current);
+
+        // 1. Fade expanded out + scroll section into view
+        setExpandShow(false);
+        document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        timerRef.current = setTimeout(() => {
+            // 2. Remove expanded from flow, bring stepper back (opacity 0)
+            setIsExpanded(false);
+
+            // 3. Double rAF then fade stepper in
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                setStepperShow(true);
+            }));
+        }, FADE_MS);
+    };
+
+    /* Derive CSS class strings */
+    const stepperClass = [
+        'timeline__stepper',
+        !stepperShow  ? 'timeline__stepper--faded' : '',
+        isExpanded    ? 'timeline__stepper--gone'  : '',
+    ].filter(Boolean).join(' ');
+
+    const expandedClass = [
+        'timeline__expanded',
+        isExpanded   ? 'timeline__expanded--in-flow' : '',
+        expandShow   ? 'timeline__expanded--shown'   : '',
+    ].filter(Boolean).join(' ');
 
     return (
         <section className="timeline section" id="timeline">
@@ -123,7 +163,7 @@ export default function Timeline() {
             </div>
 
             {/* ── Collapsed Stepper View ── */}
-            <div className={`timeline__stepper ${expanded ? 'timeline__stepper--hidden' : ''}`}>
+            <div ref={stepperRef} className={stepperClass}>
                 <div className="timeline__stepper-line" />
                 {DAY_GROUPS.map((group, gi) => (
                     <div className="timeline__step" key={gi}>
@@ -147,13 +187,9 @@ export default function Timeline() {
             </div>
 
             {/* ── Expanded Full View ── */}
-            <div
-                ref={expandRef}
-                className={`timeline__expanded ${expanded ? 'timeline__expanded--open' : ''}`}
-            >
+            <div ref={expandedRef} className={expandedClass}>
                 <div ref={trackRef} className="timeline__track">
                     <div className="timeline__line" />
-
                     {EVENTS.map((event, i) => (
                         <div
                             className={`timeline__item ${i % 2 === 0 ? 'timeline__item--left' : 'timeline__item--right'}`}
@@ -162,7 +198,6 @@ export default function Timeline() {
                             <div className="timeline__node">
                                 <div className="timeline__node-ring" />
                             </div>
-
                             <div className="timeline__card">
                                 <span className="timeline__time">{event.day !== 'pre' ? `Day ${event.day} · ` : ''}{event.time}</span>
                                 <h3 className="timeline__event-title">{event.title}</h3>
@@ -176,11 +211,11 @@ export default function Timeline() {
             {/* ── Toggle Button ── */}
             <div className="timeline__toggle-wrap">
                 <button
-                    className={`timeline__toggle-btn ${expanded ? 'timeline__toggle-btn--collapse' : ''}`}
-                    onClick={handleToggle}
-                    aria-expanded={expanded}
+                    className={`timeline__toggle-btn ${isExpanded ? 'timeline__toggle-btn--collapse' : ''}`}
+                    onClick={isExpanded ? handleCollapse : handleExpand}
+                    aria-expanded={isExpanded}
                 >
-                    <span>{expanded ? 'Collapse' : 'View Full Schedule'}</span>
+                    <span>{isExpanded ? 'Collapse' : 'View Full Schedule'}</span>
                     <svg
                         className="timeline__toggle-icon"
                         viewBox="0 0 24 24"
@@ -190,7 +225,7 @@ export default function Timeline() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                     >
-                        <polyline points={expanded ? "18 15 12 9 6 15" : "6 9 12 15 18 9"} />
+                        <polyline points={isExpanded ? "18 15 12 9 6 15" : "6 9 12 15 18 9"} />
                     </svg>
                 </button>
             </div>
