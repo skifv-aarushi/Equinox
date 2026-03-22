@@ -2,6 +2,15 @@
  * Equinox — Express Server
  * Handles registration API
  */
+
+require('dotenv').config();
+const mongoose = require('mongoose');
+
+// Connect to MongoDB Atlas
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('Successfully connected to MongoDB Atlas!'))
+    .catch((error) => console.error('Database connection failed:', error));
+
 const express = require('express');
 const cors = require('cors');
 const registerRoutes = require('./routes/register');
