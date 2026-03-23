@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './RegisterCTA.css';
 
 /**
@@ -20,6 +21,7 @@ import './RegisterCTA.css';
  *  global mousedown listener can strip pointer-events from the button.
  */
 export default function RegisterCTA() {
+    const navigate = useNavigate();
     const [ctaMode, setCtaMode] = useState('corner'); // 'corner' | 'cursor' | 'hidden'
 
     // Mirrors ctaMode synchronously for the RAF closure (avoids stale closure capture)
@@ -44,14 +46,14 @@ export default function RegisterCTA() {
         setCtaMode(mode);
     }, []);
 
-    /* ── Scroll to #register — left-click only ── */
+    /* ── Navigate to /register — left-click only ── */
     const goToRegister = useCallback((e) => {
         // Only react to left mouse button (button 0)
         if (e.button !== 0) return;
         // Stop the global mousedown listener from firing (would strip pointer-events)
         e.stopPropagation();
-        document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' });
-    }, []);
+        navigate('/register');
+    }, [navigate]);
 
     /* ── Idle scheduling ── */
     const scheduleIdle = useCallback(() => {

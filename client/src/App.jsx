@@ -1,29 +1,33 @@
 import { useEffect } from 'react';
-import RegisterCTA from './components/RegisterCTA';
-import CustomCursor from './components/CustomCursor';
-import Navbar from './components/Navbar';
+import { Routes, Route, Link } from 'react-router-dom';
+import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
+
+// Landing-page sections
+import RegisterCTA      from './components/RegisterCTA';
+import CustomCursor     from './components/CustomCursor';
+import Navbar           from './components/Navbar';
 import ConstellationCanvas from './components/ConstellationCanvas';
 import GlobalEclipseOverlay from './components/GlobalEclipseOverlay';
-import Hero from './components/Hero';
-import About from './components/About';
-import AboutUs from './components/AboutUs';
-import Tracks from './components/Tracks';
-import Timeline from './components/Timeline';
-import Sponsor from './components/Sponsor';
-import FAQ from './components/FAQ';
-import RegisterForm from './components/RegisterForm';
-import Footer from './components/Footer';
+import Hero             from './components/Hero';
+import About            from './components/About';
+import AboutUs          from './components/AboutUs';
+import Tracks           from './components/Tracks';
+import Timeline         from './components/Timeline';
+import Sponsor          from './components/Sponsor';
+import FAQ              from './components/FAQ';
+import RegisterForm     from './components/RegisterForm';
+import Footer           from './components/Footer';
 
-export default function App() {
+// Registration portal
+import RegisterPage from './components/RegisterPage';
 
-  /* ── Scroll-based reveal observer ── */
+// ─── Landing page (existing) ───────────────────────────────────────────────
+function LandingPage() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
+          if (entry.isIntersecting) entry.target.classList.add('visible');
         });
       },
       { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
@@ -31,51 +35,61 @@ export default function App() {
 
     const els = document.querySelectorAll('.reveal');
     els.forEach((el) => observer.observe(el));
-
     return () => els.forEach((el) => observer.unobserve(el));
   }, []);
 
   return (
     <>
-      {/* Rendered outside the animated app div so position:fixed elements
-          live in the root stacking context — not trapped by transform/opacity */}
       <CustomCursor />
       <RegisterCTA />
       <Navbar />
-      {/* Constellation field — fixed, always visible, pointer-events pass-through */}
       <ConstellationCanvas />
-      {/* Global eclipse animation — fixed, tracks scroll across sections */}
       <GlobalEclipseOverlay />
 
       <div className="app page-enter">
-        {/* Fixed subtle star texture */}
         <div className="star-overlay" />
 
         <Hero />
-
         <div className="celestial-divider" />
         <About />
-
         <div className="celestial-divider" />
         <Sponsor />
-
         <div className="celestial-divider" />
         <Timeline />
-
         <div className="celestial-divider" />
         <Tracks />
-
         <div className="celestial-divider" />
         <AboutUs />
-
         <div className="celestial-divider" />
         <RegisterForm />
-
         <div className="celestial-divider" />
         <FAQ />
-
         <Footer />
       </div>
     </>
+  );
+}
+
+// ─── Protected /register route ─────────────────────────────────────────────
+function ProtectedRegister() {
+  return (
+    <>
+      <SignedIn>
+        <RegisterPage />
+      </SignedIn>
+      <SignedOut>
+        <RedirectToSignIn redirectUrl="/register" />
+      </SignedOut>
+    </>
+  );
+}
+
+// ─── App ───────────────────────────────────────────────────────────────────
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/"         element={<LandingPage />} />
+      <Route path="/register" element={<ProtectedRegister />} />
+    </Routes>
   );
 }

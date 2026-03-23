@@ -1,0 +1,45 @@
+/* ═══════════════════════════════════════════════
+   RegisterPage — layout wrapper
+   ═══════════════════════════════════════════════ */
+
+.rp-root {
+  min-height: 100vh;
+  position: relative;
+  /* Same gradient as the main app body */
+  background: linear-gradient(105deg,
+    var(--equinox-dark)  0%,
+    var(--primary-dark)  22%,
+    var(--primary-mid)   48%,
+    var(--equinox-mid)   70%,
+    var(--primary-light) 85%,
+    var(--equinox-light) 100%
+  );
+  background-attachment: fixed;
+  padding-top: var(--nav-height); /* clear fixed navbar */
+}
+
+/* ── Full-page loading state ── */
+.rp-loading {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  color: var(--marble);
+  opacity: 0.7;
+}
+
+.rp-loading__ring {
+  display: block;
+  width: 48px;
+  height: 48px;
+  border: 2px solid rgba(201, 169, 110, 0.2);
+  border-top-color: var(--gold-subtle);
+  border-radius: 50%;
+  animation: rpSpin 0.85s linear infinite;
+}
+
+@keyframes rpSpin {
+  to { transform: rotate(360deg); }
+}

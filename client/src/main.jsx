@@ -1,10 +1,22 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import { ClerkProvider } from '@clerk/clerk-react';
 import './styles/global.css';
 import App from './App';
 
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error('Missing VITE_CLERK_PUBLISHABLE_KEY in .env');
+}
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignInUrl="/register" afterSignUpUrl="/register">
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ClerkProvider>
   </StrictMode>
 );

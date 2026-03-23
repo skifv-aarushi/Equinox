@@ -1,66 +1,132 @@
-/**
- * Registration Controller
- * In-memory store for demo — swap with MongoDB/Mongoose for production
- */
+const Team = require('../models/Team');
 
-const registrations = [];
-
-function registerUser(req, res) {
-    const { name, email, phone, college, teamName, track } = req.body;
-
-    // Validate required fields
-    const missing = [];
-    if (!name) missing.push('name');
-    if (!email) missing.push('email');
-    if (!phone) missing.push('phone');
-    if (!college) missing.push('college');
-    if (!teamName) missing.push('teamName');
-    if (!track) missing.push('track');
-
-    if (missing.length > 0) {
-        return res.status(400).json({
-            success: false,
-            message: `Missing required fields: ${missing.join(', ')}`,
-        });
+const generateTeamCode = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
     }
+    return code;
+};
 
-    // Simple email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        return res.status(400).json({
-            success: false,
-            message: 'Please provide a valid email address.',
+// @desc    Create a new team (Leader Action)
+// @route   POST /api/teams/create
+const createTeam = async (req, res) => {
+    try {
+        // ADDED email here
+        const { teamName, leaderName, email, registrationNumber, phoneNumber } = req.body;
+
+        if (!teamName || !leaderName || !email || !registrationNumber || !phoneNumber) {
+            return res.status(400).json({ message: 'Please provide all required fields.' });
+        }
+
+        const existingTeam = await Team.findOne({ teamName });
+        if (existingTeam) {
+            return res.status(400).json({ message: 'Team name is already taken.' });
+        }
+
+        let teamCode;
+        let isUnique = false;
+        while (!isUnique) {
+            teamCode = generateTeamCode();
+            const existingCode = await Team.findOne({ teamCode });
+            if (!existingCode) isUnique = true;
+        }
+
+        const newTeam = await Team.create({
+            teamName,
+            teamCode,
+            members: [{
+                name: leaderName,
+                email, // Save email to DB
+                registrationNumber,
+                phoneNumber,
+                isLeader: true
+            }]
         });
-    }
 
-    // Check for duplicate email
-    if (registrations.find((r) => r.email === email)) {
-        return res.status(409).json({
-            success: false,
-            message: 'This email has already been registered.',
+        res.status(201).json({
+            message: 'Team created successfully!',
+            teamCode: newTeam.teamCode,
+            teamId: newTeam._id
         });
+
+    } catch (error) {
+        console.error('Error in createTeam:', error);
+        res.status(500).json({ message: 'Server error while creating team.' });
     }
+};
 
-    const registration = {
-        id: Date.now().toString(36) + Math.random().toString(36).slice(2),
-        name,
-        email,
-        phone,
-        college,
-        teamName,
-        track,
-        registeredAt: new Date().toISOString(),
-    };
+// @desc    Join an existing team (Member Action)
+// @route   POST /api/teams/join
+const joinTeam = async (req, res) => {
+    try {
+        // ADDED email here
+        const { teamCode, memberName, email, registrationNumber, phoneNumber } = req.body;
 
-    registrations.push(registration);
+        if (!teamCode || !memberName || !email || !registrationNumber || !phoneNumber) {
+            return res.status(400).json({ message: 'Please provide all required fields.' });
+        }
 
-    console.log(`✦ New registration: ${name} (${email}) — ${track}`);
+        const team = await Team.findOne({ teamCode: teamCode.toUpperCase() });
 
-    return res.status(201).json({
-        success: true,
-        message: 'Registration successful. Your celestial coordinates have been recorded.',
-        data: { id: registration.id },
-    });
-}
+        if (!team) {
+            return res.status(404).json({ message: 'Invalid Team Code. Team not found.' });
+        }
 
-module.exports = { registerUser };
+        if (team.members.length >= 5) {
+            return res.status(400).json({ message: 'This team has reached the limit of 5 members.' });
+        }
+
+        const isAlreadyMember = team.members.some(
+            (member) => member.registrationNumber === registrationNumber || member.email === email
+        );
+        if (isAlreadyMember) {
+            return res.status(400).json({ message: 'You are already registered in this team.' });
+        }
+
+        team.members.push({
+            name: memberName,
+            email, // Save email to DB
+            registrationNumber,
+            phoneNumber,
+            isLeader: false
+        });
+
+        await team.save();
+
+        res.status(200).json({
+            message: 'Successfully joined the team!',
+            teamName: team.teamName,
+            memberCount: team.members.length
+        });
+
+    } catch (error) {
+        console.error('Error in joinTeam:', error);
+        res.status(500).json({ message: 'Server error while joining team.' });
+    }
+};
+
+// @desc    Get team by user email
+// @route   GET /api/teams/user/:email
+const getTeamByUserEmail = async (req, res) => {
+    try {
+        const { email } = req.params;
+        const team = await Team.findOne({ "members.email": email });
+
+        if (!team) {
+            return res.status(404).json({ message: "No team found for this user." });
+        }
+
+        res.status(200).json(team);
+    } catch (error) {
+        console.error("Error fetching team:", error);
+        res.status(500).json({ error: "Server error while fetching team." });
+    }
+};
+
+module.exports = {
+    createTeam,
+    joinTeam,
+    getTeamByUserEmail // Export the new function
+};

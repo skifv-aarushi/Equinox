@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Added for routing
 import CelestialScene from '../three/CelestialScene';
 import './Hero.css';
 
 export default function Hero() {
     const canvasRef = useRef(null);
     const sceneRef = useRef(null);
+    const navigate = useNavigate(); // Added for routing
 
     // countdown state
     const [timeLeft, setTimeLeft] = useState({ d: 20, h: 0, m: 0, s: 0 });
@@ -52,17 +54,34 @@ export default function Hero() {
 
             <div className="hero__content page-enter">
                 <p className="hero__pre-title accent-text">
-                   A 60-Hour Hackathon by RoboVITics
+                    A 60-Hour Hackathon by RoboVITics
                 </p>
+                <br></br>
 
-                <h1 className="hero__title" style={{alignItems:'center',justifyContent:'center',display:'flex'}}>
+                {/* Restored Sponsor Logo */}
+                <div className="hero__cobrand">
+                    <img
+                        src="/sponsor-logos/anchorpanasonic.svg"
+                        alt="Anchor Panasonic"
+                        className="hero__cobrand-logo"
+                        draggable={false}
+                    />
+                </div>
+
+                <br></br>
+
+                <h1 className="hero__title" style={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
                     <span className="hero__title-equi">EQUI</span>
-                    <span className="hero__title-nox">NOX</span>
+                    {/* Restored Custom 'O' Image */}
+                    <span className="hero__title-nox">N</span>
+                    <img src="/equinoxkaO.png" alt="O" className="hero__title-o" draggable={false} />
+                    <span className="hero__title-nox">X</span>
                 </h1>
-                <h2 className="hero__title__h2" style={{alignItems:'center',justifyContent:'center',display:'flex'}}>
+                <h2 className="hero__title__h2" style={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
                     <span className="hero__title-equi">20</span>
                     <span className="hero__title-nox">26</span>
                 </h2>
+
                 {/* COUNTDOWN */}
                 <div className="hero__countdown">
                     <div className="time-block">
@@ -83,12 +102,14 @@ export default function Hero() {
                     </div>
                 </div>
 
+                {/* Added new subtitle */}
                 <p className="hero__subtitle">
                     Theme: Smart Infrastructure
                 </p>
 
                 <div className="hero__actions">
-                    <button className="btn btn-primary" onClick={() => scrollTo('#register')}>
+                    {/* Updated to use navigate('/register') instead of scrolling */}
+                    <button className="btn btn-primary" onClick={() => navigate('/register')}>
                         Register Now
                     </button>
                     <button className="btn" onClick={() => scrollTo('#tracks')}>
