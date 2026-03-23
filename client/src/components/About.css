@@ -55,7 +55,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-md);
+    gap: 0.5rem;
 }
 
 /* ── Equinox Logo ── */
@@ -67,25 +67,17 @@
 }
 
 .about__equinox-logo {
-    width: clamp(100px, 16vw, 160px);
+    width: clamp(180px, 28vw, 360px);
     height: auto;
     object-fit: contain;
-    border-radius: 50%;
-    filter: drop-shadow(0 0 16px rgba(201, 169, 110, 0.25));
+    border-radius: 0;
+    filter: drop-shadow(0 0 20px rgba(201, 169, 110, 0.3));
     transition: filter 0.4s ease, transform 0.4s ease;
 }
 
 .about__equinox-logo:hover {
-    filter: drop-shadow(0 0 24px rgba(201, 169, 110, 0.45));
-    transform: scale(1.05);
-}
-
-.about__logo-separator {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--gold-subtle);
-    opacity: 0.5;
+    filter: drop-shadow(0 0 32px rgba(201, 169, 110, 0.5));
+    transform: scale(1.02);
 }
 
 /* ── PNG Character Logo ── */
@@ -94,8 +86,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
-    margin-top: var(--space-lg);
+    gap: 0.5rem;
+    margin-top: 0;
 }
 
 .about__logo-text {
@@ -174,24 +166,22 @@
 
 .about__stats {
     display: flex;
-    gap: 1.5rem;
+    gap: 0.75rem;
     justify-content: center;
     align-items: center;
     flex-wrap: nowrap;
-    max-width: 600px;
-    margin: 0 auto;
-    /* ADD THIS ↓ */
     width: 100%;
+    margin-top: var(--space-sm);
 }
 
 .about__stat {
-    flex: 1;                 /* all boxes take equal space */
-    min-width: 150px;        /* prevent shrinking */
-    height: 140px;           /* same height */
+    flex: 1;
+    min-width: 0;
+    height: 88px;
     text-align: center;
-    padding: 1rem;
-    border: 1.5px solid rgba(201, 169, 110, 0.5);
-    border-radius: 12px;
+    padding: 0.6rem 0.5rem;
+    border: 1px solid rgba(201, 169, 110, 0.4);
+    border-radius: 10px;
     background: rgba(201, 169, 110, 0.05);
     transition: all 0.3s ease;
 
@@ -204,7 +194,7 @@
 .about__stat-number {
     display: block;
     font-family: var(--font-heading);
-    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
     color: var(--mist);
     letter-spacing: 0.05em;
     width: 100%;
@@ -220,17 +210,18 @@
 
 .about__stat:hover {
     border-color: var(--gold-subtle);
-    box-shadow: 0 0 20px rgba(201, 169, 110, 0.25);
-    transform: translateY(-4px);
+    box-shadow: 0 0 14px rgba(201, 169, 110, 0.2);
+    transform: translateY(-3px);
 }
 
 .about__stat-label {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     opacity: 0.5;
     width: 100%;
     text-align: center;
+    margin-top: 0.2rem;
 }
 
 @media (max-width: 1024px) {

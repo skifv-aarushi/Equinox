@@ -56,26 +56,10 @@ export default function Hero() {
                 <p className="hero__pre-title accent-text">
                     A 60-Hour Hackathon by RoboVITics
                 </p>
-                <br></br>
-
-                {/* Restored Sponsor Logo */}
-                <div className="hero__cobrand">
-                    <img
-                        src="/sponsor-logos/anchorpanasonic.svg"
-                        alt="Anchor Panasonic"
-                        className="hero__cobrand-logo"
-                        draggable={false}
-                    />
-                </div>
-
-                <br></br>
 
                 <h1 className="hero__title" style={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
                     <span className="hero__title-equi">EQUI</span>
-                    {/* Restored Custom 'O' Image */}
-                    <span className="hero__title-nox">N</span>
-                    <img src="/equinoxkaO.png" alt="O" className="hero__title-o" draggable={false} />
-                    <span className="hero__title-nox">X</span>
+                    <span className="hero__title-nox">NOX</span>
                 </h1>
                 <h2 className="hero__title__h2" style={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
                     <span className="hero__title-equi">20</span>
@@ -102,7 +86,6 @@ export default function Hero() {
                     </div>
                 </div>
 
-                {/* Added new subtitle */}
                 <p className="hero__subtitle">
                     Theme: Smart Infrastructure
                 </p>

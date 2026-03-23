@@ -71,6 +71,7 @@ export default function GlobalEclipseOverlay() {
 
             const moonProxy = { angle: MOON_START_ANGLE, opacity: 0 };
             const sunProxy  = { angle: SUN_START_ANGLE, opacity: 0 };
+            const coneProxy = { alpha: 1 }; // multiplier faded by its own ScrollTrigger
 
             function updatePositions() {
                 // Update moon position
@@ -101,7 +102,7 @@ export default function GlobalEclipseOverlay() {
                 }
 
                 coronaEl.style.opacity = haloOpacity;
-                coneEl.style.opacity = haloOpacity * 0.9; // cone slightly less intense
+                coneEl.style.opacity = haloOpacity * 0.9 * coneProxy.alpha;
             }
 
             // Set initial positions (hidden)
@@ -110,12 +111,13 @@ export default function GlobalEclipseOverlay() {
             const ctx = gsap.context(() => {
 
                 // ── PHASE 1 — APPROACH (About section → Sponsors title area) ──
+                // Eclipse peaks EXACTLY when the sponsors section top hits the viewport top
                 const approach = gsap.timeline({
                     scrollTrigger: {
                         trigger: aboutEl,
                         start: "top 60%",
                         endTrigger: sponsorsEl,
-                        end: "top 20%",
+                        end: "top top",
                         scrub: 1.2,
                     },
                 });
@@ -138,14 +140,13 @@ export default function GlobalEclipseOverlay() {
                     onUpdate: updatePositions,
                 }, 0);
 
-                // ── PHASE 2 — RETREAT (starts when Panasonic is in view) ──
-                // Sun and moon part as scroll reaches the Panasonic card area
-                // Everything FULLY gone before sponsor section bottom
+                // ── PHASE 2 — RETREAT (briefly after eclipse peak) ──
+                // Hold eclipse at peak as sponsors section enters, then retreat
                 const retreat = gsap.timeline({
                     scrollTrigger: {
                         trigger: sponsorsEl,
-                        start: "top 10%",    // when sponsors title reaches near top
-                        end: "bottom 60%",    // done well before sponsors section ends
+                        start: "top -15%",   // start after sponsors has scrolled 15% of vh past viewport top
+                        end: "bottom 20%",   // fully gone before sponsors section ends
                         scrub: 1,
                     },
                 });
@@ -172,6 +173,19 @@ export default function GlobalEclipseOverlay() {
                 // But force them to 0 at end as a safety net
                 retreat.set(coronaEl, { opacity: 0 }, 1);
                 retreat.set(coneEl, { opacity: 0 }, 1);
+
+                // ── Lightcone fade — visible at eclipse peak, gone almost immediately on scroll ──
+                gsap.to(coneProxy, {
+                    alpha: 0,
+                    ease: "power2.in",
+                    onUpdate: updatePositions,
+                    scrollTrigger: {
+                        trigger: sponsorsEl,
+                        start: "top top",      // full at eclipse peak (sponsors top hits viewport)
+                        end: "top -18%",       // gone after scrolling ~18vh into the section
+                        scrub: 0.6,
+                    },
+                });
 
             }, container);
 

@@ -31,8 +31,8 @@ export default function Navbar() {
         <nav className={`navbar${scrolled ? ' navbar--scrolled' : ''}`} id="navbar">
             <div className="navbar__inner">
                 <a href="#" className="navbar__logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                    <span className="navbar__logo-icon">☉</span>
-                    <span className="navbar__logo-text">Equinox</span>
+                    <img src="/equinox-logo.png" alt="" className="navbar__logo-icon-img" draggable={false} />
+                    <img src="/equinoxnav.png" alt="Equinox" className="navbar__logo-text-img" draggable={false} />
                 </a>
 
                 <button
