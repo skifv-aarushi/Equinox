@@ -3,25 +3,25 @@ import './About.css';
 
 /* roboVITics — one entry per character in display order */
 const CHARS = [
-    { png: '/logo-chars/r.png',       key: 'r0' },
-    { png: '/logo-chars/o.png',       key: 'o0' },
-    { png: '/logo-chars/b.png',       key: 'b'  },
-    { png: '/logo-chars/o.png',       key: 'o1' },
-    { png: '/logo-chars/V.png',       key: 'V'  },
-    { png: '/logo-chars/I.png',       key: 'I'  },
-    { png: '/logo-chars/T.png',       key: 'T'  },
-    { png: '/logo-chars/small_i.png', key: 'i'  },
-    { png: '/logo-chars/c.png',       key: 'c'  },
-    { png: '/logo-chars/s.png',       key: 's'  },
+    { png: '/logo-chars/r.png', key: 'r0' },
+    { png: '/logo-chars/o.png', key: 'o0' },
+    { png: '/logo-chars/b.png', key: 'b' },
+    { png: '/logo-chars/o.png', key: 'o1' },
+    { png: '/logo-chars/V.png', key: 'V' },
+    { png: '/logo-chars/I.png', key: 'I' },
+    { png: '/logo-chars/T.png', key: 'T' },
+    { png: '/logo-chars/small_i.png', key: 'i' },
+    { png: '/logo-chars/c.png', key: 'c' },
+    { png: '/logo-chars/s.png', key: 's' },
 ];
 
 export default function About() {
-    const sectionRef  = useRef(null);
+    const sectionRef = useRef(null);
     const logoWrapRef = useRef(null);
-    const imgRefs     = useRef([]);
-    const digitRefs   = useRef([]);
-    const timerRefs   = useRef([]);
-    const subRef      = useRef(null);
+    const imgRefs = useRef([]);
+    const digitRefs = useRef([]);
+    const timerRefs = useRef([]);
+    const subRef = useRef(null);
 
     /* ── Entrance animation — fires when logo wrap itself scrolls into view ── */
     useEffect(() => {
@@ -34,13 +34,13 @@ export default function About() {
 
             CHARS.forEach((_, i) => {
                 setTimeout(() => {
-                    const img   = imgRefs.current[i];
+                    const img = imgRefs.current[i];
                     const digit = digitRefs.current[i];
                     if (!img || !digit) return;
 
                     /* show digit first */
                     digit.style.opacity = '1';
-                    digit.textContent   = Math.floor(Math.random() * 10).toString();
+                    digit.textContent = Math.floor(Math.random() * 10).toString();
 
                     let ticks = 0;
                     const iv = setInterval(() => {
@@ -48,7 +48,7 @@ export default function About() {
                         if (++ticks >= 7) {
                             clearInterval(iv);
                             digit.style.opacity = '0';
-                            img.style.opacity   = '1';
+                            img.style.opacity = '1';
 
                             /* after the last char settles, fade in subscript */
                             if (i === CHARS.length - 1) {
@@ -69,11 +69,11 @@ export default function About() {
     /* ── Hover flicker ── */
     const startFlicker = (i) => {
         clearInterval(timerRefs.current[i]);
-        const img   = imgRefs.current[i];
+        const img = imgRefs.current[i];
         const digit = digitRefs.current[i];
         if (!img || !digit) return;
 
-        img.style.opacity   = '0';
+        img.style.opacity = '0';
         digit.style.opacity = '1';
 
         let ticks = 0;
@@ -85,7 +85,7 @@ export default function About() {
 
     const stopFlicker = (i) => {
         clearInterval(timerRefs.current[i]);
-        const img   = imgRefs.current[i];
+        const img = imgRefs.current[i];
         const digit = digitRefs.current[i];
         if (!img || !digit) return;
 
@@ -94,7 +94,7 @@ export default function About() {
             digit.textContent = Math.floor(Math.random() * 10).toString();
             if (++ticks >= 4) {
                 clearInterval(timerRefs.current[i]);
-                img.style.opacity   = '1';
+                img.style.opacity = '1';
                 digit.style.opacity = '0';
             }
         }, 50);
@@ -184,8 +184,8 @@ export default function About() {
                     </div>
                     <div className="about__stats">
                         <div className="about__stat">
-                            <span className="about__stat-number">3</span>
-                            <span className="about__stat-label">Days</span>
+                            <span className="about__stat-number">60</span>
+                            <span className="about__stat-label">Hours</span>
                         </div>
                         <div className="about__stat">
                             <span className="about__stat-number">6</span>
