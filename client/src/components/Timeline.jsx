@@ -8,7 +8,7 @@ const EVENTS = [
     /* ── Day 1 — April 1, Wednesday ── */
     { time: '08:00 – 10:00 AM', title: 'Check-in & Registration', desc: 'Participants arrive at the venue.', day: '1' },
     { time: '10:00 – 11:00 AM', title: 'Inauguration', desc: 'Opening Ceremony and Welcome Address.', day: '1' },
-    { time: '11:00 AM', title: 'Hack Commences', desc: '3 days of ideation, engineering, and innovation. The build phase begins.', day: '1' },
+    { time: '11:00 AM', title: 'Hack Commences', desc: '60 hours of ideation, engineering, and innovation. The build phase begins.', day: '1' },
     { time: '05:30 – 07:30 PM', title: 'Review 1', desc: 'Progress evaluation; Teams get feedback on their work so far.', day: '1' },
 
     /* ── Day 2 — April 2, Thursday ── */
