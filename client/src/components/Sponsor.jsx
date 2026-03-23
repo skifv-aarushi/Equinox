@@ -4,6 +4,7 @@ import './Sponsor.css';
 const MAIN_SPONSOR = {
     name: 'Panasonic',
     logo: '/sponsor-logos/anchorpanasonic.svg',
+    url: 'https://lsin.panasonic.com/',
     invert: false,   // black-on-white logo → invert for dark background
 };
 
@@ -43,12 +44,14 @@ export default function Sponsor() {
             {/* Main sponsor — full-width centred row */}
             <div className="sponsor__main-row">
                 <div className="sponsor__logo-card sponsor__logo-card--main">
-                    <img
-                        src={MAIN_SPONSOR.logo}
-                        alt={MAIN_SPONSOR.name}
-                        className={`sponsor__logo-img${MAIN_SPONSOR.invert ? ' sponsor__logo-img--invert' : ''}`}
-                        draggable={false}
-                    />
+                    <a href={MAIN_SPONSOR.url} target="_blank" rel="noopener noreferrer" className="sponsor__logo-a-img">
+                        <img
+                            src={MAIN_SPONSOR.logo}
+                            alt={MAIN_SPONSOR.name}
+                            className={`sponsor__logo-img${MAIN_SPONSOR.invert ? ' sponsor__logo-img--invert' : ''}`}
+                            draggable={false}
+                        />
+                    </a>
                 </div>
             </div>
         </section>

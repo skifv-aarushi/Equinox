@@ -65,21 +65,32 @@
     gap: 0;
 }
 
-/* EQUI — bright warm gold matching the SVG's #FEEB90, with metallic shimmer */
+/* EQUI — refined light-gold metallic shimmer */
 .hero__title-equi {
-    background: linear-gradient(90deg,
-        #FEEB90 0%,
-        #fff5c0 20%,
-        #FEEB90 40%,
-        #ae8f3c 60%,
-        #FEEB90 80%,
-        #fff5c0 100%);
-    background-size: 300% auto;
+    background: linear-gradient(
+        105deg,
+        #c9a84c 0%,
+        #dbbe6a 8%,
+        #eeda8c 16%,
+        #f7edba 24%,
+        #fdf8e4 30%,
+        #f4e89a 37%,
+        #e8d070 45%,
+        #d4b85c 52%,
+        #e8d070 59%,
+        #f4e89a 66%,
+        #fdf8e4 72%,
+        #f7edba 78%,
+        #eeda8c 86%,
+        #dbbe6a 93%,
+        #c9a84c 100%
+    );
+    background-size: 500% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: textShimmer 5s linear infinite;
-    animation-delay: 1.6s;
+    animation: textShimmer 7s linear infinite;
+    animation-delay: 1.2s;
 }
 
 /* N and X — pure white matching the SVG */

@@ -74,12 +74,11 @@
 }
 
 /* ── Logo image ── */
-.sponsor__logo-img {
+
+.sponsor__logo-a-img{
     width: 72%;
     height: 72%;
     object-fit: contain;
-    pointer-events: none;
-    user-select: none;
 }
 
 /* Invert dark-on-light logos for dark background */
