@@ -4,19 +4,19 @@ import './FAQ.css';
 const QUESTIONS = [
     {
         q: 'What is Equinox?',
-        a: 'Equinox is a 48-hour hackathon organized by RoboVITics. It brings together innovators, developers, and designers to build solutions across multiple tracks, all under the theme of cosmic balance and intellectual exploration.',
+        a: 'Equinox ’26 is a 60-hour hackathon centered on the theme of Smart Infrastructure, challenging teams to build solutions for smarter cities, homes, roads, and communities. Organized by RoboVITics at VIT Vellore, powered by Anchor by Panasonic, it brings together students to innovate, build, and solve real-world problems.',
     },
     {
         q: 'Who can participate?',
-        a: 'Equinox is open to all college students — undergraduates and postgraduates from any discipline. Teams of 2-4 members are ideal, though solo participants can also join and find teammates during the event.',
+        a: 'Equinox is open to all college students from any discipline, with team participation limited to 3–5 members. Solo participants are also welcome and can find teammates during the event.',
     },
     {
         q: 'Is there a registration fee?',
-        a: 'Details about registration fees will be announced soon. Keep an eye on our official channels for the latest updates.',
+        a: 'It’s absolutely free! Just bring your ideas, energy, and creativity, and you’re all set to participate.',
     },
     {
         q: 'What should I bring?',
-        a: 'Bring your laptop, charger, any hardware you plan to use, and your celestial ambition. We provide the Wi-Fi, workspace, meals, and caffeine to fuel your 48-hour journey.',
+        a: 'Bring your laptop and charger. We’ll provide Wi-Fi, workspace, and the environment you need to innovate.',
     },
     {
         q: 'Can I work on a pre-existing project?',
@@ -24,11 +24,11 @@ const QUESTIONS = [
     },
     {
         q: 'How will projects be judged?',
-        a: 'Projects will be evaluated on innovation, technical complexity, design quality, real-world impact, and presentation. Our panel of expert judges — the Cosmic Council — will assess each submission with care.',
+        a: 'Projects will be evaluated on innovation, technical complexity, design quality, real-world impact, and presentation. Our panel of expert judges will assess each submission with care.',
     },
     {
         q: 'Will there be prizes?',
-        a: 'Yes! Exciting prizes will be awarded across all tracks as well as special categories. Detailed prize information will be revealed closer to the event.',
+        a: 'Yes! An exciting prize pool of ₹2L+ will be awarded across all tracks.',
     },
 ];
 

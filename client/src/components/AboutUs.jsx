@@ -40,16 +40,10 @@ export default function AboutUs() {
 
                     <div className="aboutus__card-body">
                         <p>
-                            Vellore Institute of Technology (VIT) is one of India's most
-                            prestigious private technical universities, NAAC A++ accredited
-                            and consistently top-ranked by NIRF with a global alumni
-                            network spanning 125+ countries.
+                            Vellore Institute of Technology (VIT) stands as one of India’s leading private technical universities, accredited with NAAC A++ and consistently ranked among the top institutions by NIRF. With a vibrant global alumni network spanning over 125 countries, VIT continues to shape innovators and leaders worldwide.
                         </p>
                         <p>
-                            Founded in 1984, VIT's Vellore campus is home to Anna
-                            Auditorium, the grand venue of Equinox '26, and over 40,000
-                            students shaping the future across engineering, science,
-                            and technology.
+                            Established in 1984, the Vellore campus is a hub of excellence, hosting more than 40,000 students across diverse disciplines in engineering, science, and technology. It is also home to the iconic Anna Auditorium, the grand venue for Equinox ’26, where ideas, talent, and innovation converge.
                         </p>
                     </div>
 
@@ -94,20 +88,16 @@ export default function AboutUs() {
                     </div>
 
                     <p className="aboutus__card-tagline accent-text">
-                        Building the future, one circuit at a time
+                       Where Curiosity Meets Creation
                     </p>
 
                     <div className="aboutus__card-body">
                         <p>
-                            RoboVITics is the official Robotics Club of VIT Vellore. A
-                            community of tech enthusiasts united by curiosity, ambition,
-                            and hands-on innovation. Through workshops, seminars, and
-                            ground-breaking projects, we mentor the next generation of
-                            builders and roboticists.
+                             <strong>RoboVITics</strong>, RoboVITics is the official Robotics Club of VIT Vellore, a community of tech enthusiasts united by curiosity, ambition, and a shared goal of learning and striving to be the best. We aim to pave the way for budding roboticists to build projects and discover their interests through hands-on workshops, seminars, and practical sessions. Together, we collaborate on ground-breaking projects, fostering innovation while building teams enriched with experience and achievements.
                         </p>
                         <p>
                             <br></br>
-                            Equinox is RoboVITics' flagship event, invites innovators nationwide to build the future of smart technology.
+                          <strong>Equinox</strong>, our flagship event, invites innovators from across the nation to come together and shape the future of smart technology.
                         </p>
                     </div>
 

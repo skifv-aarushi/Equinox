@@ -119,21 +119,19 @@ export default function About() {
                 <h2>About Equinox</h2>
             </div>
 
-            <div className="about__grid reveal">
+           <div className="about__grid reveal">
                 <div className="about__text">
                     <p className="about__lead accent-text">
                         Where innovation meets infrastructure
                     </p>
-                    <p>
-                        Equinox '26 is 60-Hour hackathon centered on the theme of <strong>Smart Infrastructure</strong>,
-                        challenging teams to build solutions that make cities, homes, roads, and communities more intelligent, connected, and resilient.
-                    </p>
-                    <p>
-                        Organized by <strong>RoboVITics</strong> and hosted at <strong>VIT Vellore</strong>, Equinox brings together coders, designers,
-                        and innovators from across the country for <strong>60 hours</strong> of relentless building. Beyond the code and hardware,
-                        Equinox is an ecosystem of rapid prototyping and high-stakes problem-solving.
-                        It's where theoretical concepts meet real-world constraints, pushing participants to transcend traditional engineering boundaries.
-                    </p>
+                     <ul>
+                    <li>60 hours of non-stop innovation in Smart Infrastructure</li>
+                    <li>Innovate for cities, homes, and connected ecosystems</li>
+                    <li>Hosted by RoboVITics, VIT Vellore</li>
+                    <li>A space for collaboration, creativity, and innovation</li>
+                    <li>From idea to prototype in real-time</li>
+                    <li>Where theory meets high-stakes problem solving</li>
+                    </ul>
                 </div>
 
                 <div className="about__visual">
