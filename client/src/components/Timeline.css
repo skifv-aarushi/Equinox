@@ -173,8 +173,9 @@
 .timeline__step-label {
     display: block;
     font-family: var(--font-heading, 'Cinzel', serif);
-    font-size: 0.95rem;
-    letter-spacing: 0.18em;
+    font-size: 1.05rem;
+    letter-spacing: 0.22em;
+    text-shadow: 0 0 10px rgba(201, 169, 110, 0.25);
     text-transform: uppercase;
     color: var(--marble, #e8e0d0);
     margin-bottom: 0.2rem;
@@ -185,12 +186,16 @@
     font-size: 0.85rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--gold-subtle, #c9a96e);
-    opacity: 0.6;
+
+    color: #e6c27a; 
+    opacity: 0.8;
+
+    text-shadow: 0 0 6px rgba(201, 169, 110, 0.4);
+
     margin-bottom: 0.75rem;
 }
 
-/* Event list inside step */
+
 .timeline__step-events {
     list-style: none;
     padding: 0;
@@ -218,9 +223,23 @@
     box-shadow: 0 0 4px rgba(201, 169, 110, 0.35);
 }
 
+.timeline__step-event {
+    transition: transform 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+.timeline__step-event:hover {
+    transform: translateX(6px);
+}
+
+.timeline__step-event:hover .timeline__step-event-name {
+    color: var(--gold-subtle);
+    text-shadow: 0 0 8px rgba(201, 169, 110, 0.5);
+}
+
 .timeline__step-event-name {
-    font-size: 0.9rem;
-    opacity: 0.7;
+    font-size: 0.82rem;
+    opacity: 0.75;
     line-height: 1.35;
     color: var(--text-primary, #e8e0d0);
 }

@@ -56,10 +56,7 @@ export default function AboutUs() {
                             <span className="aboutus__stat-num">A++</span>
                             <span className="aboutus__stat-label">NAAC Grade</span>
                         </div>
-                        <div className="aboutus__stat">
-                            <span className="aboutus__stat-num">125+</span>
-                            <span className="aboutus__stat-label">Countries</span>
-                        </div>
+
                     </div>
                 </article>
 
@@ -104,16 +101,13 @@ export default function AboutUs() {
                     <div className="aboutus__card-stats">
                         <div className="aboutus__stat">
                             <span className="aboutus__stat-num">15+</span>
-                            <span className="aboutus__stat-label">Years Active</span>
+                            <span className="aboutus__stat-label">Years</span>
                         </div>
                         <div className="aboutus__stat">
                             <span className="aboutus__stat-num">500+</span>
                             <span className="aboutus__stat-label">Members</span>
                         </div>
-                        <div className="aboutus__stat">
-                            <span className="aboutus__stat-num">1500</span>
-                            <span className="aboutus__stat-label">Participants</span>
-                        </div>
+
                     </div>
                 </article>
 

@@ -16,13 +16,15 @@
     transition: background var(--transition-smooth),
         backdrop-filter var(--transition-smooth),
         box-shadow var(--transition-smooth);
-    background: transparent;
+    background: rgba(37, 46, 69, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .navbar--scrolled {
-    background: rgba(37, 46, 69, 0.92);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(37, 46, 69, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     box-shadow: 0 1px 0 var(--gold-line);
 }
 
@@ -68,7 +70,7 @@
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--marble);
-    opacity: 0.7;
+    opacity: 1;
     padding: 0.5rem 0.9rem;
     border-radius: var(--radius-sm);
     transition: all var(--transition-fast);

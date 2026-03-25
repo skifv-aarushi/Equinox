@@ -58,6 +58,7 @@ export default function Hero() {
                 </p>
 
                 <div className="hero__cobrand">
+                    <p className="hero__powered-by">powered by</p>
                     <img src="/sponsor-logos/anchorpanasonic.svg" alt="Anchor by Panasonic" className="hero__cobrand-logo" />
                 </div>
 

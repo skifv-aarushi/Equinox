@@ -47,7 +47,7 @@
 }
 
 .hero__pre-title {
-    font-size: clamp(0.8rem, 1.2vw, 1rem);
+    font-size: clamp(0.9rem, 1.4vw, 1.2rem);
     color: var(--gold-subtle);
     opacity: 0.7;
     margin: 0 auto 0.3rem;
@@ -101,11 +101,22 @@
 /* ── Cobrand logo (AnchorPanasonic) — sits above the EQUINOX title ── */
 .hero__cobrand {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.8rem;
     animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
     animation-delay: 0.25s;
+}
+
+.hero__powered-by {
+    font-size: clamp(0.7rem, 1vw, 0.9rem);
+    color: var(--marble);
+    opacity: 0.8;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: 0.1em;
+    text-align: center;
+    font-weight: 500;
 }
 
 .hero__cobrand-logo {

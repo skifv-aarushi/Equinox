@@ -28,10 +28,10 @@ export default function Footer() {
                         </div>
                         <div className="footer__col">
                             <h4 className="footer__col-title">Connect</h4>
-                            <a href="#" rel="noopener">Instagram</a>
-                            <a href="#" rel="noopener">Twitter</a>
-                            <a href="#" rel="noopener">Discord</a>
-                            <a href="#" rel="noopener">LinkedIn</a>
+                            <a href="https://www.instagram.com/robovitics/" target="_blank"  rel="noopener">Instagram</a>
+                            <a href="https://x.com/RoboVITics_HQ" target="_blank" rel="noopener">X</a>
+                            <a href="https://medium.com/@roboviticsvitvellore" target="_blank" rel="noopener">Medium</a>
+                            <a href="https://www.linkedin.com/company/robovitics/posts/?feedView=all" target="_blank" rel="noopener">LinkedIn</a>
                         </div>
                     </div>
                 </div>

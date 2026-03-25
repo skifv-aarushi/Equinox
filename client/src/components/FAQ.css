@@ -53,10 +53,18 @@
 .faq__icon {
     font-size: 1.2rem;
     color: var(--gold-subtle);
-    opacity: 0.4;
+
+
+    opacity: 1;
+    transform: scale(1.35);
+
+
+   filter: drop-shadow(0 0 18px rgba(219, 184, 120, 0.9));
+
     transition: transform var(--transition-smooth),
                 opacity var(--transition-smooth),
                 filter var(--transition-smooth);
+
     flex-shrink: 0;
     margin-left: var(--space-sm);
     min-width: 44px;
@@ -67,18 +75,17 @@
 }
 
 .faq__question:hover .faq__icon {
+    transform: scale(1.5); 
+    filter: drop-shadow(0 0 18px rgba(219, 184, 120, 1));
     opacity: 1;
-    transform: scale(1.5);
-    filter: drop-shadow(0 0 10px rgba(219, 184, 120, 0.7));
+
 }
 
 .faq__item--open .faq__icon {
-    opacity: 0.85;
-    color: var(--gold-subtle);
-    transform: scale(1.15);
-    filter: drop-shadow(0 0 6px rgba(201, 169, 110, 0.4));
+    transform: scale(1.5);
+    filter: drop-shadow(0 0 16px rgba(201, 169, 110, 0.8));
+    opacity: 1;
 }
-
 .faq__answer {
     max-height: 0;
     overflow: hidden;
