@@ -90,7 +90,7 @@ export default function AboutUs() {
 
                     <div className="aboutus__card-body">
                         <p>
-                             <strong>RoboVITics</strong>, RoboVITics is the official Robotics Club of VIT Vellore, a community of tech enthusiasts united by curiosity, ambition, and a shared goal of learning and striving to be the best. We aim to pave the way for budding roboticists to build projects and discover their interests through hands-on workshops, seminars, and practical sessions. Together, we collaborate on ground-breaking projects, fostering innovation while building teams enriched with experience and achievements.
+                             <strong>RoboVITics</strong>, is the official Robotics Club of VIT Vellore, a community of tech enthusiasts united by curiosity, ambition, and a shared goal of learning and striving to be the best. We aim to pave the way for budding roboticists to build projects and discover their interests through hands-on workshops, seminars, and practical sessions. Together, we collaborate on ground-breaking projects, fostering innovation while building teams enriched with experience and achievements.
                         </p>
                         <p>
                             <br></br>
