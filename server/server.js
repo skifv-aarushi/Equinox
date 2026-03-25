@@ -42,7 +42,7 @@ app.use((err, req, res, next) => {
 });
 
 // 7. SERVE STATIC FILES (React Frontend)
-const staticDir = path.join(__dirname, '../client/dist');
+const staticDir = path.join(__dirname, '../client');
 app.use(express.static(staticDir));
 
 // Catch-all to return the client index for any other request (for SPA routing)
