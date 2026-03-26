@@ -32,8 +32,8 @@
     border: none;
     cursor: pointer;
     font-family: var(--font-heading);
-    font-size: clamp(0.7rem, 1.5vw, 0.8rem);
-    letter-spacing: 0.1em;
+    font-size: clamp(0.86rem, 1.75vw, 1rem);
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--marble);
     text-align: left;
@@ -41,6 +41,12 @@
     transition: color var(--transition-fast),
                 background var(--transition-fast),
                 padding var(--transition-smooth);
+}
+
+.faq__question span:first-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .faq__question:hover {
@@ -102,9 +108,11 @@
 }
 
 .faq__answer p {
-    font-size: 0.85rem;
-    line-height: 1.8;
-    opacity: 0.6;
+    font-size: 1rem;
+    line-height: 1.9;
+    color: var(--mist);
+    opacity: 0.9;
+    letter-spacing: 0;
     padding-right: var(--space-lg);
 }
 
@@ -117,6 +125,6 @@
 @media (max-width: 480px) {
     .faq__answer p {
         padding-right: 0;
-        font-size: 0.8rem;
+        font-size: 0.92rem;
     }
 }

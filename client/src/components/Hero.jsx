@@ -60,6 +60,7 @@ export default function Hero() {
                 <div className="hero__cobrand">
                     <p className="hero__powered-by">powered by</p>
                     <img src="/sponsor-logos/anchorpanasonic.svg" alt="Anchor by Panasonic" className="hero__cobrand-logo" />
+                    <p className="hero__powered-by hero__powered-by--after-logo">presents</p>
                 </div>
 
                 <h1 className="hero__title" style={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>

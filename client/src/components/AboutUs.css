@@ -163,27 +163,34 @@
 
 .aboutus__card-title {
     font-family: var(--font-heading);
-    font-size: clamp(0.8rem, 1.3vw, 1rem);
-    letter-spacing: 0.15em;
+    font-size: clamp(1.05rem, 1.75vw, 1.35rem);
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--mist);
     margin: 0;
+    overflow-wrap: anywhere;
 }
 
 /* ── Tagline ── */
 .aboutus__card-tagline {
-    font-size: clamp(0.82rem, 1vw, 0.93rem);
+    font-size: clamp(1.12rem, 1.55vw, 1.36rem);
+    font-weight: 500;
     color: var(--gold-subtle);
-    opacity: 0.6;
+    opacity: 0.9;
+    text-shadow: 0 0 8px rgba(181, 155, 106, 0.2);
+    letter-spacing: 0.01em;
     margin-bottom: 0.7rem;
     display: block;
+    overflow-wrap: anywhere;
 }
 
 /* ── Body copy ── */
 .aboutus__card-body p {
-    font-size: clamp(0.8rem, 0.95vw, 0.9rem);
-    opacity: 0.8;
-    line-height: 1.65;
+    font-size: clamp(0.9rem, 1.05vw, 1rem);
+    color: var(--mist);
+    opacity: 0.92;
+    line-height: 1.82;
+    letter-spacing: 0;
     margin-bottom: 0.5rem;
     max-width: unset;
 }
@@ -212,6 +219,9 @@
     font-family: var(--font-heading);
     font-size: clamp(1rem, 1.8vw, 1.3rem);
     color: var(--mist);
+    font-weight: 600;
+    opacity: 1;
+    text-shadow: 0 0 10px rgba(245, 246, 243, 0.18);
     letter-spacing: 0.05em;
     transition: color var(--transition-smooth), text-shadow var(--transition-smooth);
 }
@@ -223,9 +233,18 @@
 
 .aboutus__stat-label {
     font-size: 0.62rem;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    opacity: 0.45;
+    color: var(--gold-subtle);
+    font-weight: 500;
+    opacity: 0.9;
+    text-shadow: 0 0 8px rgba(201, 169, 110, 0.22);
+}
+
+.aboutus__card-body strong {
+    color: var(--gold-subtle);
+    font-weight: 700;
+    opacity: 1;
 }
 
 /* ── Vertical divider column ── */

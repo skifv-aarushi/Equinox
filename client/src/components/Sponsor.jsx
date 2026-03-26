@@ -43,12 +43,18 @@ export default function Sponsor() {
             {/* Main sponsor — full-width centred row */}
             <div className="sponsor__main-row">
                 <div className="sponsor__logo-card sponsor__logo-card--main">
-                    <img
-                        src={MAIN_SPONSOR.logo}
-                        alt={MAIN_SPONSOR.name}
-                        className={`sponsor__logo-img${MAIN_SPONSOR.invert ? ' sponsor__logo-img--invert' : ''}`}
-                        draggable={false}
-                    />
+                    <a
+                        href="https://lsin.panasonic.com/switches-sockets"
+                        aria-label="Visit Anchor by Panasonic"
+                        className="sponsor__logo-link"
+                    >
+                        <img
+                            src={MAIN_SPONSOR.logo}
+                            alt={MAIN_SPONSOR.name}
+                            className={`sponsor__logo-img${MAIN_SPONSOR.invert ? ' sponsor__logo-img--invert' : ''}`}
+                            draggable={false}
+                        />
+                    </a>
                 </div>
             </div>
         </section>

@@ -2,6 +2,7 @@
    Register Section
    ═══════════════════════════════════════════════ */
 
+
 /* ── Outer card ─────────────────────────────── */
 .register__card {
     max-width: min(820px, 100%);
@@ -130,7 +131,7 @@
 .register__field label {
     font-size: 0.66rem;
     letter-spacing: 0.12em;
-    text-transform: uppercase;
+    text-transform: none !important;
     margin-bottom: 0.42rem;
     color: var(--marble);
     opacity: 0.52;
@@ -469,6 +470,11 @@
     opacity: 0.42;
     margin: 0 0 var(--space-md);
     line-height: 1.7;
+}
+
+.register__live-btn {
+    text-transform: none !important;
+    letter-spacing: 0.08em;
 }
 
 /* ═══════════════════════════════════════════════

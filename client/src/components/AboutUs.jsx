@@ -90,11 +90,11 @@ export default function AboutUs() {
 
                     <div className="aboutus__card-body">
                         <p>
-                             <strong>RoboVITics</strong>, RoboVITics is the official Robotics Club of VIT Vellore, a community of tech enthusiasts united by curiosity, ambition, and a shared goal of learning and striving to be the best. We aim to pave the way for budding roboticists to build projects and discover their interests through hands-on workshops, seminars, and practical sessions. Together, we collaborate on ground-breaking projects, fostering innovation while building teams enriched with experience and achievements.
+                             RoboVITics, RoboVITics is the official Robotics Club of VIT Vellore, a community of tech enthusiasts united by curiosity, ambition, and a shared goal of learning and striving to be the best. We aim to pave the way for budding roboticists to build projects and discover their interests through hands-on workshops, seminars, and practical sessions. Together, we collaborate on ground-breaking projects, fostering innovation while building teams enriched with experience and achievements.
                         </p>
                         <p>
                             <br></br>
-                          <strong>Equinox</strong>, our flagship event, invites innovators from across the nation to come together and shape the future of smart technology.
+                             Equinox, our flagship event, invites innovators from across the nation to come together and shape the future of smart technology.
                         </p>
                     </div>
 
@@ -106,6 +106,14 @@ export default function AboutUs() {
                         <div className="aboutus__stat">
                             <span className="aboutus__stat-num">500+</span>
                             <span className="aboutus__stat-label">Members</span>
+                        </div>
+                        <div className="aboutus__stat">
+                            <span className="aboutus__stat-num aboutus__stat-num--small">Best Club</span>
+                            <span className="aboutus__stat-label">2023</span>
+                        </div>
+                        <div className="aboutus__stat">
+                            <span className="aboutus__stat-num aboutus__stat-num--small">Elite Club</span>
+                            <span className="aboutus__stat-label">2024</span>
                         </div>
 
                     </div>

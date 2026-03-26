@@ -73,6 +73,14 @@
     border-color: rgba(201, 169, 110, 0.2);
 }
 
+.sponsor__logo-link {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
 /* ── Logo image ── */
 .sponsor__logo-img {
     width: 72%;

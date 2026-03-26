@@ -15,11 +15,11 @@ export default function RegisterForm() {
 
             <div className="reveal" style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
                 <button 
-                    className="btn btn-primary" 
+                    className="btn btn-primary register__live-btn" 
                     onClick={() => navigate('/register')}
                     style={{ fontSize: '1.2rem', padding: '1rem 3rem' }}
                 >
-                    Register Now
+                    Registrations Are Live
                 </button>
             </div>
         </section>

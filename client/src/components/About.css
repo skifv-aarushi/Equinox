@@ -37,7 +37,7 @@
 }
 
 .about__lead.accent-text {
-    font-size: clamp(1.175rem, 2.1vw, 1.45rem);
+    font-size: clamp(1.25rem, 2.3vw, 1.6rem);
 }
 
 .about__text p {
@@ -194,9 +194,9 @@
 .about__stat-number {
     display: block;
     font-family: var(--font-heading);
-    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    font-size: clamp(1.25rem, 2.8vw, 1.6rem);
     color: var(--mist);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.02em;
     width: 100%;
     text-align: center;
     font-variant-numeric: tabular-nums;
@@ -215,10 +215,12 @@
 }
 
 .about__stat-label {
-    font-size: 0.6rem;
-    letter-spacing: 0.15em;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     opacity: 0.5;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(245, 246, 243, 0.18);
     width: 100%;
     text-align: center;
     margin-top: 0.2rem;
@@ -264,7 +266,11 @@
     position: relative;
     padding-left: 26px;
     margin-bottom: 12px;
-    line-height: 1.6;
+    font-size: clamp(0.96rem, 1.25vw, 1.1rem);
+    line-height: 1.75;
+    letter-spacing: 0.005em;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 /* Gold diamond bullet */
