@@ -85,6 +85,8 @@ const generateTeamCode = () => {
     return code;
 };
 
+const VIT_EMAIL_DOMAIN = '@vitstudent.ac.in';
+
 // ─── POST /api/teams/create ───────────────────────────────────────────────────
 const createTeam = async (req, res) => {
     try {
@@ -92,6 +94,10 @@ const createTeam = async (req, res) => {
 
         if (!teamName || !leaderName || !email || !registrationNumber || !phoneNumber) {
             return res.status(400).json({ message: 'Please provide all required fields.' });
+        }
+
+        if (!email.endsWith(VIT_EMAIL_DOMAIN)) {
+            return res.status(400).json({ message: `Registration is restricted to ${VIT_EMAIL_DOMAIN} email addresses.` });
         }
 
         if (await Team.findOne({ teamName })) {
@@ -141,6 +147,10 @@ const joinTeam = async (req, res) => {
 
         if (!teamCode || !memberName || !email || !registrationNumber || !phoneNumber) {
             return res.status(400).json({ message: 'Please provide all required fields.' });
+        }
+
+        if (!email.endsWith(VIT_EMAIL_DOMAIN)) {
+            return res.status(400).json({ message: `Registration is restricted to ${VIT_EMAIL_DOMAIN} email addresses.` });
         }
 
         if (await Team.findOne({ 'members.email': email })) {

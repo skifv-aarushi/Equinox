@@ -252,6 +252,60 @@
 .rh-divider span::before { bottom: calc(100% + 10px); }
 .rh-divider span::after  { top: calc(100% + 10px); }
 
+/* ── Domain restriction block ── */
+.rh-domain-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+  max-width: 480px;
+  padding: var(--space-md) var(--space-md);
+  background: rgba(248, 113, 113, 0.05);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.rh-domain-block__icon {
+  font-size: 2rem;
+  color: #f87171;
+  line-height: 1;
+}
+
+.rh-domain-block__title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+
+.rh-domain-block__msg {
+  font-size: 0.88rem;
+  color: var(--marble);
+  opacity: 0.85;
+  line-height: 1.6;
+  max-width: 38ch;
+}
+
+.rh-domain-block__msg strong {
+  color: var(--gold-subtle);
+}
+
+.rh-domain-block__current {
+  font-size: 0.78rem;
+  color: var(--stone-grey);
+  max-width: none;
+}
+
+.rh-domain-block__current span {
+  font-family: 'Courier New', monospace;
+  color: #f87171;
+  opacity: 0.9;
+}
+
 /* ── VTOP checkbox ── */
 .rh-vtop {
   display: flex;

@@ -273,11 +273,17 @@ function JoinPanel() {
   );
 }
 
+const VIT_DOMAIN = '@vitstudent.ac.in';
+
 // ─── RegistrationHub ───────────────────────────────────────────────────────
 export default function RegistrationHub() {
+  const { user } = useUser();
+  const email = user?.primaryEmailAddress?.emailAddress ?? '';
+  const isVitEmail = email.endsWith(VIT_DOMAIN);
+
   return (
     <div className="rh-root">
-      <div className="rh-header reveal">
+      <div className="rh-header">
         <p className="rh-header__pre accent-text">Equinox 2026 · Registration</p>
         <h1 className="rh-header__title">Join the<br />Cosmos</h1>
         <p className="rh-header__sub">
@@ -285,13 +291,27 @@ export default function RegistrationHub() {
         </p>
       </div>
 
-      <div className="rh-panels">
-        <CreatePanel />
-        <div className="rh-divider">
-          <span>or</span>
+      {!isVitEmail ? (
+        <div className="rh-domain-block">
+          <span className="rh-domain-block__icon">⊗</span>
+          <h3 className="rh-domain-block__title">Access Restricted</h3>
+          <p className="rh-domain-block__msg">
+            Registration is only open to VIT students.<br />
+            Please sign in with your <strong>{VIT_DOMAIN}</strong> email address.
+          </p>
+          <p className="rh-domain-block__current">
+            Signed in as: <span>{email || '—'}</span>
+          </p>
         </div>
-        <JoinPanel />
-      </div>
+      ) : (
+        <div className="rh-panels">
+          <CreatePanel />
+          <div className="rh-divider">
+            <span>or</span>
+          </div>
+          <JoinPanel />
+        </div>
+      )}
     </div>
   );
 }

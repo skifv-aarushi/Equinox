@@ -280,7 +280,7 @@ export default function TeamDashboard() {
     <div className="td-root">
 
       {/* ── Hero band ── */}
-      <div className="td-hero reveal">
+      <div className="td-hero">
         <p className="td-hero__pre accent-text">Your Team · Equinox 2026</p>
 
         <h1 className="td-hero__teamname">{team.teamName}</h1>
@@ -327,7 +327,7 @@ export default function TeamDashboard() {
       <div className="celestial-divider" style={{ margin: '0 auto', maxWidth: 800 }} />
 
       {/* ── Members grid ── */}
-      <div className="td-section reveal">
+      <div className="td-section">
         <h2 className="td-section__title">
           Members
           <span className="td-section__count">{memberCount} / 4</span>
@@ -347,7 +347,7 @@ export default function TeamDashboard() {
       <div className="celestial-divider" style={{ margin: '0 auto', maxWidth: 800 }} />
 
       {/* ── Submission panel ── */}
-      <div className="td-section reveal">
+      <div className="td-section">
         <SubmissionPanel
           team={team}
           email={email}
@@ -359,7 +359,7 @@ export default function TeamDashboard() {
       <div className="celestial-divider" style={{ margin: '0 auto', maxWidth: 800 }} />
 
       {/* ── Component inventory ── */}
-      <div className="td-section reveal">
+      <div className="td-section">
         <InventoryPanel
           email={email}
           api={api}
