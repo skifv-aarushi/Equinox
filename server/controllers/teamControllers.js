@@ -92,7 +92,7 @@ const VIT_EMAIL_DOMAIN = '@vitstudent.ac.in';
 // ─── POST /api/teams/create ───────────────────────────────────────────────────
 const createTeam = async (req, res) => {
     try {
-        const { teamName, leaderName, email, registrationNumber, phoneNumber, vtopRegistered, track } = req.body;
+        const { teamName, leaderName, email, registrationNumber, phoneNumber, vtopRegistered, track, gender, hostelBlock, roomNumber } = req.body;
 
         if (!teamName || !leaderName || !email || !registrationNumber || !phoneNumber) {
             return res.status(400).json({ message: 'Please provide all required fields.' });
@@ -121,13 +121,16 @@ const createTeam = async (req, res) => {
             teamCode,
             trackChosen: track || '',
             members: [{
-                name: leaderName,
+                name:           leaderName,
                 email,
                 registrationNumber,
                 phoneNumber,
                 isLeader:       true,
                 vtopRegistered: !!vtopRegistered,
-                track:          track || ''
+                track:          track || '',
+                gender:         gender || 'other',
+                hostelBlock:    hostelBlock || '',
+                roomNumber:     roomNumber || ''
             }]
         });
 
@@ -147,7 +150,7 @@ const createTeam = async (req, res) => {
 // ─── POST /api/teams/join ─────────────────────────────────────────────────────
 const joinTeam = async (req, res) => {
     try {
-        const { teamCode, memberName, email, registrationNumber, phoneNumber, vtopRegistered, track } = req.body;
+        const { teamCode, memberName, email, registrationNumber, phoneNumber, vtopRegistered, track, gender, hostelBlock, roomNumber } = req.body;
 
         if (!teamCode || !memberName || !email || !registrationNumber || !phoneNumber) {
             return res.status(400).json({ message: 'Please provide all required fields.' });
@@ -181,7 +184,10 @@ const joinTeam = async (req, res) => {
             phoneNumber,
             isLeader:       false,
             vtopRegistered: !!vtopRegistered,
-            track:          track || ''
+            track:          track || '',
+            gender:         gender || 'other',
+            hostelBlock:    hostelBlock || '',
+            roomNumber:     roomNumber || ''
         });
 
         await team.save();
@@ -345,6 +351,58 @@ const unclaimComponent = async (req, res) => {
     }
 };
 
+// ─── POST /api/teams/claim-components (batch) ────────────────────────────────
+const submitComponentList = async (req, res) => {
+    try {
+        const { email, components } = req.body; // components: string[]
+
+        if (!Array.isArray(components)) {
+            return res.status(400).json({ message: 'components must be an array.' });
+        }
+
+        // Validate all names
+        const invalid = components.filter(n => !Object.prototype.hasOwnProperty.call(COMPONENT_INVENTORY, n));
+        if (invalid.length > 0) {
+            return res.status(400).json({ message: `Unknown component(s): ${invalid.join(', ')}` });
+        }
+
+        const team = await Team.findOne({ 'members.email': email });
+        if (!team) return res.status(404).json({ message: 'Team not found.' });
+
+        const previouslyClaimed = new Set(team.claimedComponents.map(c => c.name));
+        const newSet            = new Set(components);
+
+        // Check global stock for newly added components
+        for (const name of newSet) {
+            if (previouslyClaimed.has(name)) continue; // already held, no stock change
+            const globalClaimed = await Team.countDocuments({ 'claimedComponents.name': name });
+            if (globalClaimed >= COMPONENT_INVENTORY[name]) {
+                return res.status(400).json({ message: `"${name}" is out of stock.` });
+            }
+        }
+
+        // Rebuild claimedComponents — keep old claimedAt for existing items
+        const existingMap = {};
+        team.claimedComponents.forEach(c => { existingMap[c.name] = c.claimedAt; });
+
+        team.claimedComponents = components.map(name => ({
+            name,
+            claimedAt: existingMap[name] || new Date()
+        }));
+
+        await team.save();
+        syncToGoogleSheet(team).catch(() => {});
+
+        res.status(200).json({
+            message:           'Component list updated.',
+            claimedComponents: team.claimedComponents
+        });
+    } catch (error) {
+        console.error('Error in submitComponentList:', error);
+        res.status(500).json({ message: 'Server error while updating component list.' });
+    }
+};
+
 // ─── PATCH /api/teams/vtop ────────────────────────────────────────────────────
 const updateVtopStatus = async (req, res) => {
     try {
@@ -371,6 +429,7 @@ module.exports = {
     getInventory,
     claimComponent,
     unclaimComponent,
+    submitComponentList,
     updateVtopStatus,
     COMPONENT_INVENTORY
 };
