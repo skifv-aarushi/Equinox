@@ -94,6 +94,11 @@ export async function updateTeamVenue(api, teamId, venue) {
   return res.data;
 }
 
+export async function submitComponentList(api, payload) {
+  const res = await api.post('/teams/claim-components', payload);
+  return res.data;
+}
+
 export async function updateVtopStatus(api, payload) {
   const res = await api.patch('/teams/vtop', payload);
   return res.data;
