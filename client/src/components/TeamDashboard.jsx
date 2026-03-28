@@ -17,8 +17,7 @@ import { useTeam } from '../context/TeamContext';
 import {
   submitGdriveLink,
   fetchInventory,
-  claimComponent,
-  unclaimComponent,
+  submitComponentList,
   updateVtopStatus
 } from '../utils/api';
 import './TeamDashboard.css';
@@ -206,15 +205,21 @@ function SubmissionPanel({ team, email, api, onUpdate }) {
   );
 }
 
-// ─── Inventory panel ──────────────────────────────────────────────────────────
+// ─── Inventory panel (cart-based) ────────────────────────────────────────────
 function InventoryPanel({ email, api, onUpdate }) {
-  const [inventory, setInventory] = useState([]);
-  const [loadingItem, setLoadingItem] = useState(null);
+  const [inventory,   setInventory]   = useState([]);
+  const [cart,        setCart]        = useState(new Set()); // names in cart
+  const [savedCart,   setSavedCart]   = useState(new Set()); // last confirmed DB state
+  const [submitting,  setSubmitting]  = useState(false);
 
   const load = useCallback(async () => {
     try {
       const data = await fetchInventory(api, email);
-      setInventory(data.inventory || []);
+      const items = data.inventory || [];
+      setInventory(items);
+      const claimed = new Set(items.filter(i => i.teamHasClaimed).map(i => i.name));
+      setCart(claimed);
+      setSavedCart(claimed);
     } catch (err) {
       console.error('Failed to load inventory:', err.message);
     }
@@ -222,31 +227,29 @@ function InventoryPanel({ email, api, onUpdate }) {
 
   useEffect(() => { load(); }, [load]);
 
-  const handleClaim = async (componentName) => {
-    setLoadingItem(componentName);
-    try {
-      await claimComponent(api, { email, componentName });
-      toast.success(`${componentName} claimed!`);
-      await load();
-      onUpdate();
-    } catch (err) {
-      toast.error(err.message || 'Failed to claim component.');
-    } finally {
-      setLoadingItem(null);
-    }
+  const toggle = (name, outOfStock) => {
+    if (outOfStock) return;
+    setCart(prev => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name); else next.add(name);
+      return next;
+    });
   };
 
-  const handleUnclaim = async (componentName) => {
-    setLoadingItem(componentName);
+  const isDirty = cart.size !== savedCart.size || [...cart].some(n => !savedCart.has(n));
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
     try {
-      await unclaimComponent(api, { email, componentName });
-      toast.success(`${componentName} removed.`);
-      await load();
+      await submitComponentList(api, { email, components: Array.from(cart) });
+      toast.success('Component list saved!');
+      setSavedCart(new Set(cart));
       onUpdate();
+      await load();
     } catch (err) {
-      toast.error(err.message || 'Failed to remove component.');
+      toast.error(err.message || 'Failed to save component list.');
     } finally {
-      setLoadingItem(null);
+      setSubmitting(false);
     }
   };
 
@@ -260,40 +263,56 @@ function InventoryPanel({ email, api, onUpdate }) {
 
       <div className="td-inventory__grid">
         {inventory.map((item) => {
-          const outOfStock = item.remaining <= 0 && !item.teamHasClaimed;
-          const isLoading  = loadingItem === item.name;
+          const inCart     = cart.has(item.name);
+          const outOfStock = item.remaining <= 0 && !inCart;
 
           return (
             <div
               key={item.name}
-              className={`td-inv-item ${item.teamHasClaimed ? 'td-inv-item--claimed' : ''} ${outOfStock ? 'td-inv-item--empty' : ''}`}
+              className={`td-inv-item${inCart ? ' td-inv-item--selected' : ''}${outOfStock ? ' td-inv-item--empty' : ''}`}
             >
               <div className="td-inv-item__name">{item.name}</div>
               <div className="td-inv-item__stock">
-                <span className={`td-inv-item__remaining ${item.remaining === 0 ? 'td-inv-item__remaining--zero' : ''}`}>
+                <span className={`td-inv-item__remaining${item.remaining === 0 && !inCart ? ' td-inv-item__remaining--zero' : ''}`}>
                   {item.remaining} / {item.total} left
                 </span>
               </div>
-              {item.teamHasClaimed ? (
+              {inCart ? (
                 <button
+                  type="button"
                   className="td-inv-item__btn td-inv-item__btn--remove"
-                  onClick={() => handleUnclaim(item.name)}
-                  disabled={isLoading}
+                  onClick={() => toggle(item.name, false)}
                 >
-                  {isLoading ? '…' : '✕ Remove'}
+                  ✕ Remove
                 </button>
               ) : (
                 <button
+                  type="button"
                   className="td-inv-item__btn td-inv-item__btn--claim"
-                  onClick={() => handleClaim(item.name)}
-                  disabled={outOfStock || isLoading}
+                  onClick={() => toggle(item.name, outOfStock)}
+                  disabled={outOfStock}
                 >
-                  {isLoading ? '…' : outOfStock ? 'Out of Stock' : '+ Claim'}
+                  {outOfStock ? 'Out of Stock' : '+ Claim'}
                 </button>
               )}
             </div>
           );
         })}
+      </div>
+
+      <div className="td-inventory__footer">
+        <span className="td-inventory__tally">
+          {cart.size} component{cart.size !== 1 ? 's' : ''} selected
+        </span>
+        <button
+          className="btn btn-primary td-inventory__submit"
+          onClick={handleSubmit}
+          disabled={!isDirty || submitting}
+        >
+          {submitting
+            ? <><span className="td-loading__spinner td-loading__spinner--sm" /> Saving…</>
+            : 'Submit Component List'}
+        </button>
       </div>
     </div>
   );

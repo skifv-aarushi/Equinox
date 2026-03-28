@@ -2,12 +2,7 @@
  * RegistrationHub.jsx
  *
  * Shown when the authenticated user is not yet in a team.
- * Two side-by-side panels:
- *   1. Create a Team → POST /api/teams/create
- *   2. Join a Team   → POST /api/teams/join
- *
- * Both panels include a VTOP acknowledgement checkbox with an OD warning.
- * Filling any field in one panel disables the other until cleared.
+ * Two side-by-side panels: Create a Team / Join a Team.
  */
 
 import { useState, useEffect, useRef } from 'react';
@@ -17,6 +12,7 @@ import { useTeam } from '../context/TeamContext';
 import { createTeam, joinTeam } from '../utils/api';
 import './RegistrationHub.css';
 
+// ─── Static data ──────────────────────────────────────────────────────────────
 const TRACKS = [
   'Smart Healthcare Systems',
   'Road Safety',
@@ -26,8 +22,16 @@ const TRACKS = [
   'Open Innovation: Smart Infrastructure',
 ];
 
-// ─── Reusable labelled input ───────────────────────────────────────────────
-function Field({ label, id, value, onChange, placeholder, maxLength, required = true }) {
+const GENDER_OPTIONS = ['Male', 'Female', 'Other'];
+
+const BLOCKS = {
+  female: ['N/A', 'A Block', 'B Block', 'C Block', 'D Block', 'E Block', 'F Block', 'G Block', 'H Block', 'J Block', 'RGT H Block', 'GH Annex Block'],
+  male:   ['N/A', 'A Block', 'B Block', 'B Annex Block', 'C Block', 'D Block', 'D Annex Block', 'E Block', 'F Block', 'G Block', 'H Block', 'J Block', 'J Annex Block', 'K Block', 'L Block', 'M Block', 'M Annex Block', 'N Block', 'N Annex Block', 'P Block', 'Q Block', 'R Block', 'S Block', 'T Block'],
+  other:  ['N/A', 'A Block', 'B Block', 'B Annex Block', 'C Block', 'D Block', 'D Annex Block', 'E Block', 'F Block', 'G Block', 'GH Annex Block', 'H Block', 'J Block', 'J Annex Block', 'K Block', 'L Block', 'M Block', 'M Annex Block', 'N Block', 'N Annex Block', 'P Block', 'Q Block', 'R Block', 'RGT H Block', 'S Block', 'T Block'],
+};
+
+// ─── Reusable text input ──────────────────────────────────────────────────────
+function Field({ label, id, value, onChange, placeholder, maxLength }) {
   return (
     <div className="rh-field">
       <label htmlFor={id} className="rh-label">{label}</label>
@@ -39,60 +43,51 @@ function Field({ label, id, value, onChange, placeholder, maxLength, required = 
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         maxLength={maxLength}
-        required={required}
         autoComplete="off"
       />
     </div>
   );
 }
 
-// ─── Track dropdown (custom) ──────────────────────────────────────────────────
-function TrackSelect({ value, onChange }) {
+// ─── Generic custom dropdown ──────────────────────────────────────────────────
+function CustomSelect({ label, value, onChange, options, placeholder = 'Select…' }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  // Close on outside click
   useEffect(() => {
-    const handler = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    };
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const handleSelect = (t) => {
-    onChange(t);
-    setOpen(false);
-  };
-
   return (
     <div className="rh-field">
-      <label className="rh-label">Track</label>
+      {label && <label className="rh-label">{label}</label>}
       <div className={`rh-dropdown${open ? ' rh-dropdown--open' : ''}`} ref={ref}>
         <button
           type="button"
           className={`rh-dropdown__trigger${!value ? ' rh-dropdown__trigger--placeholder' : ''}`}
-          onClick={() => setOpen((o) => !o)}
+          onClick={() => setOpen(o => !o)}
           aria-haspopup="listbox"
           aria-expanded={open}
         >
-          <span>{value || 'Select a track…'}</span>
-          <svg className="rh-dropdown__chevron" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <span>{value || placeholder}</span>
+          <svg className="rh-dropdown__chevron" viewBox="0 0 12 8" fill="none">
             <path d="M1 1l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
           </svg>
         </button>
         {open && (
           <ul className="rh-dropdown__list" role="listbox">
-            {TRACKS.map((t) => (
+            {options.map(opt => (
               <li
-                key={t}
+                key={opt}
                 role="option"
-                aria-selected={value === t}
-                className={`rh-dropdown__item${value === t ? ' rh-dropdown__item--active' : ''}`}
-                onMouseDown={() => handleSelect(t)}
+                aria-selected={value === opt}
+                className={`rh-dropdown__item${value === opt ? ' rh-dropdown__item--active' : ''}`}
+                onMouseDown={() => { onChange(opt); setOpen(false); }}
               >
-                {value === t && <span className="rh-dropdown__check">✓</span>}
-                {t}
+                {value === opt && <span className="rh-dropdown__check">✓</span>}
+                {opt}
               </li>
             ))}
           </ul>
@@ -102,7 +97,7 @@ function TrackSelect({ value, onChange }) {
   );
 }
 
-// ─── VTOP acknowledgement checkbox ────────────────────────────────────────────
+// ─── VTOP acknowledgement ─────────────────────────────────────────────────────
 function VtopCheckbox({ checked, onChange }) {
   return (
     <div className="rh-vtop">
@@ -126,35 +121,56 @@ function VtopCheckbox({ checked, onChange }) {
   );
 }
 
-// ─── Create Team Panel ─────────────────────────────────────────────────────
+// ─── Shared member fields (used in both panels) ───────────────────────────────
+function MemberFields({ prefix, name, setName, regNo, setRegNo, phone, setPhone, gender, setGender, hostelBlock, setHostelBlock, roomNumber, setRoomNumber, track, setTrack }) {
+  const blockOptions = BLOCKS[gender.toLowerCase()] || BLOCKS.other;
+
+  const handleGenderChange = (val) => {
+    setGender(val);
+    setHostelBlock(''); // reset block when gender changes
+  };
+
+  return (
+    <>
+      <Field label="Your Full Name"      id={`${prefix}-name`}   value={name}       onChange={setName}       placeholder="As per college ID" />
+      <Field label="Registration Number" id={`${prefix}-reg`}    value={regNo}      onChange={setRegNo}      placeholder="e.g. 22BCE1234" />
+      <Field label="Phone Number"        id={`${prefix}-phone`}  value={phone}      onChange={setPhone}      placeholder="+91 98765 43210" maxLength={15} />
+      <CustomSelect label="Gender"       value={gender}           onChange={handleGenderChange} options={GENDER_OPTIONS} placeholder="Select gender…" />
+      <CustomSelect label="Hostel Block" value={hostelBlock}      onChange={setHostelBlock}      options={blockOptions}   placeholder="Select block…" />
+      <Field label="Room Number"         id={`${prefix}-room`}   value={roomNumber} onChange={setRoomNumber} placeholder="e.g. 204" />
+      <CustomSelect label="Track"        value={track}            onChange={setTrack}            options={TRACKS}         placeholder="Select a track…" />
+    </>
+  );
+}
+
+// ─── Create Team Panel ────────────────────────────────────────────────────────
 function CreatePanel({ isDisabled, onActivate, onDeactivate }) {
   const { user } = useUser();
   const { api, refreshTeam } = useTeam();
-
   const email = user?.primaryEmailAddress?.emailAddress ?? '';
 
-  const [teamName, setTeamName]   = useState('');
-  const [name, setName]           = useState(user?.fullName ?? '');
-  const [regNo, setRegNo]         = useState('');
-  const [phone, setPhone]         = useState('');
-  const [track, setTrack]         = useState('');
-  const [vtop, setVtop]           = useState(false);
-  const [loading, setLoading]     = useState(false);
+  const [teamName,    setTeamName]    = useState('');
+  const [name,        setName]        = useState(user?.fullName ?? '');
+  const [regNo,       setRegNo]       = useState('');
+  const [phone,       setPhone]       = useState('');
+  const [gender,      setGender]      = useState('');
+  const [hostelBlock, setHostelBlock] = useState('');
+  const [roomNumber,  setRoomNumber]  = useState('');
+  const [track,       setTrack]       = useState('');
+  const [vtop,        setVtop]        = useState(false);
+  const [loading,     setLoading]     = useState(false);
 
-  // Activate/deactivate based on user-typed fields (excluding pre-filled name)
   useEffect(() => {
     const hasContent = [teamName, regNo, phone].some(v => v.trim() !== '');
-    if (hasContent) onActivate();
-    else onDeactivate();
+    if (hasContent) onActivate(); else onDeactivate();
   }, [teamName, regNo, phone]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    if (!teamName.trim() || !name.trim() || !regNo.trim() || !phone.trim() || !track) {
+    if (!teamName.trim() || !name.trim() || !regNo.trim() || !phone.trim() || !gender || !hostelBlock || !track) {
       toast.error('Please fill in all fields.');
       return;
     }
-
     setLoading(true);
     const toastId = toast.loading('Creating your team…');
     try {
@@ -164,7 +180,10 @@ function CreatePanel({ isDisabled, onActivate, onDeactivate }) {
         email,
         registrationNumber: regNo.trim(),
         phoneNumber:        phone.trim(),
-        vtopRegistered:     vtop,
+        gender:             gender.toLowerCase(),
+        hostelBlock,
+        roomNumber:         roomNumber.trim(),
+        vtopRegistered:     vtop ? 1 : 0,
         track,
       });
       toast.success('Team created! You are the leader.', { id: toastId });
@@ -180,7 +199,6 @@ function CreatePanel({ isDisabled, onActivate, onDeactivate }) {
     <div className={`rh-panel rh-panel--create${isDisabled ? ' rh-panel--disabled' : ''}`}>
       <div className="rh-panel__header">
         <span className="rh-panel__icon">
-          {/* Create team — group / people icon */}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
             <circle cx="9" cy="7" r="4"/>
@@ -189,43 +207,22 @@ function CreatePanel({ isDisabled, onActivate, onDeactivate }) {
           </svg>
         </span>
         <h2 className="rh-panel__title">Create a Team</h2>
-        <p className="rh-panel__sub">
-          Start a new team and share the code with your members.
-        </p>
+        <p className="rh-panel__sub">Start a new team and share the code with your members.</p>
       </div>
 
       <form onSubmit={handleCreate} className="rh-form" noValidate>
-        <Field
-          label="Team Name"
-          id="create-team-name"
-          value={teamName}
-          onChange={setTeamName}
-          placeholder="e.g. Stellar Minds"
-        />
-        <Field
-          label="Your Full Name"
-          id="create-member-name"
-          value={name}
-          onChange={setName}
-          placeholder="As per college ID"
-        />
-        <Field
-          label="Registration Number"
-          id="create-reg-no"
-          value={regNo}
-          onChange={setRegNo}
-          placeholder="e.g. 22BCE1234"
-        />
-        <Field
-          label="Phone Number"
-          id="create-phone"
-          value={phone}
-          onChange={setPhone}
-          placeholder="+91 98765 43210"
-          maxLength={15}
-        />
+        <Field label="Team Name" id="create-team-name" value={teamName} onChange={setTeamName} placeholder="e.g. Stellar Minds" />
 
-        <TrackSelect value={track} onChange={setTrack} />
+        <MemberFields
+          prefix="create"
+          name={name}        setName={setName}
+          regNo={regNo}      setRegNo={setRegNo}
+          phone={phone}      setPhone={setPhone}
+          gender={gender}    setGender={setGender}
+          hostelBlock={hostelBlock} setHostelBlock={setHostelBlock}
+          roomNumber={roomNumber}   setRoomNumber={setRoomNumber}
+          track={track}      setTrack={setTrack}
+        />
 
         <div className="rh-email-display">
           <span className="rh-email-label">Registered Email</span>
@@ -234,11 +231,7 @@ function CreatePanel({ isDisabled, onActivate, onDeactivate }) {
 
         <VtopCheckbox checked={vtop} onChange={setVtop} />
 
-        <button
-          type="submit"
-          className="btn btn-primary rh-submit"
-          disabled={loading}
-        >
+        <button type="submit" className="btn btn-primary rh-submit" disabled={loading}>
           {loading ? <><span className="rh-spinner" /> Creating…</> : 'Create Team'}
         </button>
       </form>
@@ -246,37 +239,34 @@ function CreatePanel({ isDisabled, onActivate, onDeactivate }) {
   );
 }
 
-// ─── Join Team Panel ───────────────────────────────────────────────────────
+// ─── Join Team Panel ──────────────────────────────────────────────────────────
 function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
   const { user } = useUser();
   const { api, refreshTeam } = useTeam();
-
   const email = user?.primaryEmailAddress?.emailAddress ?? '';
 
-  const [teamCode, setTeamCode]   = useState('');
-  const [name, setName]           = useState(user?.fullName ?? '');
-  const [regNo, setRegNo]         = useState('');
-  const [phone, setPhone]         = useState('');
-  const [track, setTrack]         = useState('');
-  const [vtop, setVtop]           = useState(false);
-  const [loading, setLoading]     = useState(false);
+  const [teamCode,    setTeamCode]    = useState('');
+  const [name,        setName]        = useState(user?.fullName ?? '');
+  const [regNo,       setRegNo]       = useState('');
+  const [phone,       setPhone]       = useState('');
+  const [gender,      setGender]      = useState('');
+  const [hostelBlock, setHostelBlock] = useState('');
+  const [roomNumber,  setRoomNumber]  = useState('');
+  const [track,       setTrack]       = useState('');
+  const [vtop,        setVtop]        = useState(false);
+  const [loading,     setLoading]     = useState(false);
 
-  // Activate/deactivate based on user-typed fields (excluding pre-filled name)
   useEffect(() => {
     const hasContent = [teamCode, regNo, phone].some(v => v.trim() !== '');
-    if (hasContent) onActivate();
-    else onDeactivate();
+    if (hasContent) onActivate(); else onDeactivate();
   }, [teamCode, regNo, phone]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleCodeChange = (val) => setTeamCode(val.toUpperCase().slice(0, 8));
 
   const handleJoin = async (e) => {
     e.preventDefault();
-    if (!teamCode.trim() || !name.trim() || !regNo.trim() || !phone.trim() || !track) {
+    if (!teamCode.trim() || !name.trim() || !regNo.trim() || !phone.trim() || !gender || !hostelBlock || !track) {
       toast.error('Please fill in all fields.');
       return;
     }
-
     setLoading(true);
     const toastId = toast.loading('Joining team…');
     try {
@@ -286,7 +276,10 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
         email,
         registrationNumber: regNo.trim(),
         phoneNumber:        phone.trim(),
-        vtopRegistered:     vtop,
+        gender:             gender.toLowerCase(),
+        hostelBlock,
+        roomNumber:         roomNumber.trim(),
+        vtopRegistered:     vtop ? 1 : 0,
         track,
       });
       toast.success("You've joined the team!", { id: toastId });
@@ -302,7 +295,6 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
     <div className={`rh-panel rh-panel--join${isDisabled ? ' rh-panel--disabled' : ''}`}>
       <div className="rh-panel__header">
         <span className="rh-panel__icon">
-          {/* Join team — log-in / enter door icon */}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
             <polyline points="10 17 15 12 10 7"/>
@@ -310,9 +302,7 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
           </svg>
         </span>
         <h2 className="rh-panel__title">Join a Team</h2>
-        <p className="rh-panel__sub">
-          Enter the 6-character code your team leader shared with you.
-        </p>
+        <p className="rh-panel__sub">Enter the code your team leader shared with you.</p>
       </div>
 
       <form onSubmit={handleJoin} className="rh-form" noValidate>
@@ -323,39 +313,24 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
             className="rh-input rh-input--code"
             type="text"
             value={teamCode}
-            onChange={(e) => handleCodeChange(e.target.value)}
+            onChange={(e) => setTeamCode(e.target.value.toUpperCase().slice(0, 8))}
             placeholder="XXXXXX"
             maxLength={8}
-            required
             autoComplete="off"
             spellCheck={false}
           />
         </div>
 
-        <Field
-          label="Your Full Name"
-          id="join-member-name"
-          value={name}
-          onChange={setName}
-          placeholder="As per college ID"
+        <MemberFields
+          prefix="join"
+          name={name}        setName={setName}
+          regNo={regNo}      setRegNo={setRegNo}
+          phone={phone}      setPhone={setPhone}
+          gender={gender}    setGender={setGender}
+          hostelBlock={hostelBlock} setHostelBlock={setHostelBlock}
+          roomNumber={roomNumber}   setRoomNumber={setRoomNumber}
+          track={track}      setTrack={setTrack}
         />
-        <Field
-          label="Registration Number"
-          id="join-reg-no"
-          value={regNo}
-          onChange={setRegNo}
-          placeholder="e.g. 22BCE1234"
-        />
-        <Field
-          label="Phone Number"
-          id="join-phone"
-          value={phone}
-          onChange={setPhone}
-          placeholder="+91 98765 43210"
-          maxLength={15}
-        />
-
-        <TrackSelect value={track} onChange={setTrack} />
 
         <div className="rh-email-display">
           <span className="rh-email-label">Registered Email</span>
@@ -364,11 +339,7 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
 
         <VtopCheckbox checked={vtop} onChange={setVtop} />
 
-        <button
-          type="submit"
-          className="btn btn-primary rh-submit"
-          disabled={loading}
-        >
+        <button type="submit" className="btn btn-primary rh-submit" disabled={loading}>
           {loading ? <><span className="rh-spinner" /> Joining…</> : 'Join Team'}
         </button>
       </form>
@@ -378,12 +349,12 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
 
 const VIT_DOMAIN = '@vitstudent.ac.in';
 
-// ─── RegistrationHub ───────────────────────────────────────────────────────
+// ─── RegistrationHub ──────────────────────────────────────────────────────────
 export default function RegistrationHub() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const [signingOut, setSigningOut] = useState(false);
-  const [activePanel, setActivePanel] = useState(null); // 'create' | 'join' | null
+  const [activePanel, setActivePanel] = useState(null);
 
   const email = user?.primaryEmailAddress?.emailAddress ?? '';
   const isVitEmail = email.endsWith(VIT_DOMAIN);
@@ -398,9 +369,7 @@ export default function RegistrationHub() {
       <div className="rh-header">
         <p className="rh-header__pre accent-text">Equinox 2026 · Registration</p>
         <h1 className="rh-header__title">Join the<br />Cosmos</h1>
-        <p className="rh-header__sub">
-          Teams of 3–5 members. Create a team or join one with a code.
-        </p>
+        <p className="rh-header__sub">Teams of 3–5 members. Create a team or join one with a code.</p>
       </div>
 
       {!isVitEmail ? (
@@ -411,17 +380,9 @@ export default function RegistrationHub() {
             Registration is only open to VIT students.<br />
             Please sign in with your <strong>{VIT_DOMAIN}</strong> email address.
           </p>
-          <p className="rh-domain-block__current">
-            Signed in as: <span>{email || '—'}</span>
-          </p>
-          <button
-            className="rh-domain-block__switch-btn"
-            onClick={handleSignOut}
-            disabled={signingOut}
-          >
-            {signingOut
-              ? <><span className="rh-spinner" /> Signing out…</>
-              : '↩ Sign in with a different account'}
+          <p className="rh-domain-block__current">Signed in as: <span>{email || '—'}</span></p>
+          <button className="rh-domain-block__switch-btn" onClick={handleSignOut} disabled={signingOut}>
+            {signingOut ? <><span className="rh-spinner" /> Signing out…</> : '↩ Sign in with a different account'}
           </button>
         </div>
       ) : (
@@ -431,9 +392,7 @@ export default function RegistrationHub() {
             onActivate={() => setActivePanel('create')}
             onDeactivate={() => setActivePanel(p => p === 'create' ? null : p)}
           />
-          <div className="rh-divider">
-            <span>or</span>
-          </div>
+          <div className="rh-divider"><span>or</span></div>
           <JoinPanel
             isDisabled={activePanel === 'create'}
             onActivate={() => setActivePanel('join')}
