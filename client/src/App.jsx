@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
 
 // Landing-page sections
@@ -21,14 +21,15 @@ import Footer from './components/Footer';
 // Registration portal
 import RegisterPage from './components/RegisterPage';
 
-// Sandbox testing imports
+// Admin
+import AdminPanel from './components/AdminPanel';
+
+// Sandbox testing
 import Speaker from './components/Speaker';
-import RegistrationHub from './components/RegistrationHub';
-import TeamDashboard from './components/TeamDashboard';
 
 import { TeamProvider } from './context/TeamContext';
 
-// ─── Landing page (existing) ───────────────────────────────────────────────
+// ─── Landing page ──────────────────────────────────────────────────────────────
 function LandingPage() {
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -55,7 +56,6 @@ function LandingPage() {
 
       <div className="app page-enter">
         <div className="star-overlay" />
-
         <Hero />
         <div className="celestial-divider" />
         <About />
@@ -77,22 +77,36 @@ function LandingPage() {
   );
 }
 
-// ─── Protected /register route ─────────────────────────────────────────────
+// ─── Protected /register ───────────────────────────────────────────────────────
 function ProtectedRegister() {
   return (
     <>
-      <SignedIn>
-        <RegisterPage />
-      </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn redirectUrl="/register" />
-      </SignedOut>
+      <SignedIn><RegisterPage /></SignedIn>
+      <SignedOut><RedirectToSignIn redirectUrl="/register" /></SignedOut>
     </>
   );
 }
 
-// ─── Component Sandbox (/test) ─────────────────────────────────────────────
-// Put whatever component you want to test inside this Sandbox!
+// ─── Protected /admin ─────────────────────────────────────────────────────────
+function ProtectedAdmin() {
+  return (
+    <>
+      <SignedIn>
+        <TeamProvider>
+          <div className="app page-enter" style={{ minHeight: '100vh', padding: 'var(--nav-height) 20px 0' }}>
+            <div className="star-overlay" />
+            <Navbar />
+            <CustomCursor />
+            <AdminPanel />
+          </div>
+        </TeamProvider>
+      </SignedIn>
+      <SignedOut><RedirectToSignIn redirectUrl="/admin" /></SignedOut>
+    </>
+  );
+}
+
+// ─── Sandbox (/test) ──────────────────────────────────────────────────────────
 function Sandbox() {
   return (
     <TeamProvider>
@@ -101,23 +115,20 @@ function Sandbox() {
         <Navbar />
         <CustomCursor />
         <h1 className="accent-text" style={{ textAlign: 'center', margin: '2rem 0' }}>Sandbox Mode</h1>
-
-        {/* ⬇️ DROP ANY COMPONENT HERE TO TEST IT ⬇️ */}
         <Speaker />
-        {/* ⬆️------------------------------------⬆️ */}
-
       </div>
     </TeamProvider>
   );
 }
 
-// ─── App ───────────────────────────────────────────────────────────────────
+// ─── App ───────────────────────────────────────────────────────────────────────
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
+      <Route path="/"        element={<LandingPage />} />
       <Route path="/register" element={<ProtectedRegister />} />
-      <Route path="/test" element={<Sandbox />} />
+      <Route path="/admin"   element={<ProtectedAdmin />} />
+      <Route path="/test"    element={<Sandbox />} />
     </Routes>
   );
 }

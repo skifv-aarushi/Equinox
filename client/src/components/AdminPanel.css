@@ -1,0 +1,288 @@
+/* ═══════════════════════════════════════════════
+   AdminPanel — Equinox 2026
+   ═══════════════════════════════════════════════ */
+
+.ap-root {
+  min-height: 100vh;
+  padding: var(--space-xl) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* ── Header ── */
+.ap-header {
+  text-align: center;
+}
+
+.ap-header__pre {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--gold-subtle);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.ap-header__title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  color: var(--mist);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.ap-header__sub {
+  font-size: 0.85rem;
+  color: var(--stone-grey);
+  margin-top: 0.4rem;
+}
+
+/* ── Access denied ── */
+.ap-denied {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.ap-denied__icon {
+  font-size: 2.5rem;
+  color: #f87171;
+}
+
+.ap-denied__title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--mist);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ap-denied__sub {
+  color: var(--stone-grey);
+  font-size: 0.9rem;
+}
+
+/* ── Toolbar ── */
+.ap-toolbar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.ap-search {
+  flex: 1;
+  min-width: 200px;
+  background: rgba(26, 34, 56, 0.7);
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 1rem;
+  color: var(--mist);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.ap-search:focus { border-color: var(--gold-subtle); }
+
+.ap-search::placeholder { color: var(--stone-grey); opacity: 0.7; }
+
+/* ── Loading ── */
+.ap-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem 0;
+  color: var(--marble);
+  opacity: 0.6;
+}
+
+.ap-spinner {
+  display: block;
+  width: 36px;
+  height: 36px;
+  border: 2px solid rgba(201, 169, 110, 0.2);
+  border-top-color: var(--gold-subtle);
+  border-radius: 50%;
+  animation: ap-spin 0.9s linear infinite;
+}
+
+@keyframes ap-spin {
+  to { transform: rotate(360deg); }
+}
+
+.ap-empty-state {
+  text-align: center;
+  color: var(--stone-grey);
+  padding: 3rem 0;
+}
+
+/* ── Table ── */
+.ap-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--gold-line);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.ap-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+
+.ap-th {
+  padding: 0.8rem 1rem;
+  text-align: left;
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-subtle);
+  background: rgba(15, 21, 35, 0.8);
+  border-bottom: 1px solid var(--gold-line);
+  white-space: nowrap;
+}
+
+.ap-row {
+  transition: background var(--transition-fast);
+}
+
+.ap-row:nth-child(even) { background: rgba(26, 34, 56, 0.25); }
+.ap-row:hover           { background: rgba(201, 169, 110, 0.04); }
+
+.ap-td {
+  padding: 0.75rem 1rem;
+  color: var(--marble);
+  border-bottom: 1px solid rgba(201, 169, 110, 0.07);
+  vertical-align: top;
+}
+
+.ap-td--code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: var(--gold-subtle);
+  letter-spacing: 0.15em;
+  white-space: nowrap;
+}
+
+.ap-td--name {
+  font-family: var(--font-heading);
+  letter-spacing: 0.08em;
+  color: var(--mist);
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.ap-members {
+  display: block;
+  font-size: 0.8rem;
+}
+
+.ap-vtop-count {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--stone-grey);
+  margin-top: 0.2rem;
+  font-family: 'Courier New', monospace;
+}
+
+.ap-components {
+  font-size: 0.78rem;
+  color: var(--marble);
+  opacity: 0.8;
+  max-width: 180px;
+  display: block;
+  word-break: break-word;
+}
+
+.ap-link {
+  color: var(--gold-subtle);
+  text-decoration: underline;
+  font-size: 0.8rem;
+}
+
+.ap-link:hover { color: var(--mist); }
+
+.ap-empty {
+  color: var(--stone-grey);
+}
+
+/* ── Controls ── */
+.ap-select {
+  background: rgba(26, 34, 56, 0.8);
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.6rem;
+  color: var(--marble);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+  width: 100%;
+}
+
+.ap-select:focus { border-color: var(--gold-subtle); }
+
+.ap-select--not-submitted { border-color: rgba(248, 113, 113, 0.4); color: #f87171; }
+.ap-select--under-review  { border-color: rgba(251, 191, 36, 0.4);  color: #fbbf24; }
+.ap-select--shortlisted   { border-color: rgba(74, 222, 128, 0.4);  color: #4ade80; }
+
+.ap-venue-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.ap-input {
+  background: rgba(26, 34, 56, 0.7);
+  border: 1px solid rgba(201, 169, 110, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.6rem;
+  color: var(--marble);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  outline: none;
+  width: 100px;
+  transition: border-color var(--transition-fast);
+}
+
+.ap-input:focus { border-color: var(--gold-subtle); }
+.ap-input::placeholder { color: var(--stone-grey); opacity: 0.6; }
+
+.ap-btn {
+  padding: 0.35rem 0.7rem;
+  background: rgba(201, 169, 110, 0.1);
+  border: 1px solid var(--gold-line);
+  border-radius: var(--radius-sm);
+  color: var(--gold-subtle);
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.ap-btn:hover {
+  background: rgba(201, 169, 110, 0.2);
+  border-color: var(--gold-subtle);
+  color: var(--mist);
+}
+
+.ap-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.ap-btn--refresh {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.75rem;
+}

@@ -6,9 +6,7 @@
  *   1. Create a Team → POST /api/teams/create
  *   2. Join a Team   → POST /api/teams/join
  *
- * Uses react-hot-toast for all feedback.
- * Calls refreshTeam() on success so TeamContext re-fetches and
- * the page transitions automatically to TeamDashboard.
+ * Both panels include a VTOP acknowledgement checkbox with an OD warning.
  */
 
 import { useState } from 'react';
@@ -38,6 +36,30 @@ function Field({ label, id, value, onChange, placeholder, maxLength, required = 
   );
 }
 
+// ─── VTOP acknowledgement checkbox ────────────────────────────────────────────
+function VtopCheckbox({ checked, onChange }) {
+  return (
+    <div className="rh-vtop">
+      <label className="rh-vtop__label">
+        <input
+          type="checkbox"
+          className="rh-vtop__checkbox"
+          checked={checked}
+          onChange={(e) => onChange(e.target.checked)}
+        />
+        <span className="rh-vtop__text">
+          I have registered for this event on the <strong>VTOP</strong> portal.
+        </span>
+      </label>
+      {!checked && (
+        <p className="rh-vtop__warning">
+          ⚠ If not registered on VTOP, OD (on-duty) will <strong>not</strong> be provided for this participant.
+        </p>
+      )}
+    </div>
+  );
+}
+
 // ─── Create Team Panel ─────────────────────────────────────────────────────
 function CreatePanel() {
   const { user } = useUser();
@@ -49,6 +71,7 @@ function CreatePanel() {
   const [name, setName]           = useState(user?.fullName ?? '');
   const [regNo, setRegNo]         = useState('');
   const [phone, setPhone]         = useState('');
+  const [vtop, setVtop]           = useState(false);
   const [loading, setLoading]     = useState(false);
 
   const handleCreate = async (e) => {
@@ -67,8 +90,9 @@ function CreatePanel() {
         email,
         registrationNumber: regNo.trim(),
         phoneNumber:        phone.trim(),
+        vtopRegistered:     vtop,
       });
-      toast.success('🎉 Team created! You are the leader.', { id: toastId });
+      toast.success('Team created! You are the leader.', { id: toastId });
       await refreshTeam();
     } catch (err) {
       toast.error(err.message || 'Failed to create team.', { id: toastId });
@@ -123,16 +147,14 @@ function CreatePanel() {
           <span className="rh-email-value">{email}</span>
         </div>
 
+        <VtopCheckbox checked={vtop} onChange={setVtop} />
+
         <button
           type="submit"
           className="btn btn-primary rh-submit"
           disabled={loading}
         >
-          {loading ? (
-            <><span className="rh-spinner" /> Creating…</>
-          ) : (
-            'Create Team'
-          )}
+          {loading ? <><span className="rh-spinner" /> Creating…</> : 'Create Team'}
         </button>
       </form>
     </div>
@@ -150,12 +172,10 @@ function JoinPanel() {
   const [name, setName]           = useState(user?.fullName ?? '');
   const [regNo, setRegNo]         = useState('');
   const [phone, setPhone]         = useState('');
+  const [vtop, setVtop]           = useState(false);
   const [loading, setLoading]     = useState(false);
 
-  const handleCodeChange = (val) => {
-    // Auto-uppercase team codes and cap at 8 chars
-    setTeamCode(val.toUpperCase().slice(0, 8));
-  };
+  const handleCodeChange = (val) => setTeamCode(val.toUpperCase().slice(0, 8));
 
   const handleJoin = async (e) => {
     e.preventDefault();
@@ -173,8 +193,9 @@ function JoinPanel() {
         email,
         registrationNumber: regNo.trim(),
         phoneNumber:        phone.trim(),
+        vtopRegistered:     vtop,
       });
-      toast.success("🚀 You've joined the team!", { id: toastId });
+      toast.success("You've joined the team!", { id: toastId });
       await refreshTeam();
     } catch (err) {
       toast.error(err.message || 'Failed to join team.', { id: toastId });
@@ -238,16 +259,14 @@ function JoinPanel() {
           <span className="rh-email-value">{email}</span>
         </div>
 
+        <VtopCheckbox checked={vtop} onChange={setVtop} />
+
         <button
           type="submit"
           className="btn btn-primary rh-submit"
           disabled={loading}
         >
-          {loading ? (
-            <><span className="rh-spinner" /> Joining…</>
-          ) : (
-            'Join Team'
-          )}
+          {loading ? <><span className="rh-spinner" /> Joining…</> : 'Join Team'}
         </button>
       </form>
     </div>

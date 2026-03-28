@@ -1,39 +1,30 @@
 /**
  * Equinox — Express Server
- * Handles registration API
  */
 
-// 1. LOAD ENV VARIABLES FIRST
-// Do this before any other imports so they have access to process.env immediately
 require('dotenv').config();
 
-// 2. IMPORTS
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const connectDB = require('./config/db'); // Pulls in your DB connection file
-const teamRoutes = require('./routes/teamRoutes');
+const express    = require('express');
+const cors       = require('cors');
+const path       = require('path');
+const connectDB  = require('./config/db');
+const teamRoutes  = require('./routes/teamRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
-// 3. INITIALIZE EXPRESS & DB
-const app = express();
+const app  = express();
 const PORT = process.env.PORT || 5000;
-connectDB(); // Actually fires the connection to MongoDB Atlas
+connectDB();
 
-// 4. GLOBAL MIDDLEWARE
 app.use(cors());
 app.use(express.json());
 
-// 5. API ROUTES
-// Health check route
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', message: 'Equinox server running' });
-});
-
+// ── API routes ──
+app.get('/api/health', (_req, res) => res.json({ status: 'ok', message: 'Equinox server running' }));
 app.use('/api/teams', teamRoutes);
+app.use('/api/admin', adminRoutes);
 
-// 6. CLERK GLOBAL ERROR HANDLER
-// Catches unauthorized requests to protected routes
-app.use((err, req, res, next) => {
+// ── Global error handler (Clerk 401s) ──
+app.use((err, _req, res, _next) => {
     if (err.message === 'Unauthenticated') {
         return res.status(401).json({ error: 'Unauthenticated. Please sign in.' });
     }
@@ -41,16 +32,9 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Internal Server Error' });
 });
 
-// 7. SERVE STATIC FILES (React Frontend)
+// ── Serve React frontend ──
 const staticDir = path.join(__dirname, '../client');
 app.use(express.static(staticDir));
+app.get(/.*/, (_req, res) => res.sendFile(path.join(staticDir, 'index.html')));
 
-// Catch-all to return the client index for any other request (for SPA routing)
-app.get(/.*/, (req, res) => {
-    res.sendFile(path.join(staticDir, 'index.html'));
-});
-
-// 8. START SERVER
-app.listen(PORT, () => {
-    console.log(`☉ Equinox server listening on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`☉ Equinox server listening on port ${PORT}`));
