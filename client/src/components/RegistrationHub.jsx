@@ -10,7 +10,7 @@
  */
 
 import { useState } from 'react';
-import { useUser } from '@clerk/clerk-react';
+import { useUser, useClerk } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 import { useTeam } from '../context/TeamContext';
 import { createTeam, joinTeam } from '../utils/api';
@@ -278,8 +278,15 @@ const VIT_DOMAIN = '@vitstudent.ac.in';
 // ─── RegistrationHub ───────────────────────────────────────────────────────
 export default function RegistrationHub() {
   const { user } = useUser();
+  const { signOut } = useClerk();
+  const [signingOut, setSigningOut] = useState(false);
   const email = user?.primaryEmailAddress?.emailAddress ?? '';
   const isVitEmail = email.endsWith(VIT_DOMAIN);
+
+  const handleSignOut = async () => {
+    setSigningOut(true);
+    await signOut({ redirectUrl: '/register' });
+  };
 
   return (
     <div className="rh-root">
@@ -302,6 +309,15 @@ export default function RegistrationHub() {
           <p className="rh-domain-block__current">
             Signed in as: <span>{email || '—'}</span>
           </p>
+          <button
+            className="rh-domain-block__switch-btn"
+            onClick={handleSignOut}
+            disabled={signingOut}
+          >
+            {signingOut
+              ? <><span className="rh-spinner" /> Signing out…</>
+              : '↩ Sign in with a different account'}
+          </button>
         </div>
       ) : (
         <div className="rh-panels">
