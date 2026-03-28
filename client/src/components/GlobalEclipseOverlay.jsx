@@ -73,7 +73,20 @@ export default function GlobalEclipseOverlay() {
             const sunProxy  = { angle: SUN_START_ANGLE, opacity: 0 };
             const coneProxy = { alpha: 1 }; // multiplier faded by its own ScrollTrigger
 
+            // When true, updatePositions() forces all elements to opacity 0 regardless
+            // of what the scrub tweens say. This beats the scrub lag when the user
+            // fast-scrolls or clicks a navbar link that skips through the eclipse zone.
+            let forceHide = false;
+
             function updatePositions() {
+                if (forceHide) {
+                    moonEl.style.opacity   = 0;
+                    sunEl.style.opacity    = 0;
+                    coronaEl.style.opacity = 0;
+                    coneEl.style.opacity   = 0;
+                    return;
+                }
+
                 // Update moon position
                 const moonPos = arcXY(moonProxy.angle, vw, vh);
                 moonEl.style.left = (moonPos.x - MOON_SIZE / 2) + 'px';
@@ -148,6 +161,15 @@ export default function GlobalEclipseOverlay() {
                         start: "top -15%",   // start after sponsors has scrolled 15% of vh past viewport top
                         end: "bottom 20%",   // fully gone before sponsors section ends
                         scrub: 1,
+                        // Instantly hide everything when the user scrolls past this zone
+                        // (prevents sun/moon lingering on fast navigation to later sections)
+                        onLeave: () => {
+                            forceHide = true;
+                            updatePositions();
+                        },
+                        onEnterBack: () => {
+                            forceHide = false;
+                        },
                     },
                 });
 
@@ -185,6 +207,17 @@ export default function GlobalEclipseOverlay() {
                         end: "top -18%",       // gone after scrolling ~18vh into the section
                         scrub: 0.6,
                     },
+                });
+
+                // ── Hard cutoff — once the sponsors section is fully scrolled past,
+                // force opacity to 0 every frame regardless of scrub lag.
+                // This prevents the sun/moon from staying visible when a user
+                // clicks a navbar link that fast-scrolls through the eclipse zone.
+                ScrollTrigger.create({
+                    trigger: sponsorsEl,
+                    start: "bottom top",   // sponsors bottom has passed viewport top
+                    onEnter:     () => { forceHide = true;  updatePositions(); },
+                    onLeaveBack: () => { forceHide = false; },
                 });
 
             }, container);

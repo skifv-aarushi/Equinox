@@ -4,7 +4,8 @@
 
 .hero {
     position: relative;
-    min-height: 100vh;
+    height: 100svh;
+    min-height: 100vh; /* fallback for browsers without svh */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,7 +43,7 @@
     position: relative;
     z-index: 2;
     text-align: center;
-    padding: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
     max-width: min(800px, 92vw);
 }
 
@@ -57,7 +58,7 @@
 }
 
 .hero__title {
-    font-size: clamp(3rem, 12vw, 9rem);
+    font-size: clamp(3.5rem, 14vw, 10.5rem);
     letter-spacing: 0.04em;
     margin-bottom: 0;
     line-height: 1;
@@ -104,7 +105,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.4rem;
     animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
     animation-delay: 0.25s;
 }
@@ -135,7 +136,7 @@
     font-size: clamp(0.9rem, 1.3vw, 1.1rem);
     opacity: 0.6;
     max-width: min(55ch, 90vw);
-    margin: 0 auto 0.8rem;
+    margin: 0 auto 0.4rem;
     line-height: 1.8;
 }
 
@@ -198,8 +199,12 @@
 
 @media (max-width: 480px) {
     .hero__title {
-        font-size: clamp(2.5rem, 14vw, 4rem);
+        font-size: clamp(3rem, 16vw, 5rem);
         letter-spacing: 0.1em;
+    }
+
+    .hero__title__h2 {
+        font-size: clamp(1.3rem, 6vw, 2rem);
     }
 
     .hero__content {
@@ -213,8 +218,8 @@
     display: flex;
     justify-content: center;
     gap: clamp(0.6rem, 2vw, 1.2rem);
-    margin-top: 0.6rem;
-    margin-bottom: 0.8rem;
+    margin-top: 0.3rem;
+    margin-bottom: 0.4rem;
 }
 
 /* glass tiles */
@@ -224,10 +229,10 @@
     align-items: center;
     justify-content: center;
 
-    width: clamp(60px, 16vw, 78px);
-    height: clamp(60px, 16vw, 78px);
+    width: clamp(46px, 10vw, 62px);
+    height: clamp(46px, 10vw, 62px);
 
-    border-radius: clamp(10px, 2vw, 14px);
+    border-radius: clamp(8px, 1.5vw, 12px);
 
     background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(14px);
@@ -251,7 +256,7 @@
 
 /* digits */
 .time-block span {
-    font-size: clamp(1.2rem, 2.5vw, 2.1rem);
+    font-size: clamp(0.9rem, 1.8vw, 1.6rem);
     color: var(--mist);
     line-height: 1;
     text-shadow: 0 0 18px rgba(245, 246, 243, 0.08);
@@ -259,11 +264,11 @@
 
 /* labels */
 .time-block small {
-    font-size: clamp(0.45rem, 1vw, 0.55rem);
+    font-size: clamp(0.38rem, 0.75vw, 0.46rem);
     color: var(--gold-subtle);
     opacity: 0.65;
     letter-spacing: 0.18em;
-    margin-top: 4px;
+    margin-top: 3px;
 }
 
 /* ── Hero Entrance Stagger ── */
@@ -278,6 +283,7 @@
 }
 
 .hero__title__h2 {
+    font-size: clamp(1.6rem, 5vw, 3.8rem);
     letter-spacing: 0.04em;
     animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
     animation-delay: 0.65s;

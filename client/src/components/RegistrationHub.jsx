@@ -7,9 +7,10 @@
  *   2. Join a Team   → POST /api/teams/join
  *
  * Both panels include a VTOP acknowledgement checkbox with an OD warning.
+ * Filling any field in one panel disables the other until cleared.
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 import { useTeam } from '../context/TeamContext';
@@ -51,7 +52,11 @@ function VtopCheckbox({ checked, onChange }) {
           I have registered for this event on the <strong>VTOP</strong> portal.
         </span>
       </label>
-      {!checked && (
+      {checked ? (
+        <p className="rh-vtop__confirmed">
+          ✓ VTOP registration confirmed. OD will be provided.
+        </p>
+      ) : (
         <p className="rh-vtop__warning">
           ⚠ If not registered on VTOP, OD (on-duty) will <strong>not</strong> be provided for this participant.
         </p>
@@ -61,7 +66,7 @@ function VtopCheckbox({ checked, onChange }) {
 }
 
 // ─── Create Team Panel ─────────────────────────────────────────────────────
-function CreatePanel() {
+function CreatePanel({ isDisabled, onActivate, onDeactivate }) {
   const { user } = useUser();
   const { api, refreshTeam } = useTeam();
 
@@ -73,6 +78,13 @@ function CreatePanel() {
   const [phone, setPhone]         = useState('');
   const [vtop, setVtop]           = useState(false);
   const [loading, setLoading]     = useState(false);
+
+  // Activate/deactivate based on user-typed fields (excluding pre-filled name)
+  useEffect(() => {
+    const hasContent = [teamName, regNo, phone].some(v => v.trim() !== '');
+    if (hasContent) onActivate();
+    else onDeactivate();
+  }, [teamName, regNo, phone]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -102,9 +114,17 @@ function CreatePanel() {
   };
 
   return (
-    <div className="rh-panel rh-panel--create">
+    <div className={`rh-panel rh-panel--create${isDisabled ? ' rh-panel--disabled' : ''}`}>
       <div className="rh-panel__header">
-        <span className="rh-panel__icon">⊕</span>
+        <span className="rh-panel__icon">
+          {/* Create team — group / people icon */}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </span>
         <h2 className="rh-panel__title">Create a Team</h2>
         <p className="rh-panel__sub">
           Start a new team and share the code with your members.
@@ -162,7 +182,7 @@ function CreatePanel() {
 }
 
 // ─── Join Team Panel ───────────────────────────────────────────────────────
-function JoinPanel() {
+function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
   const { user } = useUser();
   const { api, refreshTeam } = useTeam();
 
@@ -174,6 +194,13 @@ function JoinPanel() {
   const [phone, setPhone]         = useState('');
   const [vtop, setVtop]           = useState(false);
   const [loading, setLoading]     = useState(false);
+
+  // Activate/deactivate based on user-typed fields (excluding pre-filled name)
+  useEffect(() => {
+    const hasContent = [teamCode, regNo, phone].some(v => v.trim() !== '');
+    if (hasContent) onActivate();
+    else onDeactivate();
+  }, [teamCode, regNo, phone]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCodeChange = (val) => setTeamCode(val.toUpperCase().slice(0, 8));
 
@@ -205,9 +232,16 @@ function JoinPanel() {
   };
 
   return (
-    <div className="rh-panel rh-panel--join">
+    <div className={`rh-panel rh-panel--join${isDisabled ? ' rh-panel--disabled' : ''}`}>
       <div className="rh-panel__header">
-        <span className="rh-panel__icon">⊗</span>
+        <span className="rh-panel__icon">
+          {/* Join team — log-in / enter door icon */}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+        </span>
         <h2 className="rh-panel__title">Join a Team</h2>
         <p className="rh-panel__sub">
           Enter the 6-character code your team leader shared with you.
@@ -280,6 +314,8 @@ export default function RegistrationHub() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const [signingOut, setSigningOut] = useState(false);
+  const [activePanel, setActivePanel] = useState(null); // 'create' | 'join' | null
+
   const email = user?.primaryEmailAddress?.emailAddress ?? '';
   const isVitEmail = email.endsWith(VIT_DOMAIN);
 
@@ -321,11 +357,19 @@ export default function RegistrationHub() {
         </div>
       ) : (
         <div className="rh-panels">
-          <CreatePanel />
+          <CreatePanel
+            isDisabled={activePanel === 'join'}
+            onActivate={() => setActivePanel('create')}
+            onDeactivate={() => setActivePanel(p => p === 'create' ? null : p)}
+          />
           <div className="rh-divider">
             <span>or</span>
           </div>
-          <JoinPanel />
+          <JoinPanel
+            isDisabled={activePanel === 'create'}
+            onActivate={() => setActivePanel('join')}
+            onDeactivate={() => setActivePanel(p => p === 'join' ? null : p)}
+          />
         </div>
       )}
     </div>

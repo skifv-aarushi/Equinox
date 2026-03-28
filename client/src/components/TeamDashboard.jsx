@@ -347,7 +347,7 @@ export default function TeamDashboard() {
       <div className="celestial-divider" style={{ margin: '0 auto', maxWidth: 800 }} />
 
       {/* ── Submission panel ── */}
-      <div className="td-section">
+      <div className="td-section" id="submissions">
         <SubmissionPanel
           team={team}
           email={email}
