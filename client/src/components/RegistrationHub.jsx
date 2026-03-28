@@ -10,7 +10,7 @@
  * Filling any field in one panel disables the other until cleared.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useUser, useClerk } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 import { useTeam } from '../context/TeamContext';
@@ -46,22 +46,58 @@ function Field({ label, id, value, onChange, placeholder, maxLength, required = 
   );
 }
 
-// ─── Track dropdown ───────────────────────────────────────────────────────────
+// ─── Track dropdown (custom) ──────────────────────────────────────────────────
 function TrackSelect({ value, onChange }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const handleSelect = (t) => {
+    onChange(t);
+    setOpen(false);
+  };
+
   return (
     <div className="rh-field">
       <label className="rh-label">Track</label>
-      <select
-        className="rh-select"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        required
-      >
-        <option value="" disabled>Select a track…</option>
-        {TRACKS.map((t) => (
-          <option key={t} value={t}>{t}</option>
-        ))}
-      </select>
+      <div className={`rh-dropdown${open ? ' rh-dropdown--open' : ''}`} ref={ref}>
+        <button
+          type="button"
+          className={`rh-dropdown__trigger${!value ? ' rh-dropdown__trigger--placeholder' : ''}`}
+          onClick={() => setOpen((o) => !o)}
+          aria-haspopup="listbox"
+          aria-expanded={open}
+        >
+          <span>{value || 'Select a track…'}</span>
+          <svg className="rh-dropdown__chevron" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        </button>
+        {open && (
+          <ul className="rh-dropdown__list" role="listbox">
+            {TRACKS.map((t) => (
+              <li
+                key={t}
+                role="option"
+                aria-selected={value === t}
+                className={`rh-dropdown__item${value === t ? ' rh-dropdown__item--active' : ''}`}
+                onMouseDown={() => handleSelect(t)}
+              >
+                {value === t && <span className="rh-dropdown__check">✓</span>}
+                {t}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
@@ -70,6 +106,11 @@ function TrackSelect({ value, onChange }) {
 function VtopCheckbox({ checked, onChange }) {
   return (
     <div className="rh-vtop">
+      {!checked && (
+        <p className="rh-vtop__warning">
+          ⚠ If not registered on VTOP, OD (on-duty) will <strong>not</strong> be provided for this participant.
+        </p>
+      )}
       <label className="rh-vtop__label">
         <input
           type="checkbox"
@@ -81,11 +122,6 @@ function VtopCheckbox({ checked, onChange }) {
           I have registered for this event on the <strong>VTOP</strong> portal.
         </span>
       </label>
-      {
-        <p key="warning" className="rh-vtop__warning">
-          ⚠ If not registered on VTOP, OD (on-duty) will <strong>not</strong> be provided for this participant.
-        </p>
-      }
     </div>
   );
 }

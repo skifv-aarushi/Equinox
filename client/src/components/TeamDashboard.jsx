@@ -55,23 +55,53 @@ function CopyButton({ text }) {
   );
 }
 
-// ─── Member card ──────────────────────────────────────────────────────────────
-function MemberCard({ member, index, isCurrentUser, api, onVtopChange }) {
-  const isLeader = member.isLeader === true;
-  const [updating, setUpdating] = useState(false);
+// ─── VTOP caution popup ──────────────────────────────────────────────────────
+function VtopCaution({ email, vtopRegistered, api, onUpdate }) {
+  const [dismissed, setDismissed] = useState(false);
+  const [updating, setUpdating]   = useState(false);
 
-  const handleVtopToggle = async (e) => {
+  // Show if user hasn't registered on VTOP and hasn't dismissed
+  if (vtopRegistered || dismissed) return null;
+
+  const handleAcknowledge = async () => {
     setUpdating(true);
     try {
-      await updateVtopStatus(api, { email: member.email, vtopRegistered: e.target.checked });
+      await updateVtopStatus(api, { email, vtopRegistered: true });
       toast.success('VTOP status updated.');
-      onVtopChange();
+      onUpdate();
+      setDismissed(true);
     } catch (err) {
       toast.error(err.message || 'Failed to update VTOP status.');
     } finally {
       setUpdating(false);
     }
   };
+
+  return (
+    <div className="td-vtop-caution">
+      <div className="td-vtop-caution__icon">⚠</div>
+      <div className="td-vtop-caution__body">
+        <p className="td-vtop-caution__title">VTOP Registration Required</p>
+        <p className="td-vtop-caution__msg">
+          If not registered on VTOP, OD (on-duty) will <strong>not</strong> be provided for this participant.
+        </p>
+        <label className="td-vtop-caution__label">
+          <input
+            type="checkbox"
+            className="td-vtop-caution__checkbox"
+            onChange={handleAcknowledge}
+            disabled={updating}
+          />
+          <span>I have registered for this event on the VTOP portal.</span>
+        </label>
+      </div>
+    </div>
+  );
+}
+
+// ─── Member card ──────────────────────────────────────────────────────────────
+function MemberCard({ member, index }) {
+  const isLeader = member.isLeader === true;
 
   return (
     <div className={`td-member ${isLeader ? 'td-member--leader' : ''}`}>
@@ -82,24 +112,9 @@ function MemberCard({ member, index, isCurrentUser, api, onVtopChange }) {
         <span className="td-member__name">{member.name || '—'}</span>
         <span className="td-member__reg">{member.registrationNumber || '—'}</span>
         <span className="td-member__email">{member.email || '—'}</span>
-        {isCurrentUser ? (
-          <label className="td-member__vtop-toggle" title="Click to toggle your VTOP registration">
-            <input
-              type="checkbox"
-              checked={!!member.vtopRegistered}
-              onChange={handleVtopToggle}
-              disabled={updating}
-              style={{ accentColor: 'var(--gold-subtle)' }}
-            />
-            <span className={`td-member__vtop ${member.vtopRegistered ? 'td-member__vtop--yes' : 'td-member__vtop--no'}`}>
-              VTOP: {member.vtopRegistered ? 'Registered' : 'Not Registered'}
-            </span>
-          </label>
-        ) : (
-          <span className={`td-member__vtop ${member.vtopRegistered ? 'td-member__vtop--yes' : 'td-member__vtop--no'}`}>
-            VTOP: {member.vtopRegistered ? 'Registered' : 'Not Registered'}
-          </span>
-        )}
+        <span className={`td-member__vtop ${member.vtopRegistered ? 'td-member__vtop--yes' : 'td-member__vtop--no'}`}>
+          VTOP: {member.vtopRegistered ? 'Registered' : 'Not Registered'}
+        </span>
       </div>
       {isLeader
         ? <span className="td-member__badge">☉ Leader</span>
@@ -355,13 +370,26 @@ export default function TeamDashboard() {
         </div>
       </div>
 
+      {/* ── VTOP caution popup ── */}
+      {(() => {
+        const me = members.find(m => m.email === email);
+        return me ? (
+          <VtopCaution
+            email={email}
+            vtopRegistered={me.vtopRegistered}
+            api={api}
+            onUpdate={refreshTeam}
+          />
+        ) : null;
+      })()}
+
       <div className="celestial-divider" style={{ margin: '0 auto', maxWidth: 800 }} />
 
       {/* ── Members grid ── */}
       <div className="td-section">
         <h2 className="td-section__title">
           Members
-          <span className="td-section__count">{memberCount} / 4</span>
+          <span className="td-section__count">{memberCount} / 5</span>
         </h2>
 
         {memberCount === 0 ? (
@@ -369,14 +397,7 @@ export default function TeamDashboard() {
         ) : (
           <div className="td-members">
             {members.map((m, i) => (
-              <MemberCard
-                key={m.email ?? i}
-                member={m}
-                index={i}
-                isCurrentUser={m.email === email}
-                api={api}
-                onVtopChange={refreshTeam}
-              />
+              <MemberCard key={m.email ?? i} member={m} index={i} />
             ))}
           </div>
         )}
