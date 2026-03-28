@@ -27,8 +27,20 @@ const QUESTIONS = [
         a: 'Projects will be evaluated on innovation, technical complexity, design quality, real-world impact, and presentation. Our panel of expert judges will assess each submission with care.',
     },
     {
+        q: 'What do I do if the electic component I need isn\'t listed or not available?',
+        a: 'If a component isn\'t listed or available, you need to bring it yourself or find an alternative solution. We encourage creativity and resourcefulness, so think outside the box and make the most of what\'s available!',
+    },
+    {
+        q: 'What happens if I damage any equipment provided by the organizers?',
+        a: 'Participants are responsible for any damage to the provided equipment. Please handle all materials with care to ensure a safe and enjoyable experience for everyone.',  
+    },
+    {
         q: 'Will there be prizes?',
         a: 'Yes! An exciting prize pool of ₹2L+ will be awarded across all tracks.',
+    },
+    {
+        q: 'If I have more questions, how can I reach out?',
+        a: 'Feel free to reach out to us at <a href="mailto: robovitics@gmail.com"> ',
     },
 ];
 
