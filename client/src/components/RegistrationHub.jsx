@@ -122,12 +122,12 @@ function VtopCheckbox({ checked, onChange }) {
 }
 
 // ─── Shared member fields (used in both panels) ───────────────────────────────
-function MemberFields({ prefix, name, setName, regNo, setRegNo, phone, setPhone, gender, setGender, hostelBlock, setHostelBlock, roomNumber, setRoomNumber, track, setTrack }) {
+function MemberFields({ prefix, name, setName, regNo, setRegNo, phone, setPhone, gender, setGender, hostelBlock, setHostelBlock, roomNumber, setRoomNumber, track, setTrack, showTrack = true }) {
   const blockOptions = BLOCKS[gender.toLowerCase()] || BLOCKS.other;
 
   const handleGenderChange = (val) => {
     setGender(val);
-    setHostelBlock(''); // reset block when gender changes
+    setHostelBlock('');
   };
 
   return (
@@ -138,7 +138,7 @@ function MemberFields({ prefix, name, setName, regNo, setRegNo, phone, setPhone,
       <CustomSelect label="Gender"       value={gender}           onChange={handleGenderChange} options={GENDER_OPTIONS} placeholder="Select gender…" />
       <CustomSelect label="Hostel Block" value={hostelBlock}      onChange={setHostelBlock}      options={blockOptions}   placeholder="Select block…" />
       <Field label="Room Number"         id={`${prefix}-room`}   value={roomNumber} onChange={setRoomNumber} placeholder="e.g. 204" />
-      <CustomSelect label="Track"        value={track}            onChange={setTrack}            options={TRACKS}         placeholder="Select a track…" />
+      {showTrack && <CustomSelect label="Track" value={track} onChange={setTrack} options={TRACKS} placeholder="Select a track…" />}
     </>
   );
 }
@@ -252,7 +252,6 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
   const [gender,      setGender]      = useState('');
   const [hostelBlock, setHostelBlock] = useState('');
   const [roomNumber,  setRoomNumber]  = useState('');
-  const [track,       setTrack]       = useState('');
   const [vtop,        setVtop]        = useState(false);
   const [loading,     setLoading]     = useState(false);
 
@@ -263,7 +262,7 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
 
   const handleJoin = async (e) => {
     e.preventDefault();
-    if (!teamCode.trim() || !name.trim() || !regNo.trim() || !phone.trim() || !gender || !hostelBlock || !track) {
+    if (!teamCode.trim() || !name.trim() || !regNo.trim() || !phone.trim() || !gender || !hostelBlock) {
       toast.error('Please fill in all fields.');
       return;
     }
@@ -280,7 +279,6 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
         hostelBlock,
         roomNumber:         roomNumber.trim(),
         vtopRegistered:     vtop ? 1 : 0,
-        track,
       });
       toast.success("You've joined the team!", { id: toastId });
       await refreshTeam();
@@ -329,7 +327,7 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
           gender={gender}    setGender={setGender}
           hostelBlock={hostelBlock} setHostelBlock={setHostelBlock}
           roomNumber={roomNumber}   setRoomNumber={setRoomNumber}
-          track={track}      setTrack={setTrack}
+          showTrack={false}
         />
 
         <div className="rh-email-display">

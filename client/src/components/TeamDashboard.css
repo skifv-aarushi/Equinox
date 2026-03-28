@@ -325,6 +325,7 @@
   flex-direction: column;
   gap: 0.15rem;
   width: 100%;
+  flex: 1;
 }
 
 .td-member__name {
@@ -357,8 +358,9 @@
   text-transform: uppercase;
   padding: 0.15rem 0.5rem;
   border-radius: var(--radius-pill);
-  margin-top: 0.2rem;
+  margin-top: auto;
   display: inline-block;
+  align-self: center;
 }
 
 .td-member__vtop--yes {

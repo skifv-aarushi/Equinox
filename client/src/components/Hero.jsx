@@ -102,7 +102,7 @@ export default function Hero() {
                     <button className="btn btn-primary" onClick={() => navigate('/register')}>
                         Register Now
                     </button>
-                    <button className="btn" onClick={() => scrollTo('#tracks')}>
+                    <button className="btn" onClick={() => navigate('/register')}>
                         Login
                     </button>
                 </div>
