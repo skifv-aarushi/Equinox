@@ -11,6 +11,8 @@
     border-bottom: 1px solid rgba(201, 169, 110, 0.06);
     border-left: 2px solid transparent;
     padding-left: 0;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     transition:
         border-left-color var(--transition-smooth),
         padding-left var(--transition-smooth);
@@ -34,6 +36,7 @@
     font-family: var(--font-heading);
     font-size: clamp(0.86rem, 1.75vw, 1rem);
     letter-spacing: 0.06em;
+    line-height: 1.7;
     text-transform: uppercase;
     color: var(--marble);
     text-align: left;
@@ -109,7 +112,7 @@
 
 .faq__answer p {
     font-size: 1rem;
-    line-height: 1.9;
+    line-height: 2.2;
     color: var(--mist);
     opacity: 0.9;
     letter-spacing: 0;
@@ -117,14 +120,25 @@
 }
 
 @media (max-width: 768px) {
+    .faq__question {
+        padding: var(--space-sm) 0;
+        font-size: 0.82rem;
+    }
+
     .faq__answer p {
         padding-right: var(--space-sm);
     }
 }
 
 @media (max-width: 480px) {
+    .faq__question {
+        padding: 0.55rem 0;
+        font-size: 0.76rem;
+        min-height: 36px;
+    }
+
     .faq__answer p {
         padding-right: 0;
-        font-size: 0.92rem;
+        font-size: 0.88rem;
     }
 }

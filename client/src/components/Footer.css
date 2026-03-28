@@ -132,12 +132,19 @@
 }
 
 @media (max-width: 480px) {
-    .footer__links {
-        flex-direction: column;
-        gap: var(--space-md);
-    }
-
     .footer__content {
         padding: var(--space-lg) var(--space-sm) var(--space-sm);
+    }
+
+    /* Keep the two link columns side-by-side — they're short enough */
+    .footer__links {
+        flex-direction: row;
+        gap: var(--space-md);
+        width: 100%;
+    }
+
+    .footer__col {
+        flex: 1;
+        min-width: 0;
     }
 }

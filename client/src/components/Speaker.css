@@ -31,7 +31,7 @@
     text-align: center;
     padding: var(--space-lg) var(--space-sm);
     border: 1px solid rgba(201, 169, 110, 0.05);
-    background: rgba(47, 58, 85, 0.1);
+    background: rgba(47, 58, 85, 0.48);
     border-radius: var(--radius-md);
     transition: all var(--transition-smooth);
     backdrop-filter: blur(4px);

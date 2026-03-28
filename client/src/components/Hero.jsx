@@ -16,8 +16,8 @@ export default function Hero() {
             sceneRef.current = new CelestialScene(canvasRef.current);
         }
 
-        // countdown to April 1 2026 08:00 AM IST
-        const target = new Date('2026-04-01T08:00:00+05:30').getTime();
+        // countdown to April 7 2026 08:00 AM IST
+        const target = new Date('2026-04-07T08:00:00+05:30').getTime();
 
         const timer = setInterval(() => {
             const now = new Date().getTime();
@@ -58,8 +58,7 @@ export default function Hero() {
                 </p>
 
                 <div className="hero__cobrand">
-                    <p className="hero__powered-by">powered by</p>
-                    <img src="/sponsor-logos/anchorpanasonic.svg" alt="Anchor by Panasonic" className="hero__cobrand-logo" />
+                    <img src="/sponsor-logos/whiteanchor.svg" alt="Anchor by Panasonic" className="hero__cobrand-logo" />
                     <p className="hero__powered-by hero__powered-by--after-logo">presents</p>
                 </div>
 
@@ -104,7 +103,7 @@ export default function Hero() {
                         Register Now
                     </button>
                     <button className="btn" onClick={() => scrollTo('#tracks')}>
-                        Explore Tracks
+                        Login
                     </button>
                 </div>
 

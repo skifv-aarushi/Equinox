@@ -20,6 +20,8 @@ import Footer from './components/Footer';
 
 // Registration portal
 import RegisterPage from './components/RegisterPage';
+import SignInPage   from './components/SignInPage';
+import SSOCallback  from './components/SSOCallback';
 
 // Admin
 import AdminPanel from './components/AdminPanel';
@@ -126,8 +128,10 @@ export default function App() {
   return (
     <Routes>
       <Route path="/"        element={<LandingPage />} />
-      <Route path="/register" element={<ProtectedRegister />} />
-      <Route path="/admin"   element={<ProtectedAdmin />} />
+      <Route path="/register"    element={<ProtectedRegister />} />
+      <Route path="/sign-in"     element={<SignInPage />} />
+      <Route path="/sso-callback" element={<SSOCallback />} />
+      <Route path="/admin"       element={<ProtectedAdmin />} />
       <Route path="/test"    element={<Sandbox />} />
     </Routes>
   );

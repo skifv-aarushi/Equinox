@@ -62,7 +62,7 @@
 
 /* ── Cards ── */
 .aboutus__card {
-    background: rgba(47, 58, 85, 0.22);
+    background: rgba(47, 58, 85, 0.48);
     border: 1px solid rgba(201, 169, 110, 0.1);
     border-radius: 2px;
     padding: clamp(1.1rem, 2.5vh, 1.7rem) clamp(1.2rem, 2vw, 1.8rem);

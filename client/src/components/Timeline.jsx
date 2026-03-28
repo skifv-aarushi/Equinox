@@ -3,7 +3,7 @@ import './Timeline.css';
 
 const EVENTS = [
     /* ── Pre-event ── */
-    { time: 'Before Hack', title: 'Online Screening (Review 0)', desc: 'Teams get shortlisted via Google Forms for on-site participation.', day: 'pre' },
+    { time: 'Before Hack', title: 'Online Screening', desc: 'Teams get shortlisted via their online submissions on this site for the Hackathon.', day: 'pre' },
 
     /* ── Day 1 — April 1, Wednesday ── */
     { time: '08:00 – 10:00 AM', title: 'Check-in & Registration', desc: 'Participants arrive at the venue.', day: '1' },
@@ -56,9 +56,9 @@ const ICONS = {
 
 const DAY_GROUPS = [
     { label: 'Pre-event', date: 'Before Hack', icon: ICONS.clipboard, indices: [0] },
-    { label: 'Day 1', date: 'April 1 · Wednesday', icon: ICONS.flag, indices: [1, 2, 3, 4] },
-    { label: 'Day 2', date: 'April 2 · Thursday', icon: ICONS.bolt, indices: [5, 6] },
-    { label: 'Day 3', date: 'April 3 · Friday', icon: ICONS.trophy, indices: [7, 8, 9] },
+    { label: 'Day 1', date: 'April 7 · Tuesday', icon: ICONS.flag, indices: [1, 2, 3, 4] },
+    { label: 'Day 2', date: 'April 8 · Wednesday', icon: ICONS.bolt, indices: [5, 6] },
+    { label: 'Day 3', date: 'April 9 · Thursday', icon: ICONS.trophy, indices: [7, 8, 9] },
 ];
 
 const FADE_MS = 380; // must match CSS transition duration

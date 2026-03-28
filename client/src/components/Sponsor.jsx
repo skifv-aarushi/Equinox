@@ -3,7 +3,7 @@ import './Sponsor.css';
 
 const MAIN_SPONSOR = {
     name: 'Panasonic',
-    logo: '/sponsor-logos/anchorpanasonic.svg',
+    logo: '/sponsor-logos/whiteanchor.svg',
     invert: false,   // black-on-white logo → invert for dark background
 };
 

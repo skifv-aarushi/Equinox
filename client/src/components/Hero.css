@@ -58,7 +58,7 @@
 }
 
 .hero__title {
-    font-size: clamp(3.5rem, 14vw, 10.5rem);
+    font-size: clamp(3rem, 12vw, 9rem);
     letter-spacing: 0.04em;
     margin-bottom: 0;
     line-height: 1;
@@ -126,7 +126,7 @@
 }
 
 .hero__cobrand-logo {
-    height: clamp(36px, 5vw, 64px);
+    height: clamp(54px, 7.5vw, 96px);
     width: auto;
     object-fit: contain;
     opacity: 0.85;
@@ -145,6 +145,10 @@
     gap: var(--space-sm);
     justify-content: center;
     flex-wrap: wrap;
+}
+
+.hero__actions .btn {
+    min-width: 200px;
 }
 
 .hero__register-btn {
@@ -184,7 +188,7 @@
     }
 
     .hero__cobrand-logo {
-        height: clamp(28px, 7vw, 48px);
+        height: clamp(42px, 10.5vw, 72px);
     }
 
     .hero__actions {
@@ -198,13 +202,17 @@
 }
 
 @media (max-width: 480px) {
+    .hero__cobrand-logo {
+        height: clamp(68px, 20vw, 96px);
+    }
+
     .hero__title {
-        font-size: clamp(3rem, 16vw, 5rem);
-        letter-spacing: 0.1em;
+        font-size: clamp(2.4rem, 13vw, 4rem);
+        letter-spacing: 0.08em;
     }
 
     .hero__title__h2 {
-        font-size: clamp(1.3rem, 6vw, 2rem);
+        font-size: clamp(1.1rem, 5vw, 1.6rem);
     }
 
     .hero__content {
@@ -283,7 +291,7 @@
 }
 
 .hero__title__h2 {
-    font-size: clamp(1.6rem, 5vw, 3.8rem);
+    font-size: clamp(1.4rem, 4.5vw, 3.4rem);
     letter-spacing: 0.04em;
     animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
     animation-delay: 0.65s;

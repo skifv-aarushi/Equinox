@@ -12,12 +12,24 @@ const NAV_LINKS = [
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
+    const [atHero, setAtHero] = useState(true);
     const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 60);
         window.addEventListener('scroll', onScroll);
         return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
+    useEffect(() => {
+        const hero = document.getElementById('hero');
+        if (!hero) return;
+        const observer = new IntersectionObserver(
+            ([entry]) => setAtHero(entry.isIntersecting),
+            { threshold: 0.1 }
+        );
+        observer.observe(hero);
+        return () => observer.disconnect();
     }, []);
 
     const handleClick = (e, href) => {
@@ -28,7 +40,7 @@ export default function Navbar() {
     };
 
     return (
-        <nav className={`navbar${scrolled ? ' navbar--scrolled' : ''}`} id="navbar">
+        <nav className={`navbar${atHero ? ' navbar--hero' : scrolled ? ' navbar--scrolled' : ''}`} id="navbar">
             <div className="navbar__inner">
                 <a href="#" className="navbar__logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                     <img src="/equinox-logo.png" alt="" className="navbar__logo-icon-img" draggable={false} />

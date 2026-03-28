@@ -17,6 +17,15 @@ import { useTeam } from '../context/TeamContext';
 import { createTeam, joinTeam } from '../utils/api';
 import './RegistrationHub.css';
 
+const TRACKS = [
+  'Smart Healthcare Systems',
+  'Road Safety',
+  'Social Wellness',
+  'Smart Security',
+  'Smart Home & Automation',
+  'Open Innovation: Smart Infrastructure',
+];
+
 // ─── Reusable labelled input ───────────────────────────────────────────────
 function Field({ label, id, value, onChange, placeholder, maxLength, required = true }) {
   return (
@@ -37,6 +46,26 @@ function Field({ label, id, value, onChange, placeholder, maxLength, required = 
   );
 }
 
+// ─── Track dropdown ───────────────────────────────────────────────────────────
+function TrackSelect({ value, onChange }) {
+  return (
+    <div className="rh-field">
+      <label className="rh-label">Track</label>
+      <select
+        className="rh-select"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        required
+      >
+        <option value="" disabled>Select a track…</option>
+        {TRACKS.map((t) => (
+          <option key={t} value={t}>{t}</option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
 // ─── VTOP acknowledgement checkbox ────────────────────────────────────────────
 function VtopCheckbox({ checked, onChange }) {
   return (
@@ -52,15 +81,11 @@ function VtopCheckbox({ checked, onChange }) {
           I have registered for this event on the <strong>VTOP</strong> portal.
         </span>
       </label>
-      {checked ? (
-        <p className="rh-vtop__confirmed">
-          ✓ VTOP registration confirmed. OD will be provided.
-        </p>
-      ) : (
-        <p className="rh-vtop__warning">
+      {
+        <p key="warning" className="rh-vtop__warning">
           ⚠ If not registered on VTOP, OD (on-duty) will <strong>not</strong> be provided for this participant.
         </p>
-      )}
+      }
     </div>
   );
 }
@@ -76,6 +101,7 @@ function CreatePanel({ isDisabled, onActivate, onDeactivate }) {
   const [name, setName]           = useState(user?.fullName ?? '');
   const [regNo, setRegNo]         = useState('');
   const [phone, setPhone]         = useState('');
+  const [track, setTrack]         = useState('');
   const [vtop, setVtop]           = useState(false);
   const [loading, setLoading]     = useState(false);
 
@@ -88,7 +114,7 @@ function CreatePanel({ isDisabled, onActivate, onDeactivate }) {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    if (!teamName.trim() || !name.trim() || !regNo.trim() || !phone.trim()) {
+    if (!teamName.trim() || !name.trim() || !regNo.trim() || !phone.trim() || !track) {
       toast.error('Please fill in all fields.');
       return;
     }
@@ -103,6 +129,7 @@ function CreatePanel({ isDisabled, onActivate, onDeactivate }) {
         registrationNumber: regNo.trim(),
         phoneNumber:        phone.trim(),
         vtopRegistered:     vtop,
+        track,
       });
       toast.success('Team created! You are the leader.', { id: toastId });
       await refreshTeam();
@@ -162,6 +189,8 @@ function CreatePanel({ isDisabled, onActivate, onDeactivate }) {
           maxLength={15}
         />
 
+        <TrackSelect value={track} onChange={setTrack} />
+
         <div className="rh-email-display">
           <span className="rh-email-label">Registered Email</span>
           <span className="rh-email-value">{email}</span>
@@ -192,6 +221,7 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
   const [name, setName]           = useState(user?.fullName ?? '');
   const [regNo, setRegNo]         = useState('');
   const [phone, setPhone]         = useState('');
+  const [track, setTrack]         = useState('');
   const [vtop, setVtop]           = useState(false);
   const [loading, setLoading]     = useState(false);
 
@@ -206,7 +236,7 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
 
   const handleJoin = async (e) => {
     e.preventDefault();
-    if (!teamCode.trim() || !name.trim() || !regNo.trim() || !phone.trim()) {
+    if (!teamCode.trim() || !name.trim() || !regNo.trim() || !phone.trim() || !track) {
       toast.error('Please fill in all fields.');
       return;
     }
@@ -221,6 +251,7 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
         registrationNumber: regNo.trim(),
         phoneNumber:        phone.trim(),
         vtopRegistered:     vtop,
+        track,
       });
       toast.success("You've joined the team!", { id: toastId });
       await refreshTeam();
@@ -288,6 +319,8 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
           maxLength={15}
         />
 
+        <TrackSelect value={track} onChange={setTrack} />
+
         <div className="rh-email-display">
           <span className="rh-email-label">Registered Email</span>
           <span className="rh-email-value">{email}</span>
@@ -330,7 +363,7 @@ export default function RegistrationHub() {
         <p className="rh-header__pre accent-text">Equinox 2026 · Registration</p>
         <h1 className="rh-header__title">Join the<br />Cosmos</h1>
         <p className="rh-header__sub">
-          Teams of 2–4 members. Create a team or join one with a code.
+          Teams of 3–5 members. Create a team or join one with a code.
         </p>
       </div>
 

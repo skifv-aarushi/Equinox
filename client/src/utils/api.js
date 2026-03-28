@@ -93,3 +93,8 @@ export async function updateTeamVenue(api, teamId, venue) {
   const res = await api.patch(`/admin/teams/${teamId}/venue`, { venue });
   return res.data;
 }
+
+export async function updateVtopStatus(api, payload) {
+  const res = await api.patch('/teams/vtop', payload);
+  return res.data;
+}

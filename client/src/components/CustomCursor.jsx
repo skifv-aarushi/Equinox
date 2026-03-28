@@ -1,7 +1,11 @@
 import { useEffect, useRef } from 'react';
 import './CustomCursor.css';
 
+const isTouchDevice = () => window.matchMedia('(pointer: coarse)').matches;
+
 export default function CustomCursor() {
+  if (isTouchDevice()) return null;
+
   const dotRef = useRef(null);
   const wrapperRef = useRef(null);
   const posRef = useRef({ x: -200, y: -200 });
@@ -9,8 +13,6 @@ export default function CustomCursor() {
   const rafRef = useRef(null);
 
   useEffect(() => {
-    // Don't mount on touch-only devices
-    if (window.matchMedia('(pointer: coarse)').matches) return;
 
     const onMove = (e) => {
       posRef.current = { x: e.clientX, y: e.clientY };

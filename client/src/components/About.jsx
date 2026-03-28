@@ -174,7 +174,7 @@ export default function About() {
                     {/* Equinox × Panasonic Logo */}
                     <div className="about__equinox-logo-wrap">
                         <img
-                            src="/sponsor-logos/equinoxpanasonic.svg"
+                            src="/sponsor-logos/anchorequinox.svg"
                             alt="Equinox '26 × Panasonic"
                             className="about__equinox-logo"
                             draggable={false}
@@ -190,7 +190,7 @@ export default function About() {
                             <span className="about__stat-label">Tracks</span>
                         </div>
                         <div className="about__stat">
-                            <span className="about__stat-number">1500</span>
+                            <span className="about__stat-number">1500+</span>
                             <span className="about__stat-label">Participants</span>
                         </div>
                     </div>

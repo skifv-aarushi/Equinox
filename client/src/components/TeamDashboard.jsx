@@ -18,7 +18,8 @@ import {
   submitGdriveLink,
   fetchInventory,
   claimComponent,
-  unclaimComponent
+  unclaimComponent,
+  updateVtopStatus
 } from '../utils/api';
 import './TeamDashboard.css';
 
@@ -55,8 +56,23 @@ function CopyButton({ text }) {
 }
 
 // ─── Member card ──────────────────────────────────────────────────────────────
-function MemberCard({ member, index }) {
+function MemberCard({ member, index, isCurrentUser, api, onVtopChange }) {
   const isLeader = member.isLeader === true;
+  const [updating, setUpdating] = useState(false);
+
+  const handleVtopToggle = async (e) => {
+    setUpdating(true);
+    try {
+      await updateVtopStatus(api, { email: member.email, vtopRegistered: e.target.checked });
+      toast.success('VTOP status updated.');
+      onVtopChange();
+    } catch (err) {
+      toast.error(err.message || 'Failed to update VTOP status.');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   return (
     <div className={`td-member ${isLeader ? 'td-member--leader' : ''}`}>
       <div className="td-member__avatar">
@@ -66,9 +82,24 @@ function MemberCard({ member, index }) {
         <span className="td-member__name">{member.name || '—'}</span>
         <span className="td-member__reg">{member.registrationNumber || '—'}</span>
         <span className="td-member__email">{member.email || '—'}</span>
-        <span className={`td-member__vtop ${member.vtopRegistered ? 'td-member__vtop--yes' : 'td-member__vtop--no'}`}>
-          VTOP: {member.vtopRegistered ? 'Registered' : 'Not Registered'}
-        </span>
+        {isCurrentUser ? (
+          <label className="td-member__vtop-toggle" title="Click to toggle your VTOP registration">
+            <input
+              type="checkbox"
+              checked={!!member.vtopRegistered}
+              onChange={handleVtopToggle}
+              disabled={updating}
+              style={{ accentColor: 'var(--gold-subtle)' }}
+            />
+            <span className={`td-member__vtop ${member.vtopRegistered ? 'td-member__vtop--yes' : 'td-member__vtop--no'}`}>
+              VTOP: {member.vtopRegistered ? 'Registered' : 'Not Registered'}
+            </span>
+          </label>
+        ) : (
+          <span className={`td-member__vtop ${member.vtopRegistered ? 'td-member__vtop--yes' : 'td-member__vtop--no'}`}>
+            VTOP: {member.vtopRegistered ? 'Registered' : 'Not Registered'}
+          </span>
+        )}
       </div>
       {isLeader
         ? <span className="td-member__badge">☉ Leader</span>
@@ -338,7 +369,14 @@ export default function TeamDashboard() {
         ) : (
           <div className="td-members">
             {members.map((m, i) => (
-              <MemberCard key={m.email ?? i} member={m} index={i} />
+              <MemberCard
+                key={m.email ?? i}
+                member={m}
+                index={i}
+                isCurrentUser={m.email === email}
+                api={api}
+                onVtopChange={refreshTeam}
+              />
             ))}
           </div>
         )}

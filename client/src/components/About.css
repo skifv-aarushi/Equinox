@@ -64,6 +64,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-bottom: 0.5rem;
 }
 
 .about__equinox-logo {
@@ -251,6 +252,14 @@
 @media (max-width: 480px) {
     .about__text p {
         font-size: 0.9rem;
+    }
+
+    .about__equinox-logo {
+        width: min(80vw, 320px);
+    }
+
+    .about__logo-char-wrap {
+        height: clamp(44px, 9.5vw, 58px);
     }
 }
 

@@ -21,7 +21,7 @@ const TRACKS = [
         description: 'Foster thriving communities. Build solutions that enhance public services, promote well-being, and create smarter cities for all.',
     },
     {
-        name: 'SMART SECURITY PROTECTION',
+        name: 'SMART SECURITY',
         subtitle: 'Defending Smart Infrastructure',
         icon: <Shield size={30} strokeWidth={2} />,
         description: 'Guard the digital frontier. Develop solutions that secure smart infrastructure, protect data, and ensure a safe connected future.',
