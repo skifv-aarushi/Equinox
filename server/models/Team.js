@@ -6,7 +6,8 @@ const memberSchema = new mongoose.Schema({
     registrationNumber: { type: String, required: true },
     phoneNumber:        { type: String, required: true },
     isLeader:           { type: Boolean, default: false },
-    vtopRegistered:     { type: Boolean, default: false }
+    vtopRegistered:     { type: Boolean, default: false },
+    track:              { type: String, default: '' }
 });
 
 const claimedComponentSchema = new mongoose.Schema({
@@ -17,7 +18,13 @@ const claimedComponentSchema = new mongoose.Schema({
 const teamSchema = new mongoose.Schema({
     teamName:  { type: String, required: true, unique: true },
     teamCode:  { type: String, required: true, unique: true },
-    members:   [memberSchema],
+    members: {
+        type: [memberSchema],
+        validate: {
+            validator: function (arr) { return arr.length <= 5; },
+            message:   'A team cannot have more than 5 members.'
+        }
+    },
 
     // Hackathon progression
     venue:        { type: String, default: '' },

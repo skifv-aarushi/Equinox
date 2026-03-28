@@ -2,17 +2,18 @@ const Team = require('../models/Team');
 
 // ─── Global component inventory ───────────────────────────────────────────────
 const COMPONENT_INVENTORY = {
-    'ESP32 b type':           25,
-    'ESP32 s3 n16r8':          2,
-    'Breadboard 400 tiepoint': 35,
-    'DHT 11 sensor':           30,
-    'Knock/Tap sensor':        10,
-    'Relay 1 channel module':  20,
-    'IR sensor':               25,
-    'LDR module':              20,
-    'Jumper male to male':     60,
-    'Jumper male to female':   60,
-    'Jumper female to female': 60,
+    'ESP32 Development Board':          40,
+    'MAX30102 Pulse Oximeter Sensor':   15,
+    'ADXL345 Accelerometer Module':     25,
+    'MQ-2 Gas Sensor Module':           25,
+    'PIR Motion Sensor (HC-SR501)':     25,
+    'Reed Switch Module':               25,
+    'Servo Motor (SG90 9G)':            15,
+    'Piezo Buzzer (Small)':             30,
+    'Breadboard (400 Tie-Point)':       35,
+    'Jumper Wires — Male to Male':      60,
+    'Jumper Wires — Male to Female':    60,
+    'Jumper Wires — Female to Female':  60,
 };
 
 // ─── Google Sheets sync (fire-and-forget) ─────────────────────────────────────
@@ -41,7 +42,7 @@ const syncToGoogleSheet = async (team) => {
         const existingRows = await sheet.getRows({ limit: 1 });
         if (existingRows.length === 0) {
             await sheet.setHeaderRow([
-                'Team Code', 'Team Name', 'Team Members',
+                'Team Code', 'Team Name', 'Track', 'Team Members',
                 'GDrive Submission', 'VTOP Registration Status', 'Claimed Components'
             ]);
         }
@@ -58,6 +59,7 @@ const syncToGoogleSheet = async (team) => {
         const rowData = {
             'Team Code':                team.teamCode,
             'Team Name':                team.teamName,
+            'Track':                    team.trackChosen || '',
             'Team Members':             memberNames,
             'GDrive Submission':        team.gdriveLink || '',
             'VTOP Registration Status': vtopStatuses,
@@ -90,7 +92,7 @@ const VIT_EMAIL_DOMAIN = '@vitstudent.ac.in';
 // ─── POST /api/teams/create ───────────────────────────────────────────────────
 const createTeam = async (req, res) => {
     try {
-        const { teamName, leaderName, email, registrationNumber, phoneNumber, vtopRegistered } = req.body;
+        const { teamName, leaderName, email, registrationNumber, phoneNumber, vtopRegistered, track } = req.body;
 
         if (!teamName || !leaderName || !email || !registrationNumber || !phoneNumber) {
             return res.status(400).json({ message: 'Please provide all required fields.' });
@@ -117,13 +119,15 @@ const createTeam = async (req, res) => {
         const newTeam = await Team.create({
             teamName,
             teamCode,
+            trackChosen: track || '',
             members: [{
                 name: leaderName,
                 email,
                 registrationNumber,
                 phoneNumber,
                 isLeader:       true,
-                vtopRegistered: !!vtopRegistered
+                vtopRegistered: !!vtopRegistered,
+                track:          track || ''
             }]
         });
 
@@ -143,7 +147,7 @@ const createTeam = async (req, res) => {
 // ─── POST /api/teams/join ─────────────────────────────────────────────────────
 const joinTeam = async (req, res) => {
     try {
-        const { teamCode, memberName, email, registrationNumber, phoneNumber, vtopRegistered } = req.body;
+        const { teamCode, memberName, email, registrationNumber, phoneNumber, vtopRegistered, track } = req.body;
 
         if (!teamCode || !memberName || !email || !registrationNumber || !phoneNumber) {
             return res.status(400).json({ message: 'Please provide all required fields.' });
@@ -162,8 +166,8 @@ const joinTeam = async (req, res) => {
             return res.status(404).json({ message: 'Invalid Team Code. Team not found.' });
         }
 
-        if (team.members.length >= 4) {
-            return res.status(400).json({ message: 'This team has reached the maximum of 4 members.' });
+        if (team.members.length >= 5) {
+            return res.status(400).json({ message: 'This team has reached the maximum of 5 members.' });
         }
 
         if (team.members.some(m => m.registrationNumber === registrationNumber)) {
@@ -176,7 +180,8 @@ const joinTeam = async (req, res) => {
             registrationNumber,
             phoneNumber,
             isLeader:       false,
-            vtopRegistered: !!vtopRegistered
+            vtopRegistered: !!vtopRegistered,
+            track:          track || ''
         });
 
         await team.save();
@@ -340,6 +345,24 @@ const unclaimComponent = async (req, res) => {
     }
 };
 
+// ─── PATCH /api/teams/vtop ────────────────────────────────────────────────────
+const updateVtopStatus = async (req, res) => {
+    try {
+        const { email, vtopRegistered } = req.body;
+        const team = await Team.findOne({ 'members.email': email });
+        if (!team) return res.status(404).json({ message: 'Team not found.' });
+        const member = team.members.find(m => m.email === email);
+        if (!member) return res.status(404).json({ message: 'Member not found.' });
+        member.vtopRegistered = !!vtopRegistered;
+        await team.save();
+        syncToGoogleSheet(team).catch(() => {});
+        res.status(200).json({ message: 'VTOP status updated.', vtopRegistered: member.vtopRegistered });
+    } catch (error) {
+        console.error('Error in updateVtopStatus:', error);
+        res.status(500).json({ message: 'Server error.' });
+    }
+};
+
 module.exports = {
     createTeam,
     joinTeam,
@@ -348,5 +371,6 @@ module.exports = {
     getInventory,
     claimComponent,
     unclaimComponent,
+    updateVtopStatus,
     COMPONENT_INVENTORY
 };
