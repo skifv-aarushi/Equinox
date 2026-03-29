@@ -1,21 +1,5 @@
 const Team = require('../models/Team');
 
-// ─── Global component inventory ───────────────────────────────────────────────
-const COMPONENT_INVENTORY = {
-    'ESP32 Development Board':          40,
-    'MAX30102 Pulse Oximeter Sensor':   15,
-    'ADXL345 Accelerometer Module':     25,
-    'MQ-2 Gas Sensor Module':           25,
-    'PIR Motion Sensor (HC-SR501)':     25,
-    'Reed Switch Module':               25,
-    'Servo Motor (SG90 9G)':            15,
-    'Piezo Buzzer (Small)':             30,
-    'Breadboard (400 Tie-Point)':       35,
-    'Jumper Wires — Male to Male':      60,
-    'Jumper Wires — Male to Female':    60,
-    'Jumper Wires — Female to Female':  60,
-};
-
 // ─── Google Sheets sync (fire-and-forget) ─────────────────────────────────────
 const syncToGoogleSheet = async (team) => {
     const svcEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
@@ -43,7 +27,7 @@ const syncToGoogleSheet = async (team) => {
         if (existingRows.length === 0) {
             await sheet.setHeaderRow([
                 'Team Code', 'Team Name', 'Track', 'Team Members',
-                'GDrive Submission', 'VTOP Registration Status', 'Claimed Components'
+                'GDrive Submission', 'VTOP Registration Status'
             ]);
         }
 
@@ -51,7 +35,6 @@ const syncToGoogleSheet = async (team) => {
         const vtopStatuses = team.members
             .map(m => `${m.name}: ${m.vtopRegistered ? 'Yes' : 'No'}`)
             .join(' | ');
-        const components   = team.claimedComponents.map(c => c.name).join(', ');
 
         const rows = await sheet.getRows();
         const existingRow = rows.find(r => r.get('Team Code') === team.teamCode);
@@ -63,7 +46,6 @@ const syncToGoogleSheet = async (team) => {
             'Team Members':             memberNames,
             'GDrive Submission':        team.gdriveLink || '',
             'VTOP Registration Status': vtopStatuses,
-            'Claimed Components':       components,
         };
 
         if (existingRow) {
@@ -252,157 +234,6 @@ const submitGdriveLink = async (req, res) => {
     }
 };
 
-// ─── GET /api/teams/inventory?email=... ──────────────────────────────────────
-const getInventory = async (req, res) => {
-    try {
-        const { email } = req.query;
-
-        const claimedCounts = await Team.aggregate([
-            { $unwind: '$claimedComponents' },
-            { $group: { _id: '$claimedComponents.name', count: { $sum: 1 } } }
-        ]);
-
-        const claimedMap = {};
-        claimedCounts.forEach(item => { claimedMap[item._id] = item.count; });
-
-        let teamClaimed = [];
-        if (email) {
-            const team = await Team.findOne({ 'members.email': email });
-            if (team) teamClaimed = team.claimedComponents.map(c => c.name);
-        }
-
-        const inventory = Object.entries(COMPONENT_INVENTORY).map(([name, total]) => ({
-            name,
-            total,
-            claimed:        claimedMap[name] || 0,
-            remaining:      total - (claimedMap[name] || 0),
-            teamHasClaimed: teamClaimed.includes(name)
-        }));
-
-        res.status(200).json({ inventory });
-    } catch (error) {
-        console.error('Error in getInventory:', error);
-        res.status(500).json({ message: 'Server error while fetching inventory.' });
-    }
-};
-
-// ─── POST /api/teams/claim-component ─────────────────────────────────────────
-const claimComponent = async (req, res) => {
-    try {
-        const { email, componentName } = req.body;
-
-        if (!componentName || !Object.prototype.hasOwnProperty.call(COMPONENT_INVENTORY, componentName)) {
-            return res.status(400).json({ message: 'Invalid component name.' });
-        }
-
-        const team = await Team.findOne({ 'members.email': email });
-        if (!team) return res.status(404).json({ message: 'Team not found.' });
-
-        // Rule 1 — per-team limit
-        if (team.claimedComponents.some(c => c.name === componentName)) {
-            return res.status(400).json({ message: 'Your team has already claimed this component.' });
-        }
-
-        // Rule 2 — global stock
-        const globalClaimed = await Team.countDocuments({ 'claimedComponents.name': componentName });
-        if (globalClaimed >= COMPONENT_INVENTORY[componentName]) {
-            return res.status(400).json({ message: 'This component is out of stock.' });
-        }
-
-        team.claimedComponents.push({ name: componentName });
-        await team.save();
-        syncToGoogleSheet(team).catch(() => {});
-
-        res.status(200).json({
-            message:           `${componentName} claimed successfully.`,
-            claimedComponents: team.claimedComponents
-        });
-    } catch (error) {
-        console.error('Error in claimComponent:', error);
-        res.status(500).json({ message: 'Server error while claiming component.' });
-    }
-};
-
-// ─── DELETE /api/teams/claim-component ───────────────────────────────────────
-const unclaimComponent = async (req, res) => {
-    try {
-        const { email, componentName } = req.body;
-
-        const team = await Team.findOne({ 'members.email': email });
-        if (!team) return res.status(404).json({ message: 'Team not found.' });
-
-        const before = team.claimedComponents.length;
-        team.claimedComponents = team.claimedComponents.filter(c => c.name !== componentName);
-
-        if (team.claimedComponents.length === before) {
-            return res.status(400).json({ message: 'Component not in your claimed list.' });
-        }
-
-        await team.save();
-        syncToGoogleSheet(team).catch(() => {});
-
-        res.status(200).json({
-            message:           `${componentName} removed.`,
-            claimedComponents: team.claimedComponents
-        });
-    } catch (error) {
-        console.error('Error in unclaimComponent:', error);
-        res.status(500).json({ message: 'Server error while unclaiming component.' });
-    }
-};
-
-// ─── POST /api/teams/claim-components (batch) ────────────────────────────────
-const submitComponentList = async (req, res) => {
-    try {
-        const { email, components } = req.body; // components: string[]
-
-        if (!Array.isArray(components)) {
-            return res.status(400).json({ message: 'components must be an array.' });
-        }
-
-        // Validate all names
-        const invalid = components.filter(n => !Object.prototype.hasOwnProperty.call(COMPONENT_INVENTORY, n));
-        if (invalid.length > 0) {
-            return res.status(400).json({ message: `Unknown component(s): ${invalid.join(', ')}` });
-        }
-
-        const team = await Team.findOne({ 'members.email': email });
-        if (!team) return res.status(404).json({ message: 'Team not found.' });
-
-        const previouslyClaimed = new Set(team.claimedComponents.map(c => c.name));
-        const newSet            = new Set(components);
-
-        // Check global stock for newly added components
-        for (const name of newSet) {
-            if (previouslyClaimed.has(name)) continue; // already held, no stock change
-            const globalClaimed = await Team.countDocuments({ 'claimedComponents.name': name });
-            if (globalClaimed >= COMPONENT_INVENTORY[name]) {
-                return res.status(400).json({ message: `"${name}" is out of stock.` });
-            }
-        }
-
-        // Rebuild claimedComponents — keep old claimedAt for existing items
-        const existingMap = {};
-        team.claimedComponents.forEach(c => { existingMap[c.name] = c.claimedAt; });
-
-        team.claimedComponents = components.map(name => ({
-            name,
-            claimedAt: existingMap[name] || new Date()
-        }));
-
-        await team.save();
-        syncToGoogleSheet(team).catch(() => {});
-
-        res.status(200).json({
-            message:           'Component list updated.',
-            claimedComponents: team.claimedComponents
-        });
-    } catch (error) {
-        console.error('Error in submitComponentList:', error);
-        res.status(500).json({ message: 'Server error while updating component list.' });
-    }
-};
-
 // ─── PATCH /api/teams/vtop ────────────────────────────────────────────────────
 const updateVtopStatus = async (req, res) => {
     try {
@@ -426,10 +257,5 @@ module.exports = {
     joinTeam,
     getTeamByUserEmail,
     submitGdriveLink,
-    getInventory,
-    claimComponent,
-    unclaimComponent,
-    submitComponentList,
-    updateVtopStatus,
-    COMPONENT_INVENTORY
+    updateVtopStatus
 };
