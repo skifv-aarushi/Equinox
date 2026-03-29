@@ -117,6 +117,7 @@ export default function About() {
 
             <div className="section-title reveal">
                 <h2>About Equinox</h2>
+                <p className="section-eyebrow">The vision and the challenge</p>
             </div>
 
            <div className="about__grid reveal">
@@ -174,7 +175,7 @@ export default function About() {
                     {/* Equinox × Panasonic Logo */}
                     <div className="about__equinox-logo-wrap">
                         <img
-                            src="/sponsor-logos/anchorequinox.svg"
+                            src="/sponsor-logos/equinoxanchorpresents.svg"
                             alt="Equinox '26 × Panasonic"
                             className="about__equinox-logo"
                             draggable={false}

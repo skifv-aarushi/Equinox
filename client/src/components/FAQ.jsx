@@ -4,11 +4,11 @@ import './FAQ.css';
 const QUESTIONS = [
     {
         q: 'What is Equinox?',
-        a: 'Equinox ’26 is a 60-hour hackathon centered on the theme of Smart Infrastructure, challenging teams to build solutions for smarter cities, homes, roads, and communities. Organized by RoboVITics at VIT Vellore, powered by Anchor by Panasonic, it brings together students to innovate, build, and solve real-world problems.',
+        a: 'Equinox ’26 is a 60-hour hackathon centered on the theme of Smart Infrastructure, challenging teams to build solutions for smarter cities, homes, roads, and communities. Organized by RoboVITics at VIT Vellore, presented by Anchor by Panasonic, it brings together students to innovate, build, and solve real-world problems.',
     },
     {
         q: 'Who can participate?',
-        a: 'Equinox is open to all college students from any discipline, with team participation limited to 3–5 members. Solo participants are also welcome and can find teammates during the event.',
+        a: 'Equinox is open to VIT students from any discipline, with team participation limited to 3–5 members. Solo participants are also welcome and can find teammates during the event.',
     },
     {
         q: 'Is there a registration fee?',
@@ -27,7 +27,7 @@ const QUESTIONS = [
         a: 'Projects will be evaluated on innovation, technical complexity, design quality, real-world impact, and presentation. Our panel of expert judges will assess each submission with care.',
     },
     {
-        q: 'What do I do if the electic component I need isn\'t listed or not available?',
+        q: 'What do I do if an electric component I need isn\'t listed or not available?',
         a: 'If a component isn\'t listed or available, you need to bring it yourself or find an alternative solution. We encourage creativity and resourcefulness, so think outside the box and make the most of what\'s available!',
     },
     {
@@ -40,7 +40,7 @@ const QUESTIONS = [
     },
     {
         q: 'If I have more questions, how can I reach out?',
-        a: 'Feel free to reach out to us at <a href="mailto: robovitics@gmail.com"> ',
+        a: 'Feel free to reach out to us at robovitics@vit.ac.in',
     },
 ];
 
@@ -55,9 +55,7 @@ export default function FAQ() {
         <section className="faq section" id="faq">
             <div className="section-title reveal">
                 <h2>Frequently Asked</h2>
-                <p className="accent-text" style={{ textAlign: 'center', margin: '0 auto' }}>
-                    Seek and you shall find
-                </p>
+                <p className="section-eyebrow">Seek and you shall find</p>
             </div>
 
             <div className="faq__list reveal">

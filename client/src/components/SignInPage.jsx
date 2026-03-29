@@ -1,4 +1,5 @@
 import { useSignIn } from '@clerk/clerk-react';
+import CustomCursor from './CustomCursor';
 import './SignInPage.css';
 
 export default function SignInPage() {
@@ -14,11 +15,12 @@ export default function SignInPage() {
   };
 
   return (
+    <>
+    <CustomCursor />
     <div className="si-root">
       <div className="si-card">
         <div className="si-logo-row">
-          <img src="/equinox-logo.png" alt="" className="si-logo-img" draggable={false} />
-          <img src="/equinoxnav.png"   alt="Equinox" className="si-logo-text" draggable={false} />
+          <img src="/sponsor-logos/equinoxanchorpresents.svg"   alt="Equinox" className="si-logo-text" draggable={false} />
         </div>
 
         <h1 className="si-title">Sign In</h1>
@@ -43,5 +45,6 @@ export default function SignInPage() {
         </p>
       </div>
     </div>
+    </>
   );
 }

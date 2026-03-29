@@ -3,7 +3,7 @@ import './Navbar.css';
 
 const NAV_LINKS = [
     { label: 'About', href: '#about' },
-    { label: 'Sponsors', href: '#sponsors' },
+    { label: 'Sponsor', href: '#sponsors' },
     { label: 'Timeline', href: '#timeline' },
     { label: 'Tracks', href: '#tracks' },
     { label: 'Register', href: '#register' },

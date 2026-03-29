@@ -7,7 +7,7 @@
   padding: var(--space-md);
 }
 
-.si-card {
+.si-card { 
   width: min(420px, 100%);
   background: rgba(15, 21, 35, 0.85);
   border: 1px solid var(--gold-line);
@@ -29,16 +29,8 @@
   margin-bottom: 0.4rem;
 }
 
-.si-logo-img {
-  height: 44px;
-  width: auto;
-  object-fit: contain;
-  opacity: 0.85;
-  filter: drop-shadow(0 0 6px rgba(201, 169, 110, 0.35));
-}
-
 .si-logo-text {
-  height: 22px;
+  height: 70px;
   width: auto;
   object-fit: contain;
   filter: brightness(0.95);

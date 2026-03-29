@@ -26,7 +26,7 @@ const GENDER_OPTIONS = ['Male', 'Female', 'Other'];
 
 const BLOCKS = {
   female: ['N/A', 'A Block', 'B Block', 'C Block', 'D Block', 'E Block', 'F Block', 'G Block', 'H Block', 'J Block', 'RGT H Block', 'GH Annex Block'],
-  male:   ['N/A', 'A Block', 'B Block', 'B Annex Block', 'C Block', 'D Block', 'D Annex Block', 'E Block', 'F Block', 'G Block', 'H Block', 'J Block', 'J Annex Block', 'K Block', 'L Block', 'M Block', 'M Annex Block', 'N Block', 'N Annex Block', 'P Block', 'Q Block', 'R Block', 'S Block', 'T Block'],
+  male:   ['N/A', 'A Block', 'B Annex Block', 'C Block', 'D Block', 'D Annex Block', 'E Block', 'F Block', 'G Block', 'H Block', 'J Block', 'J Annex Block', 'K Block', 'L Block', 'M Block', 'M Annex Block', 'N Block', 'N Annex Block', 'P Block', 'Q Block', 'R Block', 'S Block', 'T Block'],
   other:  ['N/A', 'A Block', 'B Block', 'B Annex Block', 'C Block', 'D Block', 'D Annex Block', 'E Block', 'F Block', 'G Block', 'GH Annex Block', 'H Block', 'J Block', 'J Annex Block', 'K Block', 'L Block', 'M Block', 'M Annex Block', 'N Block', 'N Annex Block', 'P Block', 'Q Block', 'R Block', 'RGT H Block', 'S Block', 'T Block'],
 };
 

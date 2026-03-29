@@ -10,14 +10,12 @@
  *  – Component inventory selection
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 import { useTeam } from '../context/TeamContext';
 import {
   submitGdriveLink,
-  fetchInventory,
-  submitComponentList,
   updateVtopStatus
 } from '../utils/api';
 import './TeamDashboard.css';
@@ -205,119 +203,6 @@ function SubmissionPanel({ team, email, api, onUpdate }) {
   );
 }
 
-// ─── Inventory panel (cart-based) ────────────────────────────────────────────
-function InventoryPanel({ email, api, onUpdate }) {
-  const [inventory,   setInventory]   = useState([]);
-  const [cart,        setCart]        = useState(new Set()); // names in cart
-  const [savedCart,   setSavedCart]   = useState(new Set()); // last confirmed DB state
-  const [submitting,  setSubmitting]  = useState(false);
-
-  const load = useCallback(async () => {
-    try {
-      const data = await fetchInventory(api, email);
-      const items = data.inventory || [];
-      setInventory(items);
-      const claimed = new Set(items.filter(i => i.teamHasClaimed).map(i => i.name));
-      setCart(claimed);
-      setSavedCart(claimed);
-    } catch (err) {
-      console.error('Failed to load inventory:', err.message);
-    }
-  }, [api, email]);
-
-  useEffect(() => { load(); }, [load]);
-
-  const toggle = (name, outOfStock) => {
-    if (outOfStock) return;
-    setCart(prev => {
-      const next = new Set(prev);
-      if (next.has(name)) next.delete(name); else next.add(name);
-      return next;
-    });
-  };
-
-  const isDirty = cart.size !== savedCart.size || [...cart].some(n => !savedCart.has(n));
-
-  const handleSubmit = async () => {
-    setSubmitting(true);
-    try {
-      await submitComponentList(api, { email, components: Array.from(cart) });
-      toast.success('Component list saved!');
-      setSavedCart(new Set(cart));
-      onUpdate();
-      await load();
-    } catch (err) {
-      toast.error(err.message || 'Failed to save component list.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <div className="td-inventory">
-      <div className="td-inventory__header">
-        <span className="td-inventory__icon">⚙</span>
-        <h3 className="td-inventory__title">Component Selection</h3>
-        <span className="td-inventory__sub">Max 1 unit per component per team</span>
-      </div>
-
-      <div className="td-inventory__grid">
-        {inventory.map((item) => {
-          const inCart     = cart.has(item.name);
-          const outOfStock = item.remaining <= 0 && !inCart;
-
-          return (
-            <div
-              key={item.name}
-              className={`td-inv-item${inCart ? ' td-inv-item--selected' : ''}${outOfStock ? ' td-inv-item--empty' : ''}`}
-            >
-              <div className="td-inv-item__name">{item.name}</div>
-              <div className="td-inv-item__stock">
-                <span className={`td-inv-item__remaining${item.remaining === 0 && !inCart ? ' td-inv-item__remaining--zero' : ''}`}>
-                  {item.remaining} / {item.total} left
-                </span>
-              </div>
-              {inCart ? (
-                <button
-                  type="button"
-                  className="td-inv-item__btn td-inv-item__btn--remove"
-                  onClick={() => toggle(item.name, false)}
-                >
-                  ✕ Remove
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="td-inv-item__btn td-inv-item__btn--claim"
-                  onClick={() => toggle(item.name, outOfStock)}
-                  disabled={outOfStock}
-                >
-                  {outOfStock ? 'Out of Stock' : '+ Claim'}
-                </button>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="td-inventory__footer">
-        <span className="td-inventory__tally">
-          {cart.size} component{cart.size !== 1 ? 's' : ''} selected
-        </span>
-        <button
-          className="btn btn-primary td-inventory__submit"
-          onClick={handleSubmit}
-          disabled={!isDirty || submitting}
-        >
-          {submitting
-            ? <><span className="td-loading__spinner td-loading__spinner--sm" /> Saving…</>
-            : 'Submit Component List'}
-        </button>
-      </div>
-    </div>
-  );
-}
-
 // ─── TeamDashboard ─────────────────────────────────────────────────────────
 export default function TeamDashboard() {
   const { team, isLoading, refreshTeam } = useTeam();
@@ -434,16 +319,6 @@ export default function TeamDashboard() {
         />
       </div>
 
-      <div className="celestial-divider" style={{ margin: '0 auto', maxWidth: 800 }} />
-
-      {/* ── Component inventory ── */}
-      <div className="td-section">
-        <InventoryPanel
-          email={email}
-          api={api}
-          onUpdate={refreshTeam}
-        />
-      </div>
 
     </div>
   );

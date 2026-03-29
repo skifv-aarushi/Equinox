@@ -20,9 +20,7 @@ export default function AboutUs() {
 
             <div className="section-title reveal">
                 <h2>About Us</h2>
-                <p className="aboutus__intro accent-text">
-                    The minds and institution behind Equinox
-                </p>
+                <p className="section-eyebrow">The minds and institution behind Equinox</p>
             </div>
 
             <div className="aboutus__layout">
@@ -104,12 +102,8 @@ export default function AboutUs() {
 
                     <div className="aboutus__card-stats">
                         <div className="aboutus__stat">
-                            <span className="aboutus__stat-num">15+</span>
+                            <span className="aboutus__stat-num">15</span>
                             <span className="aboutus__stat-label">Years</span>
-                        </div>
-                        <div className="aboutus__stat">
-                            <span className="aboutus__stat-num">500+</span>
-                            <span className="aboutus__stat-label">Members</span>
                         </div>
                         <div className="aboutus__stat">
                             <span className="aboutus__stat-num aboutus__stat-num--small">Best Club</span>

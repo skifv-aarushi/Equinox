@@ -8,9 +8,7 @@ export default function RegisterForm() {
         <section className="register section" id="register">
             <div className="section-title reveal">
                 <h2>Register</h2>
-                <p className="accent-text" style={{ textAlign: 'center', margin: '0 auto' }}>
-                    Align yourself with the stars
-                </p>
+                <p className="section-eyebrow">Align yourself with the stars</p>
             </div>
 
             <div className="reveal" style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>

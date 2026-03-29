@@ -66,9 +66,6 @@ export default function GlobalEclipseOverlay() {
             const sponsorsEl = document.getElementById("sponsors");
             if (!aboutEl || !sponsorsEl) return;
 
-            const vw = window.innerWidth;
-            const vh = window.innerHeight;
-
             const moonProxy = { angle: MOON_START_ANGLE, opacity: 0 };
             const sunProxy  = { angle: SUN_START_ANGLE, opacity: 0 };
             const coneProxy = { alpha: 1 }; // multiplier faded by its own ScrollTrigger
@@ -79,6 +76,10 @@ export default function GlobalEclipseOverlay() {
             let forceHide = false;
 
             function updatePositions() {
+                // Read live viewport size so mobile chrome show/hide is handled correctly
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+
                 if (forceHide) {
                     moonEl.style.opacity   = 0;
                     sunEl.style.opacity    = 0;
@@ -223,6 +224,10 @@ export default function GlobalEclipseOverlay() {
             }, container);
 
             container._gsapCtx = ctx;
+
+            // Refresh after layout settles — critical on mobile where fonts/images
+            // shift element positions after the initial render
+            setTimeout(() => ScrollTrigger.refresh(), 300);
         });
 
         return () => {

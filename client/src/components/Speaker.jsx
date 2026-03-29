@@ -26,9 +26,7 @@ export default function Speaker() {
 
             <div className="section-title reveal">
                 <h2>Speakers</h2>
-                <p className="accent-text" style={{ textAlign: 'center', margin: '0 auto' }}>
-                    Guided by the brightest stars
-                </p>
+                <p className="section-eyebrow">Guided by the brightest stars</p>
             </div>
 
             <div className="speakers__grid reveal stagger">

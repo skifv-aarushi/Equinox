@@ -78,7 +78,6 @@ function TeamRow({ team, api, onUpdated }) {
 
   const vtopCount = team.members.filter(m => m.vtopRegistered).length;
   const members   = team.members.map(m => m.name).join(', ');
-  const components = team.claimedComponents?.map(c => c.name).join(', ') || '—';
 
   return (
     <tr className="ap-row">
@@ -93,9 +92,6 @@ function TeamRow({ team, api, onUpdated }) {
           ? <a href={team.gdriveLink} target="_blank" rel="noopener noreferrer" className="ap-link">View Link</a>
           : <span className="ap-empty">—</span>
         }
-      </td>
-      <td className="ap-td ap-td--components">
-        <span className="ap-components">{components}</span>
       </td>
       <td className="ap-td ap-td--round">
         <select
@@ -220,7 +216,6 @@ export default function AdminPanel() {
                 <th className="ap-th">Team Name</th>
                 <th className="ap-th">Members</th>
                 <th className="ap-th">GDrive</th>
-                <th className="ap-th">Components</th>
                 <th className="ap-th">Round</th>
                 <th className="ap-th">Status</th>
                 <th className="ap-th">Venue</th>

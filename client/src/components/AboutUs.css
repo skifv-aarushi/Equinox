@@ -38,18 +38,6 @@
     margin-bottom: clamp(1rem, 2.5vh, 1.8rem);
 }
 
-/* ── Section subtitle ── */
-.aboutus__intro {
-    display: block;
-    text-align: center;
-    font-size: clamp(0.85rem, 1.2vw, 1rem);
-    color: var(--gold-subtle);
-    opacity: 0.6;
-    margin-top: 0.4rem;
-    max-width: 50ch;
-    margin-inline: auto;
-}
-
 /* ── Three-column layout: card | divider | card ── */
 .aboutus__layout {
     display: grid;

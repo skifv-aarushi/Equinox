@@ -61,9 +61,7 @@ export default function Tracks() {
 
             <div className="section-title reveal">
                 <h2>Tracks</h2>
-                <p className="accent-text" style={{ textAlign: 'center', margin: '0 auto' }}>
-                    Choose your constellation
-                </p>
+                <p className="section-eyebrow">Choose your constellation</p>
             </div>
 
             <div className="tracks__grid reveal stagger">

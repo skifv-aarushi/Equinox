@@ -14,7 +14,7 @@ export default function Footer() {
                         <span className="footer__logo-icon">☉</span>
                         <span className="footer__logo-text">Equinox</span>
                         <p className="footer__tagline">
-                            An ancient observatory reborn in the modern digital cosmos.
+                            Override the Ordinary.
                         </p>
                     </div>
 
@@ -38,9 +38,6 @@ export default function Footer() {
 
                 <div className="footer__bottom">
                     <p>© 2026 Equinox by RoboVITics. All rights reserved.</p>
-                    <p className="footer__motto accent-text">
-                        "Balance in all things."
-                    </p>
                 </div>
             </div>
         </footer>

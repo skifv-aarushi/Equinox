@@ -195,15 +195,6 @@
   font-family: 'Courier New', monospace;
 }
 
-.ap-components {
-  font-size: 0.78rem;
-  color: var(--marble);
-  opacity: 0.8;
-  max-width: 180px;
-  display: block;
-  word-break: break-word;
-}
-
 .ap-link {
   color: var(--gold-subtle);
   text-decoration: underline;

@@ -57,21 +57,6 @@ export async function submitGdriveLink(api, payload) {
   return res.data;
 }
 
-export async function fetchInventory(api, email) {
-  const res = await api.get(`/teams/inventory?email=${encodeURIComponent(email)}`);
-  return res.data;
-}
-
-export async function claimComponent(api, payload) {
-  const res = await api.post('/teams/claim-component', payload);
-  return res.data;
-}
-
-export async function unclaimComponent(api, payload) {
-  const res = await api.delete('/teams/claim-component', { data: payload });
-  return res.data;
-}
-
 // ─── Admin helpers ────────────────────────────────────────────────────────────
 
 export async function fetchAllTeams(api) {
@@ -91,11 +76,6 @@ export async function updateSubmissionStatus(api, teamId, submissionStatus) {
 
 export async function updateTeamVenue(api, teamId, venue) {
   const res = await api.patch(`/admin/teams/${teamId}/venue`, { venue });
-  return res.data;
-}
-
-export async function submitComponentList(api, payload) {
-  const res = await api.post('/teams/claim-components', payload);
   return res.data;
 }
 
