@@ -1,26 +1,54 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Added for routing
+import { useNavigate } from 'react-router-dom';
+import { useUser, useAuth } from '@clerk/clerk-react';
+import { createApiClient, fetchTeamByEmail } from '../utils/api';
 import CelestialScene from '../three/CelestialScene';
 import './Hero.css';
 
 export default function Hero() {
     const canvasRef = useRef(null);
-    const sceneRef = useRef(null);
-    const navigate = useNavigate(); // Added for routing
+    const sceneRef  = useRef(null);
+    const navigate  = useNavigate();
 
-    // countdown state
+    const { user, isLoaded: userLoaded } = useUser();
+    const { getToken } = useAuth();
+
+    // Will be null (no team), an object (has team), or 'loading'
+    const [teamStatus, setTeamStatus] = useState('loading');
+
+    // Countdown state
     const [timeLeft, setTimeLeft] = useState({ d: 20, h: 0, m: 0, s: 0 });
 
+    // ── Fetch team status for logged-in user ──────────────────
+    useEffect(() => {
+        if (!userLoaded) return;
+
+        if (!user) {
+            // Not signed in
+            setTeamStatus(null);
+            return;
+        }
+
+        const email = user.primaryEmailAddress?.emailAddress;
+        if (!email) { setTeamStatus(null); return; }
+
+        const api = createApiClient(getToken);
+        fetchTeamByEmail(api, email)
+            .then(data => setTeamStatus(data ?? null))
+            .catch(() => setTeamStatus(null));
+    }, [userLoaded, user, getToken]);
+
+    // ── Three.js canvas + countdown timer ────────────────────
     useEffect(() => {
         if (canvasRef.current && !sceneRef.current) {
             sceneRef.current = new CelestialScene(canvasRef.current);
         }
 
-        // countdown to April 7 2026 08:00 AM IST
+        // Countdown to April 7 2026 08:00 AM IST
         const target = new Date('2026-04-07T08:00:00+05:30').getTime();
 
         const timer = setInterval(() => {
-            const now = new Date().getTime();
+            const now  = new Date().getTime();
             const diff = target - now;
 
             if (diff <= 0) return clearInterval(timer);
@@ -42,8 +70,14 @@ export default function Hero() {
         };
     }, []);
 
-    const scrollTo = (id) => {
-        const el = document.querySelector(id);
+    // ── Derived button labels ─────────────────────────────────
+    const hasTeam    = teamStatus && teamStatus !== 'loading' && teamStatus.teamName;
+    const primaryLabel = hasTeam ? 'View Team' : 'Register Now';
+
+    const handlePrimary = () => navigate('/register');
+
+    const handleExploreTracks = () => {
+        const el = document.querySelector('#tracks');
         if (el) el.scrollIntoView({ behavior: 'smooth' });
     };
 
@@ -73,6 +107,15 @@ export default function Hero() {
                     <span className="hero__title-nox">26</span>
                 </h2>
 
+                
+
+                {/* HIGHLIGHTS (Priority 2) */}
+                <div className="hero__highlights">
+                    <span className="hero__highlight-item hero__highlight-gold" style={{ flex: 1, textAlign: 'right' }}>Prize Pool: ₹ 2,00,000+</span>
+                    <span className="hero__highlight-divider">•</span>
+                    <span className="hero__highlight-item" style={{ flex: 1, textAlign: 'left' }}>Theme: Smart Infrastructure</span>
+                </div>
+
                 {/* COUNTDOWN */}
                 <div className="hero__countdown">
                     <div className="time-block">
@@ -93,17 +136,14 @@ export default function Hero() {
                     </div>
                 </div>
 
-                <p className="hero__subtitle">
-                    Theme: Smart Infrastructure
-                </p>
+                
 
                 <div className="hero__actions">
-                    {/* Updated to use navigate('/register') instead of scrolling */}
-                    <button className="btn btn-primary" onClick={() => navigate('/register')}>
-                        Register Now
+                    <button className="btn btn-primary" onClick={handlePrimary}>
+                        {primaryLabel}
                     </button>
-                    <button className="btn" onClick={() => navigate('/register')}>
-                        Login
+                    <button className="btn" onClick={handleExploreTracks}>
+                        Explore Tracks
                     </button>
                 </div>
 

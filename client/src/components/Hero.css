@@ -48,19 +48,19 @@
 }
 
 .hero__pre-title {
-    font-size: clamp(1.22rem, 2.05vw, 1.68rem);
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
     color: var(--gold-subtle);
     opacity: 0.7;
-    margin: 0 auto 0.3rem;
+    margin: 0 auto 0.2rem;
     letter-spacing: 0.1em;
     text-align: center;
     width: 100%;
 }
 
 .hero__title {
-    font-size: clamp(3rem, 12vw, 9rem);
+    font-size: clamp(3rem, 13vw, 8.5rem);
     letter-spacing: 0.04em;
-    margin-bottom: 0;
+    margin-bottom: -0.5rem;
     line-height: 1;
     text-align: center;
     gap: 0;
@@ -105,7 +105,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0;
     animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
     animation-delay: 0.25s;
 }
@@ -126,10 +126,10 @@
 }
 
 .hero__cobrand-logo {
-    height: clamp(54px, 7.5vw, 96px);
+    height: clamp(60px, 15vw, 130px);
     width: auto;
     object-fit: contain;
-    opacity: 0.85;
+    opacity: 0.95;
 }
 
 .hero__subtitle {
@@ -138,6 +138,58 @@
     max-width: min(55ch, 90vw);
     margin: 0 auto 0.4rem;
     line-height: 1.8;
+}
+
+.hero__highlights {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin: 0.2rem 0 1.2rem 0;
+    width: 100%;
+}
+
+.hero__highlight-item {
+    font-size: clamp(0.85rem, 2vw, 1.25rem);
+    font-weight: 500;
+    color: var(--marble);
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+}
+
+.hero__highlight-divider {
+    color: var(--gold-subtle);
+    opacity: 0.5;
+    font-size: 1.2rem;
+}
+
+.hero__highlight-gold {
+    font-weight: 800;
+    color: var(--gold);
+    background: linear-gradient(90deg, #FEEB90 0%, #fff5c0 50%, #FEEB90 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px rgba(254, 235, 144, 0.3));
+}
+
+.hero__tagline {
+    font-size: clamp(0.6rem, 1.4vw, 0.85rem);
+    color: var(--gold-subtle);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    font-weight: 500;
+    opacity: 0.9;
+    
+    width: 100%;
+    margin: 0.2rem auto -0.6rem auto;
+    max-width: clamp(300px, 85vw, 680px);
+    text-align: right;
+}
+
+.hero__title__h2 {
+    margin: 0.2rem 0 1rem 0;
 }
 
 .hero__actions {
@@ -225,9 +277,9 @@
 .hero__countdown {
     display: flex;
     justify-content: center;
-    gap: clamp(0.6rem, 2vw, 1.2rem);
-    margin-top: 0.3rem;
-    margin-bottom: 0.4rem;
+    gap: clamp(0.4rem, 1.5vw, 0.8rem);
+    margin-top: 0.5rem;
+    margin-bottom: 1.2rem;
 }
 
 /* glass tiles */
@@ -237,8 +289,8 @@
     align-items: center;
     justify-content: center;
 
-    width: clamp(46px, 10vw, 62px);
-    height: clamp(46px, 10vw, 62px);
+    width: clamp(55px, 12vw, 75px);
+    height: clamp(55px, 12vw, 75px);
 
     border-radius: clamp(8px, 1.5vw, 12px);
 
@@ -264,7 +316,7 @@
 
 /* digits */
 .time-block span {
-    font-size: clamp(0.9rem, 1.8vw, 1.6rem);
+    font-size: clamp(1.4rem, 2.8vw, 2.3rem);
     color: var(--mist);
     line-height: 1;
     text-shadow: 0 0 18px rgba(245, 246, 243, 0.08);
@@ -272,10 +324,10 @@
 
 /* labels */
 .time-block small {
-    font-size: clamp(0.38rem, 0.75vw, 0.46rem);
-    color: var(--gold-subtle);
+    font-size: clamp(0.65rem, 0.9vw, 0.75rem);
+    color: white;
     opacity: 0.65;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.15em;
     margin-top: 3px;
 }
 
@@ -290,26 +342,31 @@
     animation-delay: 0.5s;
 }
 
+.hero__tagline {
+    animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.60s;
+}
+
 .hero__title__h2 {
-    font-size: clamp(1.4rem, 4.5vw, 3.4rem);
+    font-size: clamp(1.2rem, 4vw, 3rem);
     letter-spacing: 0.04em;
     animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: 0.65s;
+    animation-delay: 0.68s;
+}
+
+.hero__highlights {
+    animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.76s;
 }
 
 .hero__countdown {
     animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: 0.82s;
-}
-
-.hero__subtitle {
-    animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: 0.98s;
+    animation-delay: 0.85s;
 }
 
 .hero__actions {
     animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: 1.12s;
+    animation-delay: 0.95s;
 }
 
 /* Countdown digit flip on change */
