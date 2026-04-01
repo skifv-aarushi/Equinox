@@ -35,7 +35,7 @@ export default function Sponsor() {
         <section ref={sectionRef} className="sponsor section" id="sponsors">
             <div className="section-title reveal">
                 <h2>Our Sponsor</h2>
-                <p className="section-eyebrow">Backed by industry leaders</p>
+                <p className="section-eyebrow">Backed by industry leader</p>
             </div>
 
             {/* Main sponsor — full-width centred row */}

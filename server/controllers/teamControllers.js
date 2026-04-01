@@ -217,7 +217,29 @@ const submitGdriveLink = async (req, res) => {
             return res.status(404).json({ message: 'Team not found.' });
         }
 
-        team.gdriveLink       = gdriveLink.trim();
+        const round = team.currentRound ?? 0;
+        const link  = gdriveLink.trim();
+
+        // Check if team was rejected — block further submissions
+        const currentEntry = team.roundSubmissions.find(s => s.round === round);
+        if (currentEntry && currentEntry.submissionStatus === 'rejected') {
+            return res.status(403).json({ message: 'Your team has been rejected for this round. Submissions are disabled.' });
+        }
+
+        // Update or create the roundSubmissions entry for the current round
+        if (currentEntry) {
+            currentEntry.gdriveLink       = link;
+            currentEntry.submissionStatus = 'under_review';
+        } else {
+            team.roundSubmissions.push({
+                round,
+                gdriveLink:       link,
+                submissionStatus: 'under_review'
+            });
+        }
+
+        // Mirror to flat fields for backward compatibility
+        team.gdriveLink       = link;
         team.submissionStatus = 'under_review';
         await team.save();
 
@@ -252,10 +274,50 @@ const updateVtopStatus = async (req, res) => {
     }
 };
 
+// ─── DELETE /api/teams/leave ─────────────────────────────────────────────────
+const leaveTeam = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).json({ message: 'Email is required.' });
+        }
+
+        const team = await Team.findOne({ 'members.email': email });
+        if (!team) {
+            return res.status(404).json({ message: 'You are not in any team.' });
+        }
+
+        const memberIndex = team.members.findIndex(m => m.email === email);
+        const member = team.members[memberIndex];
+
+        // Last member — delete the entire team
+        if (team.members.length === 1) {
+            await Team.deleteOne({ _id: team._id });
+            return res.status(200).json({ message: 'You left the team. The team has been disbanded.' });
+        }
+
+        // If the leader is leaving, transfer leadership to the next member
+        if (member.isLeader) {
+            const nextLeader = team.members.find(m => m.email !== email);
+            nextLeader.isLeader = true;
+        }
+
+        team.members.splice(memberIndex, 1);
+        await team.save();
+        syncToGoogleSheet(team).catch(() => {});
+
+        res.status(200).json({ message: 'You have left the team.' });
+    } catch (error) {
+        console.error('Error in leaveTeam:', error);
+        res.status(500).json({ message: 'Server error while leaving team.' });
+    }
+};
+
 module.exports = {
     createTeam,
     joinTeam,
     getTeamByUserEmail,
     submitGdriveLink,
-    updateVtopStatus
+    updateVtopStatus,
+    leaveTeam
 };

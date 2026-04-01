@@ -128,7 +128,6 @@ export default function About() {
                      <ul>
                     <li>60 hours of non-stop innovation in Smart Infrastructure</li>
                     <li>Innovate for cities, homes, and connected ecosystems</li>
-                    <li>Hosted by RoboVITics, VIT Vellore</li>
                     <li>A space for collaboration, creativity, and innovation</li>
                     <li>From idea to prototype in real-time</li>
                     <li>Where theory meets high-stakes problem solving</li>
@@ -191,8 +190,8 @@ export default function About() {
                             <span className="about__stat-label">Tracks</span>
                         </div>
                         <div className="about__stat">
-                            <span className="about__stat-number">1500+</span>
-                            <span className="about__stat-label">Participants</span>
+                            <span className="about__stat-number">2L+</span>
+                            <span className="about__stat-label">Prize Pool</span>
                         </div>
                     </div>
                 </div>

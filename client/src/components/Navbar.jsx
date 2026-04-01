@@ -1,19 +1,47 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUser, useAuth } from '@clerk/clerk-react';
+import { createApiClient, fetchTeamByEmail } from '../utils/api';
 import './Navbar.css';
 
 const NAV_LINKS = [
-    { label: 'About', href: '#about' },
-    { label: 'Sponsor', href: '#sponsors' },
+    { label: 'About',    href: '#about'    },
+    { label: 'Sponsor',  href: '#sponsors' },
     { label: 'Timeline', href: '#timeline' },
-    { label: 'Tracks', href: '#tracks' },
+    { label: 'Tracks',   href: '#tracks'   },
     { label: 'Register', href: '#register' },
-    { label: 'FAQ', href: '#faq' },
+    { label: 'FAQs',      href: '#faq'      },
 ];
 
 export default function Navbar() {
-    const [scrolled, setScrolled] = useState(false);
-    const [atHero, setAtHero] = useState(true);
-    const [menuOpen, setMenuOpen] = useState(false);
+    const [scrolled,  setScrolled]  = useState(false);
+    const [atHero,    setAtHero]    = useState(true);
+    const [menuOpen,  setMenuOpen]  = useState(false);
+
+    // Clerk user state
+    const { user, isLoaded: userLoaded } = useUser();
+    const { getToken } = useAuth();
+    const navigate = useNavigate();
+
+    // Team status: null = no team / no auth, 'loading', or team object
+    const [teamStatus, setTeamStatus] = useState(null);
+
+    // Fetch team status once user is loaded
+    useEffect(() => {
+        if (!userLoaded) return;
+        if (!user) { setTeamStatus(null); return; }
+
+        const email = user.primaryEmailAddress?.emailAddress;
+        if (!email) { setTeamStatus(null); return; }
+
+        const api = createApiClient(getToken);
+        fetchTeamByEmail(api, email)
+            .then(data => setTeamStatus(data ?? null))
+            .catch(() => setTeamStatus(null));
+    }, [userLoaded, user, getToken]);
+
+    const hasTeam  = teamStatus && teamStatus.teamName;
+    const isSignedIn = userLoaded && !!user;
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 60);
@@ -36,7 +64,17 @@ export default function Navbar() {
         e.preventDefault();
         setMenuOpen(false);
         const el = document.querySelector(href);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            window.location.href = '/' + href;
+        }
+    };
+
+    const handleMyTeam = (e) => {
+        e.preventDefault();
+        setMenuOpen(false);
+        navigate('/register');
     };
 
     return (
@@ -63,6 +101,15 @@ export default function Navbar() {
                             </a>
                         </li>
                     ))}
+
+                    {/* My Team tab — visible only when signed in */}
+                    {isSignedIn && (
+                        <li>
+                            <a href="/register" onClick={handleMyTeam}>
+                                Team
+                            </a>
+                        </li>
+                    )}
                 </ul>
             </div>
         </nav>

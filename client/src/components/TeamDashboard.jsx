@@ -5,23 +5,40 @@
  *
  * Sections:
  *  – Hero band (team name + copyable code, venue, round)
+ *  – Round progress timeline with per-round status colouring
+ *  – Verdict banner (selected/rejected/under review/pending)
  *  – Members grid
- *  – GDrive submission with colour-coded status
- *  – Component inventory selection
+ *  – GDrive submission (disabled when rejected)
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 import { useTeam } from '../context/TeamContext';
 import {
   submitGdriveLink,
-  updateVtopStatus
+  updateVtopStatus,
+  leaveTeam
 } from '../utils/api';
 import './TeamDashboard.css';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const ROUND_LABELS = ['Round 0 — Registration', 'Round 1', 'Round 2', 'Round 3 — Finals'];
+
+// Get the submission entry for a given round from the roundSubmissions array
+function getSubmission(team, round) {
+  const entry = (team.roundSubmissions || []).find(s => s.round === round);
+  if (entry) return entry;
+  // Fallback to flat fields if roundSubmissions hasn't been populated yet
+  if (round === (team.currentRound ?? 0)) {
+    return {
+      round,
+      gdriveLink:       team.gdriveLink       || '',
+      submissionStatus: team.submissionStatus || 'not_submitted'
+    };
+  }
+  return { round, gdriveLink: '', submissionStatus: 'not_submitted' };
+}
 
 function CopyButton({ text }) {
   const [copied, setCopied] = useState(false);
@@ -123,10 +140,13 @@ function MemberCard({ member, index }) {
 
 // ─── Submission panel ─────────────────────────────────────────────────────────
 function SubmissionPanel({ team, email, api, onUpdate }) {
-  const [link, setLink]     = useState(team.gdriveLink || '');
-  const [saving, setSaving] = useState(false);
+  const round   = team.currentRound ?? 0;
+  const sub     = getSubmission(team, round);
+  const status  = sub.submissionStatus;
+  const isRejected = status === 'rejected';
 
-  const status = team.submissionStatus || 'not_submitted';
+  const [link, setLink]     = useState(sub.gdriveLink || '');
+  const [saving, setSaving] = useState(false);
 
   const statusConfig = {
     not_submitted: {
@@ -138,18 +158,24 @@ function SubmissionPanel({ team, email, api, onUpdate }) {
     under_review: {
       color:   'yellow',
       label:   'Under Review',
-      message: 'Your submissions are under review.',
+      message: 'Your submission is under review.',
       icon:    '◐'
     },
     shortlisted: {
       color:   'green',
       label:   'Shortlisted',
-      message: 'The submission has been shortlisted!',
+      message: 'Your submission has been shortlisted!',
       icon:    '◉'
+    },
+    rejected: {
+      color:   'red',
+      label:   'Rejected',
+      message: 'Your team was not selected for this round. Submissions are disabled.',
+      icon:    '✕'
     }
   };
 
-  const cfg = statusConfig[status];
+  const cfg = statusConfig[status] || statusConfig.not_submitted;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -173,7 +199,7 @@ function SubmissionPanel({ team, email, api, onUpdate }) {
     <div className="td-submission">
       <div className="td-submission__header">
         <span className="td-submission__icon">◈</span>
-        <h3 className="td-submission__title">Submission</h3>
+        <h3 className="td-submission__title">Submission — {ROUND_LABELS[round] || `Round ${round}`}</h3>
         <span className={`td-submission__status td-submission__status--${cfg.color}`}>
           {cfg.icon} {cfg.label}
         </span>
@@ -190,15 +216,75 @@ function SubmissionPanel({ team, email, api, onUpdate }) {
           value={link}
           onChange={(e) => setLink(e.target.value)}
           placeholder="https://drive.google.com/..."
+          disabled={isRejected}
         />
         <button
           type="submit"
           className="btn btn-primary td-submission__btn"
-          disabled={saving}
+          disabled={saving || isRejected}
         >
           {saving ? <><span className="td-loading__spinner td-loading__spinner--sm" /> Saving…</> : 'Submit Link'}
         </button>
       </form>
+    </div>
+  );
+}
+
+// ─── Leave Team button ───────────────────────────────────────────────────────
+function LeaveButton({ email, api, onLeft }) {
+  const [confirming, setConfirming] = useState(false);
+  const [leaving, setLeaving]       = useState(false);
+
+  const handleLeave = async () => {
+    setLeaving(true);
+    const toastId = toast.loading('Leaving team…');
+    try {
+      await leaveTeam(api, { email });
+      toast.success('You have left the team.', { id: toastId });
+      onLeft();
+    } catch (err) {
+      toast.error(err.message || 'Failed to leave team.', { id: toastId });
+    } finally {
+      setLeaving(false);
+      setConfirming(false);
+    }
+  };
+
+  if (!confirming) {
+    return (
+      <button
+        type="button"
+        className="td-leave-btn"
+        onClick={() => setConfirming(true)}
+      >
+        ↩ Leave Team
+      </button>
+    );
+  }
+
+  return (
+    <div className="td-leave-confirm">
+      <p className="td-leave-confirm__msg">
+        Are you sure? You can join or create a new team afterward.
+      </p>
+      <div className="td-leave-confirm__actions">
+        <button
+          type="button"
+          className="td-leave-confirm__yes"
+          onClick={handleLeave}
+          disabled={leaving}
+        >
+          {leaving ? 'Leaving…' : 'Yes, leave'}
+        </button>
+        <button
+          type="button"
+          className="td-leave-confirm__no"
+          onClick={() => setConfirming(false)}
+          disabled={leaving}
+        >
+          Cancel
+        </button>
+      </div>
     </div>
   );
 }
@@ -225,6 +311,8 @@ export default function TeamDashboard() {
   const members     = Array.isArray(team.members) ? team.members : [];
   const memberCount = members.length;
   const round       = team.currentRound ?? 0;
+  const currentSub  = getSubmission(team, round);
+  const currentStatus = currentSub.submissionStatus;
 
   return (
     <div className="td-root">
@@ -246,32 +334,80 @@ export default function TeamDashboard() {
           </p>
         </div>
 
-        {/* Round + Venue row */}
+        {/* Round + Status row */}
         <div className="td-meta-row">
-          <div className="td-meta-badge">
+          <div className="td-meta-badge td-meta-badge--wide">
             <span className="td-meta-badge__label">Stage</span>
             <span className="td-meta-badge__value">{ROUND_LABELS[round]}</span>
           </div>
-          {team.venue && (
-            <div className="td-meta-badge">
-              <span className="td-meta-badge__label">Venue</span>
-              <span className="td-meta-badge__value">{team.venue}</span>
-            </div>
-          )}
         </div>
 
-        {/* Round progress dots */}
+        {/* Round progress dots — colour-coded per round status */}
         <div className="td-rounds">
-          {[0, 1, 2, 3].map((r) => (
-            <div
-              key={r}
-              className={`td-round-dot ${r <= round ? 'td-round-dot--active' : ''} ${r === round ? 'td-round-dot--current' : ''}`}
-              title={ROUND_LABELS[r]}
-            >
-              {r}
-            </div>
-          ))}
+          {[0, 1, 2, 3].map((r) => {
+            const sub    = getSubmission(team, r);
+            const rStatus = sub.submissionStatus;
+
+            // Determine dot class:
+            // - active = team has reached or passed this round
+            // - current = this is the team's current round
+            // - rejected = team was rejected at this round (red)
+            // - shortlisted = team passed this round (green)
+            let dotCls = 'td-round-dot';
+            if (r <= round) dotCls += ' td-round-dot--active';
+            if (r === round) dotCls += ' td-round-dot--current';
+            if (rStatus === 'rejected')    dotCls += ' td-round-dot--rejected';
+            if (rStatus === 'shortlisted') dotCls += ' td-round-dot--shortlisted';
+
+            return (
+              <div
+                key={r}
+                className={dotCls}
+                title={`${ROUND_LABELS[r]} — ${rStatus.replace('_', ' ')}`}
+              >
+                {r}
+              </div>
+            );
+          })}
         </div>
+
+        {/* ── Verdict banner ── */}
+        {(() => {
+          const roundLabel = ROUND_LABELS[round] || `Round ${round}`;
+          let verdictIcon, verdictTitle, verdictMsg, verdictCls;
+
+          if (currentStatus === 'shortlisted') {
+            verdictIcon  = '✦';
+            verdictTitle = `Selected — ${roundLabel}`;
+            verdictMsg   = 'Congratulations! Your team has been selected to advance to the next round.';
+            verdictCls   = 'td-verdict--selected';
+          } else if (currentStatus === 'under_review') {
+            verdictIcon  = '◐';
+            verdictTitle = `Under Review — ${roundLabel}`;
+            verdictMsg   = 'Your submission is being reviewed by our team. Results will be announced soon.';
+            verdictCls   = 'td-verdict--review';
+          } else if (currentStatus === 'rejected') {
+            verdictIcon  = '✕';
+            verdictTitle = `Not Selected — ${roundLabel}`;
+            verdictMsg   = 'Unfortunately your team has not been selected to move forward. Thank you for participating!';
+            verdictCls   = 'td-verdict--rejected';
+          } else {
+            verdictIcon  = '○';
+            verdictTitle = 'Awaiting Submission';
+            verdictMsg   = 'Submit your Google Drive project link below to begin the review process.';
+            verdictCls   = 'td-verdict--pending';
+          }
+
+          return (
+            <div className={`td-verdict ${verdictCls}`}>
+              <span className="td-verdict__icon">{verdictIcon}</span>
+              <div className="td-verdict__body">
+                <span className="td-verdict__title">{verdictTitle}</span>
+                <span className="td-verdict__msg">{verdictMsg}</span>
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* ── VTOP caution popup ── */}
@@ -305,6 +441,8 @@ export default function TeamDashboard() {
             ))}
           </div>
         )}
+
+        <LeaveButton email={email} api={api} onLeft={refreshTeam} />
       </div>
 
       <div className="celestial-divider" style={{ margin: '0 auto', maxWidth: 800 }} />

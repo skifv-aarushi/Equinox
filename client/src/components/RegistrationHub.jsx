@@ -30,14 +30,25 @@ const BLOCKS = {
   other:  ['N/A', 'A Block', 'B Block', 'B Annex Block', 'C Block', 'D Block', 'D Annex Block', 'E Block', 'F Block', 'G Block', 'GH Annex Block', 'H Block', 'J Block', 'J Annex Block', 'K Block', 'L Block', 'M Block', 'M Annex Block', 'N Block', 'N Annex Block', 'P Block', 'Q Block', 'R Block', 'RGT H Block', 'S Block', 'T Block'],
 };
 
+// ─── Validation patterns ─────────────────────────────────────────────────────
+const PATTERNS = {
+  name:   { regex: /^[A-Za-z0-9\s.'-]+$/, hint: 'Letters, numbers, spaces, dots, hyphens, and apostrophes only' },
+  regNo:  { regex: /^\d{2}[A-Za-z]{3}\d{4}$/, hint: 'Format: 22BCE1234' },
+  phone:  { regex: /^(\+?\d[\d\s-]{7,13}\d)$/, hint: '10–15 digits, optional + prefix' },
+  room:   { regex: /^[A-Za-z0-9/-]{1,10}$/, hint: 'e.g. 204, 3/12, A1' },
+  teamName: { regex: /^[A-Za-z0-9\s&'.!-]{2,40}$/, hint: '2–40 characters, letters/numbers/spaces' },
+};
+
 // ─── Reusable text input ──────────────────────────────────────────────────────
-function Field({ label, id, value, onChange, placeholder, maxLength }) {
+function Field({ label, id, value, onChange, placeholder, maxLength, pattern }) {
+  const invalid = pattern && value.trim() !== '' && !pattern.regex.test(value.trim());
+
   return (
     <div className="rh-field">
       <label htmlFor={id} className="rh-label">{label}</label>
       <input
         id={id}
-        className="rh-input"
+        className={`rh-input${invalid ? ' rh-input--invalid' : ''}`}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -45,6 +56,7 @@ function Field({ label, id, value, onChange, placeholder, maxLength }) {
         maxLength={maxLength}
         autoComplete="off"
       />
+      {invalid && <span className="rh-hint">{pattern.hint}</span>}
     </div>
   );
 }
@@ -101,11 +113,9 @@ function CustomSelect({ label, value, onChange, options, placeholder = 'Select�
 function VtopCheckbox({ checked, onChange }) {
   return (
     <div className="rh-vtop">
-      {!checked && (
-        <p className="rh-vtop__warning">
-          ⚠ If not registered on VTOP, OD (on-duty) will <strong>not</strong> be provided for this participant.
-        </p>
-      )}
+      <p className={`rh-vtop__warning${checked ? ' rh-vtop__warning--ok' : ''}`}>
+        <>⚠ If not registered on VTOP, OD (on-duty) will <strong>not</strong> be provided for this participant.</>
+      </p>
       <label className="rh-vtop__label">
         <input
           type="checkbox"
@@ -130,14 +140,21 @@ function MemberFields({ prefix, name, setName, regNo, setRegNo, phone, setPhone,
     setHostelBlock('');
   };
 
+  const handleBlockChange = (val) => {
+    setHostelBlock(val);
+    if (val === 'N/A') setRoomNumber('');
+  };
+
   return (
     <>
-      <Field label="Your Full Name"      id={`${prefix}-name`}   value={name}       onChange={setName}       placeholder="As per college ID" />
-      <Field label="Registration Number" id={`${prefix}-reg`}    value={regNo}      onChange={setRegNo}      placeholder="e.g. 22BCE1234" />
-      <Field label="Phone Number"        id={`${prefix}-phone`}  value={phone}      onChange={setPhone}      placeholder="+91 98765 43210" maxLength={15} />
+      <Field label="Your Full Name"      id={`${prefix}-name`}   value={name}       onChange={setName}       placeholder="As per college ID" pattern={PATTERNS.name} />
+      <Field label="Registration Number" id={`${prefix}-reg`}    value={regNo}      onChange={setRegNo}      placeholder="e.g. 22BCE1234" pattern={PATTERNS.regNo} />
+      <Field label="Phone Number"        id={`${prefix}-phone`}  value={phone}      onChange={setPhone}      placeholder="+91 98765 43210" maxLength={15} pattern={PATTERNS.phone} />
       <CustomSelect label="Gender"       value={gender}           onChange={handleGenderChange} options={GENDER_OPTIONS} placeholder="Select gender…" />
-      <CustomSelect label="Hostel Block" value={hostelBlock}      onChange={setHostelBlock}      options={blockOptions}   placeholder="Select block…" />
-      <Field label="Room Number"         id={`${prefix}-room`}   value={roomNumber} onChange={setRoomNumber} placeholder="e.g. 204" />
+      <CustomSelect label="Hostel Block" value={hostelBlock}      onChange={handleBlockChange}   options={blockOptions}   placeholder="Select block…" />
+      {hostelBlock !== 'N/A' && (
+        <Field label="Room Number"       id={`${prefix}-room`}   value={roomNumber} onChange={setRoomNumber} placeholder="e.g. 204" pattern={PATTERNS.room} />
+      )}
       {showTrack && <CustomSelect label="Track" value={track} onChange={setTrack} options={TRACKS} placeholder="Select a track…" />}
     </>
   );
@@ -171,6 +188,10 @@ function CreatePanel({ isDisabled, onActivate, onDeactivate }) {
       toast.error('Please fill in all fields.');
       return;
     }
+    if (!PATTERNS.teamName.regex.test(teamName.trim())) { toast.error('Invalid team name.'); return; }
+    if (!PATTERNS.name.regex.test(name.trim()))         { toast.error('Invalid name.'); return; }
+    if (!PATTERNS.regNo.regex.test(regNo.trim()))       { toast.error('Invalid registration number.'); return; }
+    if (!PATTERNS.phone.regex.test(phone.trim()))       { toast.error('Invalid phone number.'); return; }
     setLoading(true);
     const toastId = toast.loading('Creating your team…');
     try {
@@ -211,7 +232,7 @@ function CreatePanel({ isDisabled, onActivate, onDeactivate }) {
       </div>
 
       <form onSubmit={handleCreate} className="rh-form" noValidate>
-        <Field label="Team Name" id="create-team-name" value={teamName} onChange={setTeamName} placeholder="e.g. Stellar Minds" />
+        <Field label="Team Name" id="create-team-name" value={teamName} onChange={setTeamName} placeholder="e.g. Stellar Minds" pattern={PATTERNS.teamName} />
 
         <MemberFields
           prefix="create"
@@ -266,6 +287,9 @@ function JoinPanel({ isDisabled, onActivate, onDeactivate }) {
       toast.error('Please fill in all fields.');
       return;
     }
+    if (!PATTERNS.name.regex.test(name.trim()))   { toast.error('Invalid name.'); return; }
+    if (!PATTERNS.regNo.regex.test(regNo.trim())) { toast.error('Invalid registration number.'); return; }
+    if (!PATTERNS.phone.regex.test(phone.trim())) { toast.error('Invalid phone number.'); return; }
     setLoading(true);
     const toastId = toast.loading('Joining team…');
     try {

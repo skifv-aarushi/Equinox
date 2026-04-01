@@ -11,8 +11,10 @@ export default function Footer() {
 
                 <div className="footer__inner">
                     <div className="footer__brand">
-                        <span className="footer__logo-icon">☉</span>
-                        <span className="footer__logo-text">Equinox</span>
+                        <div className="footer__logo-wrap">
+                            <img src="/equinox-logo.png" alt="" className="footer__logo-icon" draggable={false} />
+                            <span className="footer__logo-text">Equinox</span>
+                        </div>
                         <p className="footer__tagline">
                             Override the Ordinary.
                         </p>

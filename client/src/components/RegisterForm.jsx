@@ -7,7 +7,7 @@ export default function RegisterForm() {
     return (
         <section className="register section" id="register">
             <div className="section-title reveal">
-                <h2>Register</h2>
+                <h2>Register Now</h2>
                 <p className="section-eyebrow">Align yourself with the stars</p>
             </div>
 

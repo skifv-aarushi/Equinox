@@ -35,7 +35,7 @@ export function createApiClient(getToken) {
   return instance;
 }
 
-// ─── Endpoint helpers ─────────────────────────────────────────────────────────
+// ─── Team helpers ─────────────────────────────────────────────────────────────
 
 export async function fetchTeamByEmail(api, email) {
   const res = await api.get(`/teams/user/${encodeURIComponent(email)}`);
@@ -57,6 +57,16 @@ export async function submitGdriveLink(api, payload) {
   return res.data;
 }
 
+export async function leaveTeam(api, payload) {
+  const res = await api.delete('/teams/leave', { data: payload });
+  return res.data;
+}
+
+export async function updateVtopStatus(api, payload) {
+  const res = await api.patch('/teams/vtop', payload);
+  return res.data;
+}
+
 // ─── Admin helpers ────────────────────────────────────────────────────────────
 
 export async function fetchAllTeams(api) {
@@ -64,13 +74,26 @@ export async function fetchAllTeams(api) {
   return res.data;
 }
 
-export async function updateTeamRound(api, teamId, round) {
-  const res = await api.patch(`/admin/teams/${teamId}/round`, { round });
+export async function fetchAdminSettings(api) {
+  const res = await api.get('/admin/settings');
   return res.data;
 }
 
-export async function updateSubmissionStatus(api, teamId, submissionStatus) {
-  const res = await api.patch(`/admin/teams/${teamId}/submission-status`, { submissionStatus });
+// Advance global round (promotes shortlisted teams)
+export async function advanceGlobalRound(api, round) {
+  const res = await api.post('/admin/advance-round', { round });
+  return res.data;
+}
+
+// Set verdict for a single team
+export async function setTeamVerdict(api, teamId, submissionStatus) {
+  const res = await api.put('/admin/verdict', { teamId, submissionStatus });
+  return res.data;
+}
+
+// Bulk-update team statuses
+export async function bulkUpdateTeamsApi(api, updates) {
+  const res = await api.post('/admin/teams/bulk-update', { updates });
   return res.data;
 }
 
@@ -79,7 +102,14 @@ export async function updateTeamVenue(api, teamId, venue) {
   return res.data;
 }
 
-export async function updateVtopStatus(api, payload) {
-  const res = await api.patch('/teams/vtop', payload);
+// ─── Admin Query Console ──────────────────────────────────────────────────────
+
+export async function executeAdminQuery(api, queryPayload) {
+  const res = await api.post('/admin/query', queryPayload);
+  return res.data;
+}
+
+export async function fetchCollections(api) {
+  const res = await api.get('/admin/collections');
   return res.data;
 }

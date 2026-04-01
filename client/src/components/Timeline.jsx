@@ -9,14 +9,14 @@ const EVENTS = [
     { time: '08:00 – 9:00 AM', title: 'Check-in & Registration', desc: 'Participants arrive at the venue.', day: '1' },
     { time: '10:00 – 11:00 AM', title: 'Inauguration', desc: 'Opening Ceremony and Welcome Address.', day: '1' },
     { time: '11:00 AM', title: 'Hack Commences', desc: '60 hours of ideation, engineering, and innovation. The build phase begins.', day: '1' },
-    { time: '05:30 – 06:30 PM', title: 'Review 1', desc: 'Progress evaluation; Teams get feedback on their work so far.', day: '1' },
+    { time: '05:30 – 06:30 PM', title: 'Review 1', desc: 'Progress evaluation. Teams get feedback on their work so far.', day: '1' },
 
     /* ── Day 2 — April 2, Thursday ── */
-    { time: '10:00 AM – 12:00 PM', title: 'Review 2', desc: 'Judges assesses architecture, technical feasibility, and problem-solution fit.', day: '2' },
-    { time: '05:00 – 06:00 PM', title: 'Speaker Session', desc: 'Industry expert shares perspectives on smart infrastructure and emerging tech.', day: '2' },
+    { time: '10:00 AM – 12:00 PM', title: 'Review 2', desc: 'Judges assess architecture, technical feasibility, and problem-solution fit.', day: '2' },
+    { time: '05:00 – 06:00 PM', title: 'Speaker Session', desc: 'Industry experts shares perspectives on smart infrastructure and emerging tech.', day: '2' },
 
     /* ── Day 3 — April 3, Friday ── */
-    { time: '9:40 AM – 10:30 AM', title: 'Review 3 & Code Freeze', desc: 'Submissions locked; judges shortlist the top teams for final stage.', day: '3' },
+    { time: '9:40 AM – 10:30 AM', title: 'Review 3 & Code Freeze', desc: 'Submissions locked. Judges shortlist the top teams for final stage.', day: '3' },
     { time: '11:30 – 1:00 PM', title: 'Final Pitches', desc: 'Finalists present and defend their solutions before the judging panel.', day: '3' },
     { time: '2:30 – 3:00 PM', title: 'Prize Distribution & Closing Ceremony', desc: 'Winners announced, prizes awarded, and Equinox \'26 concludes.', day: '3' },
 ];

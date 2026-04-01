@@ -4,16 +4,31 @@ const { ClerkExpressRequireAuth } = require('@clerk/clerk-sdk-node');
 
 const {
     getAllTeams,
-    updateTeamRound,
-    updateSubmissionStatus,
-    updateTeamVenue
+    setVerdict,
+    advanceRound,
+    bulkUpdateTeams,
+    getSettings,
+    updateTeamVenue,
+    executeQuery,
+    listCollections
 } = require('../controllers/adminController');
 
-// All admin routes require a valid Clerk JWT; additional admin-email check is
-// done inside each controller via requireAdmin().
-router.get('/teams',                    ClerkExpressRequireAuth(), getAllTeams);
-router.patch('/teams/:id/round',        ClerkExpressRequireAuth(), updateTeamRound);
-router.patch('/teams/:id/submission-status', ClerkExpressRequireAuth(), updateSubmissionStatus);
-router.patch('/teams/:id/venue',        ClerkExpressRequireAuth(), updateTeamVenue);
+const auth = ClerkExpressRequireAuth();
+
+// Teams
+router.get('/teams',                      auth, getAllTeams);
+router.put('/verdict',                    auth, setVerdict);
+router.patch('/teams/:id/venue',          auth, updateTeamVenue);
+router.post('/teams/bulk-update',         auth, bulkUpdateTeams);
+
+// Round advancement
+router.post('/advance-round',             auth, advanceRound);
+
+// Settings
+router.get('/settings',                   auth, getSettings);
+
+// Query console
+router.post('/query',                     auth, executeQuery);
+router.get('/collections',                auth, listCollections);
 
 module.exports = router;
